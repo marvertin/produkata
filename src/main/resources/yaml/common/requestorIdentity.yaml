@@ -1,0 +1,56 @@
+#24/11/2020 - Milan Gajdos initial version
+components:
+  schemas:
+    RequestorIdentityType:
+      type: object
+      required:
+        - responsiblePerson
+        - accountableUser
+      properties:
+        responsiblePerson:
+          $ref: '#/components/schemas/ResponsiblePersonType'
+        accountableUser:
+          $ref: '#/components/schemas/AccountableUserType'
+
+    ResponsiblePersonType:
+      type: object
+      properties:
+        responsibleUserType:
+          $ref: '#/components/schemas/ResponsibleUserType'
+        responsibleOperatorType:
+          $ref: '#/components/schemas/ResponsibleOperatorType'
+
+    ResponsibleUserType:
+      type: object
+      required:
+        - userId
+        - idType
+      properties:
+        userId:
+          type: string
+          description: 'User identifier'
+        idType:
+          type: string
+          description: 'Type or source of the party identifier. Codebook: TODO'
+
+    ResponsibleOperatorType:
+      type: object
+      required:
+        - operatorId
+      properties:
+        operatorId:
+          type: string
+          description: 'User identifier'
+
+    AccountableUserType:
+      type: object
+      required:
+        - userId
+        - idType
+      properties:
+        userId:
+          type: string
+          description: 'User identifier'
+        idType:
+          type: string
+          description: 'Type or source of the party identifier. Codebook: TODO'

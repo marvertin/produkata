@@ -1,0 +1,40 @@
+components:
+  schemas:
+    Alpha2LangCodeType:
+      type: string
+      maxLength: 2
+      description: '2 letter alphabetic code of language (ISO 639-1:2002)'
+
+    ProductCategoryIdType:
+      type: string
+      description: 'technický názov kategórie produktu'
+
+    ProductIdType:
+      type: string
+      description: 'ID produktu'
+
+    TechnicalProductIdType:
+      type: string
+      description: 'technické ID produktu'
+
+    Alpha3CurrencyCodeType:
+      type: string
+      description: '3 letter alhpabetic code of currency (ISO 4217)'
+
+    ISINNumberType:
+      type: string
+      description: 'základný identifikátorom emisií cenných papierov (CP) a finančných nástrojov'
+
+    ProductAttrTechnicalNameType:
+      type: string
+      description: 'technický identifikátor atribútu'
+
+    FilterDateFromType:
+      type: string
+      format: date
+      description: 'dátum od'
+
+    FilterDateToType:
+      type: string
+      format: date
+      description: 'dátum do'

@@ -1,0 +1,123 @@
+#24/11/2020 - Milan Gajdos initial version
+components:
+  parameters:
+    InitiatorSystemQueryParameterType:
+      name: initiatorSystem
+      in: query
+      description: ''
+      required: false
+      style: form
+      schema:
+        $ref: 'common/initiatorSystem.yaml#/components/schemas/InitiatorSystemType'
+
+    PagingQueryParameterType:
+      name: paging
+      in: query
+      description: ''
+      required: false
+      style: form
+      schema:
+        $ref: 'common/paging.yaml#/components/schemas/PagingRequestType'
+
+    XCorrelationIdHeaderParameterType:
+      name: X-Correlation-ID
+      in: header
+      description: 'Correlation ID'
+      style: simple
+      schema:
+        type: string
+    XRequestIdHeaderParameterType:
+      name: X-Request-ID
+      in: header
+      description: 'Request ID'
+      style: simple
+      schema:
+        type: string
+
+    LangPathParameterType:
+      name: lang
+      in: path
+      description: '2 letter alphabetic code of language (ISO 639-1:2002)'
+      required: true
+      style: simple
+      schema:
+        $ref: '#/components/schemas/Alpha2LangCodeType'
+
+    CategoryIdPathParameterType:
+      name: categoryId
+      in: path
+      description: 'Category ID'
+      required: true
+      style: simple
+      schema:
+        $ref: '#/components/schemas/ProductCategoryIdType'
+
+    ProductIdPathParameterType:
+      name: productId
+      in: path
+      description: 'Product ID'
+      required: true
+      style: simple
+      schema:
+        $ref: '#/components/schemas/ProductIdType'
+
+    DateFromFilteringQueryParameterType:
+      name: dateFrom
+      in: query
+      description: 'Date from'
+      required: true
+      style: form
+      schema:
+        $ref: '#/components/schemas/FilterDateFromType'
+
+    DateToFilteringQueryParameterType:
+      name: dateTo
+      in: query
+      description: 'Date to'
+      required: true
+      style: form
+      schema:
+        $ref: '#/components/schemas/FilterDateToType'
+  schemas:
+    #This should be used as a general structure for all requests
+    #RequestType:
+    #        type: object
+    #        properties:
+    #          params:
+    #            $ref: 'common/common.yaml#/components/schemas/CommonRequestType'
+    #          data:
+    #            {}
+
+    CommonRequestType:
+      type: object
+      properties:
+        authorizationContext:
+          $ref: 'authorizationContext.yaml#/components/schemas/AuthorizationContextType'
+        iniciatorSystem:
+          $ref: 'initiatorSystem.yaml#/components/schemas/InitiatorSystemType'
+        requestorIdentity:
+          $ref: 'requestorIdentity.yaml#/components/schemas/RequestorIdentityType'
+        # filtering:
+        #  $ref: 'filtering.yaml#/components/schemas/FilteringQueryType'
+        paging:
+          $ref: 'paging.yaml#/components/schemas/PagingRequestType'
+        language:
+          type: string
+      description: 'General structure for all requests'
+
+    #This should be used as a general structure for all responses
+    #ResponseType:
+    #      type: object
+    #      properties:
+    #        params:
+    #          $ref: 'common/common.yaml#/components/schemas/CommonResponseType'
+    #        data:
+    #          {}
+    CommonResponseType:
+      type: object
+      properties:
+        paging:
+          $ref: 'paging.yaml#/components/schemas/PagingResponseType'
+        errorsAndWarnings:
+          $ref: 'warning.yaml#/components/schemas/WarningErrorParamsType'
+      description: 'General structure for all responses'

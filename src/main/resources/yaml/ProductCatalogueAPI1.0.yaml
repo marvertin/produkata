@@ -1,0 +1,1199 @@
+openapi: 3.0.2
+info:
+  title: ProductCatalogue API
+  description:
+    Defines API for productCatalogue
+  version: '1.0'
+servers:
+  - url: 'https://localhost:8443/productcatalogue'
+tags:
+  - name: ProductCatalogue API
+    description: Defines API for ProductCatalogue
+paths:
+  '/{lang}/productCategories':
+    get:
+      tags:
+        - ProductCatalogue API
+      summary: Vracia zoznam produktových kategórií
+      description: >-
+        Získanie zoznamu produktových kategórií (Fondy, Dlhopisy, Investičné zlato, ... )
+
+      parameters:
+        - $ref: '#/components/parameters/XCorrelationIdHeaderParameterType'
+        - $ref: '#/components/parameters/XRequestIdHeaderParameterType'
+        - $ref: '#/components/parameters/InitiatorSystemQueryParameterType'
+        - $ref: '#/components/parameters/LangPathParameterType'
+
+      responses:
+        '200':
+          description: >-
+            Successfull response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetListOfProductCategoriesResponseType'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyErrorWarningResponseType'
+              example:
+                params:
+                  errorsAndWarnings:
+                    warningError:
+                      code: '400.001.service_error_code'
+                      type: 'ERROR'
+                      description: 'Bad Request'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyErrorWarningResponseType'
+              example:
+                params:
+                  errorsAndWarnings:
+                    warningError:
+                      code: '500.001.service_error_code'
+                      type: 'ERROR'
+                      description: 'Internal Server Error'
+      security:
+        - basicAuth: []
+  '/{lang}/productCategories/{categoryId}/products':
+    get:
+      tags:
+        - ProductCatalogue API
+      summary: Vracia zoznam produktov v produktovej kategórii
+      description: >-
+        Získanie zoznamu produktov v definovanej produktovej kategórií na vstupe
+
+      parameters:
+        - $ref: '#/components/parameters/XCorrelationIdHeaderParameterType'
+        - $ref: '#/components/parameters/XRequestIdHeaderParameterType'
+        - $ref: '#/components/parameters/InitiatorSystemQueryParameterType'
+        - $ref: '#/components/parameters/PagingQueryParameterType'
+        - $ref: '#/components/parameters/LangPathParameterType'
+        - $ref: '#/components/parameters/CategoryIdPathParameterType'
+
+      responses:
+        '200':
+          description: >-
+            Successfull response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetListOfProductsInCategoryResponseType'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyErrorWarningResponseType'
+              example:
+                params:
+                  errorsAndWarnings:
+                    warningError:
+                      code: '400.001.service_error_code'
+                      type: 'ERROR'
+                      description: 'Bad Request'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyErrorWarningResponseType'
+              example:
+                params:
+                  errorsAndWarnings:
+                    warningError:
+                      code: '500.001.service_error_code'
+                      type: 'ERROR'
+                      description: 'Internal Server Error'
+      security:
+        - basicAuth: []
+  '/{lang}/productDetail/{productId}':
+    get:
+      tags:
+        - ProductCatalogue API
+      summary: Vracia detail produktu
+      description: >-
+        Získanie detailu produktu
+
+      parameters:
+        - $ref: '#/components/parameters/XCorrelationIdHeaderParameterType'
+        - $ref: '#/components/parameters/XRequestIdHeaderParameterType'
+        - $ref: '#/components/parameters/InitiatorSystemQueryParameterType'
+        - $ref: '#/components/parameters/LangPathParameterType'
+        - $ref: '#/components/parameters/ProductIdPathParameterType'
+
+      responses:
+        '200':
+          description: >-
+            Successfull response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProductDetailResponseType'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyErrorWarningResponseType'
+              example:
+                params:
+                  errorsAndWarnings:
+                    warningError:
+                      code: '400.001.service_error_code'
+                      type: 'ERROR'
+                      description: 'Bad Request'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyErrorWarningResponseType'
+              example:
+                params:
+                  errorsAndWarnings:
+                    warningError:
+                      code: '500.001.service_error_code'
+                      type: 'ERROR'
+                      description: 'Internal Server Error'
+      security:
+        - basicAuth: []
+  '/{lang}/productDetail/{productId}/documents':
+    get:
+      tags:
+        - ProductCatalogue API
+      summary: Vracia zoznam dokumentov súvisiacich s produktom
+      description: >-
+        Získanie zoznamu dokumentov súvisiacich s produktom.
+
+      parameters:
+        - $ref: '#/components/parameters/XCorrelationIdHeaderParameterType'
+        - $ref: '#/components/parameters/XRequestIdHeaderParameterType'
+        - $ref: '#/components/parameters/InitiatorSystemQueryParameterType'
+        - $ref: '#/components/parameters/LangPathParameterType'
+        - $ref: '#/components/parameters/ProductIdPathParameterType'
+        #FILTERS
+        - $ref: '#/components/parameters/DateFromFilteringQueryParameterType'
+        - $ref: '#/components/parameters/DateToFilteringQueryParameterType'
+
+      responses:
+        '200':
+          description: >-
+            Successfull response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProductDocumentsResponseType'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyErrorWarningResponseType'
+              example:
+                params:
+                  errorsAndWarnings:
+                    warningError:
+                      code: '400.001.service_error_code'
+                      type: 'ERROR'
+                      description: 'Bad Request'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyErrorWarningResponseType'
+              example:
+                params:
+                  errorsAndWarnings:
+                    warningError:
+                      code: '500.001.service_error_code'
+                      type: 'ERROR'
+                      description: 'Internal Server Error'
+      security:
+        - basicAuth: []
+  '/{lang}/productDetail/{productId}/graph':
+    get:
+      tags:
+        - ProductCatalogue API
+      summary: Vracia dáta pre graf vývoja hodnôt
+      description: >-
+        Získanie grafu vývoja hodnôt pre definovaný produkt
+
+      parameters:
+        - $ref: '#/components/parameters/XCorrelationIdHeaderParameterType'
+        - $ref: '#/components/parameters/XRequestIdHeaderParameterType'
+        - $ref: '#/components/parameters/InitiatorSystemQueryParameterType'
+        - $ref: '#/components/parameters/PagingQueryParameterType'
+        - $ref: '#/components/parameters/LangPathParameterType'
+        - $ref: '#/components/parameters/ProductIdPathParameterType'
+        #FILTERS
+        - $ref: '#/components/parameters/DateFromFilteringQueryParameterType'
+        - $ref: '#/components/parameters/DateToFilteringQueryParameterType'
+
+
+      responses:
+        '200':
+          description: >-
+            Successfull response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProductSimpleGraphResponseType'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyErrorWarningResponseType'
+              example:
+                params:
+                  errorsAndWarnings:
+                    warningError:
+                      code: '400.001.service_error_code'
+                      type: 'ERROR'
+                      description: 'Bad Request'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyErrorWarningResponseType'
+              example:
+                params:
+                  errorsAndWarnings:
+                    warningError:
+                      code: '500.001.service_error_code'
+                      type: 'ERROR'
+                      description: 'Internal Server Error'
+      security:
+        - basicAuth: []
+  '/{lang}/productDetail/{productId}/portfolio/assetStructure':
+    get:
+      tags:
+        - ProductCatalogue API
+      summary: Vracia dáta pre koláčový graf pre štruktúru majetku
+      description: >-
+        Získanie dát pre koláčový graf pre štruktúru majetku ku konkrétnemu dátumu
+
+      parameters:
+        - $ref: '#/components/parameters/XCorrelationIdHeaderParameterType'
+        - $ref: '#/components/parameters/XRequestIdHeaderParameterType'
+        - $ref: '#/components/parameters/InitiatorSystemQueryParameterType'
+        - $ref: '#/components/parameters/PagingQueryParameterType'
+        - $ref: '#/components/parameters/LangPathParameterType'
+        - $ref: '#/components/parameters/ProductIdPathParameterType'
+        #FILTERS
+        - $ref: '#/components/parameters/DateFromFilteringQueryParameterType'
+        - $ref: '#/components/parameters/DateToFilteringQueryParameterType'
+
+      responses:
+        '200':
+          description: >-
+            Successfull response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProductPortfolioAssetStructureResponseType'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyErrorWarningResponseType'
+              example:
+                params:
+                  errorsAndWarnings:
+                    warningError:
+                      code: '400.001.service_error_code'
+                      type: 'ERROR'
+                      description: 'Bad Request'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyErrorWarningResponseType'
+              example:
+                params:
+                  errorsAndWarnings:
+                    warningError:
+                      code: '500.001.service_error_code'
+                      type: 'ERROR'
+                      description: 'Internal Server Error'
+      security:
+        - basicAuth: []
+  '/{lang}/productDetail/{productId}/portfolio/fundPerformance':
+    get:
+      tags:
+        - ProductCatalogue API
+      summary: Vracia dáta pre výkonnosť fondu
+      description: >-
+        Získanie dát pre výkonnosť (zmiešaného) fondu ku konkrétnemu dátumu
+
+      parameters:
+        - $ref: '#/components/parameters/XCorrelationIdHeaderParameterType'
+        - $ref: '#/components/parameters/XRequestIdHeaderParameterType'
+        - $ref: '#/components/parameters/InitiatorSystemQueryParameterType'
+        - $ref: '#/components/parameters/LangPathParameterType'
+        - $ref: '#/components/parameters/ProductIdPathParameterType'
+        #FILTERS
+        - $ref: '#/components/parameters/DateFromFilteringQueryParameterType'
+        - $ref: '#/components/parameters/DateToFilteringQueryParameterType'
+
+      responses:
+        '200':
+          description: >-
+            Successfull response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProductPortfolioFundPerformanceResponseType'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyErrorWarningResponseType'
+              example:
+                params:
+                  errorsAndWarnings:
+                    warningError:
+                      code: '400.001.service_error_code'
+                      type: 'ERROR'
+                      description: 'Bad Request'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyErrorWarningResponseType'
+              example:
+                params:
+                  errorsAndWarnings:
+                    warningError:
+                      code: '500.001.service_error_code'
+                      type: 'ERROR'
+                      description: 'Internal Server Error'
+      security:
+        - basicAuth: []
+  '/{lang}/productDetail/{productId}/portfolio/portfolioComposition':
+    get:
+      tags:
+        - ProductCatalogue API
+      summary: Vracia dáta pre zloženie portfólia
+      description: >-
+        Získanie dát pre zloženie portfólia
+
+        Detail:
+        https://www.jtbanka.sk/produkty/2000015-jt-select.html?parentId=15269
+
+      parameters:
+        - $ref: '#/components/parameters/XCorrelationIdHeaderParameterType'
+        - $ref: '#/components/parameters/XRequestIdHeaderParameterType'
+        - $ref: '#/components/parameters/InitiatorSystemQueryParameterType'
+        - $ref: '#/components/parameters/LangPathParameterType'
+        - $ref: '#/components/parameters/ProductIdPathParameterType'
+        #FILTERS
+        - $ref: '#/components/parameters/DateFromFilteringQueryParameterType'
+        - $ref: '#/components/parameters/DateToFilteringQueryParameterType'
+
+      responses:
+        '200':
+          description: >-
+            Successfull response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProductPortfolioCompositionResponseType'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyErrorWarningResponseType'
+              example:
+                params:
+                  errorsAndWarnings:
+                    warningError:
+                      code: '400.001.service_error_code'
+                      type: 'ERROR'
+                      description: 'Bad Request'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyErrorWarningResponseType'
+              example:
+                params:
+                  errorsAndWarnings:
+                    warningError:
+                      code: '500.001.service_error_code'
+                      type: 'ERROR'
+                      description: 'Internal Server Error'
+      security:
+        - basicAuth: []
+  '/{lang}/compare':
+    get:
+      tags:
+        - ProductCatalogue API
+      summary: Vracia zoznam ID produktov pre porovnanie
+      description: >-
+        Získanie zoznamu produktov s jednotlivými atribútmi pre porovnanie
+
+      parameters:
+        - $ref: '#/components/parameters/XCorrelationIdHeaderParameterType'
+        - $ref: '#/components/parameters/XRequestIdHeaderParameterType'
+        - $ref: '#/components/parameters/InitiatorSystemQueryParameterType'
+        - $ref: '#/components/parameters/LangPathParameterType'
+        - name: listOfProductIds
+          in: query
+          description: 'zoznam reťazcov s productId, ktoré majú byť porovnávané'
+          required: true
+          style: form
+          schema:
+            type: array
+            items:
+              $ref: 'common/commonSimpleTypes.yaml#/components/schemas/ProductIdType'
+        - name: listOfProductAttrs
+          in: query
+          description: 'zoznam reťazcov s technickým ID (attrTechnicalName), ktoré majú vstupovať do porovnávania'
+          required: true
+          style: form
+          schema:
+            type: array
+            items:
+              $ref: 'common/commonSimpleTypes.yaml#/components/schemas/ProductAttrTechnicalNameType'
+
+        #FILTERS
+        #nofilters
+
+      responses:
+        '200':
+          description: >-
+            Successfull response for password activation verify response
+            operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompareProductResponseType'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyErrorWarningResponseType'
+              example:
+                params:
+                  errorsAndWarnings:
+                    warningError:
+                      code: '400.001.service_error_code'
+                      type: 'ERROR'
+                      description: 'Bad Request'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyErrorWarningResponseType'
+              example:
+                params:
+                  errorsAndWarnings:
+                    warningError:
+                      code: '500.001.service_error_code'
+                      type: 'ERROR'
+                      description: 'Internal Server Error'
+      security:
+        - basicAuth: []
+  '/{lang}/attributes':
+    get:
+      tags:
+        - ProductCatalogue API
+      summary: Vráti zoznam technických atribútov pre konkrétnu kategóriu
+      description: >-
+        Vráti zoznam všetkých atribútov a podľa prepínača categoryId a comboBoxAttributes zobrazuje rôzne podmnožiny atribútov produktového katalógu.
+
+
+      parameters:
+        - $ref: '#/components/parameters/XCorrelationIdHeaderParameterType'
+        - $ref: '#/components/parameters/XRequestIdHeaderParameterType'
+        - $ref: '#/components/parameters/InitiatorSystemQueryParameterType'
+        - $ref: '#/components/parameters/LangPathParameterType'
+        #FILTERS
+        - name: categoryId
+          in: query
+          description: 'ID kategórie pre ktorú sa majú zobraziť technické atribúty'
+          required: true
+          style: form
+          schema:
+            type: string
+        - name: comboBoxAttributes
+          in: query
+          description: 'boolean hodnota, či sa majú zobraziť iba atribúty, ktoré obsahujú combobox atribúty (distinct hodnoty)'
+          required: true
+          style: form
+          schema:
+            type: boolean
+
+      responses:
+        '200':
+          description: >-
+            Successfull response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProductAttributesResponseType'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyErrorWarningResponseType'
+              example:
+                params:
+                  errorsAndWarnings:
+                    warningError:
+                      code: '400.001.service_error_code'
+                      type: 'ERROR'
+                      description: 'Bad Request'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyErrorWarningResponseType'
+              example:
+                params:
+                  errorsAndWarnings:
+                    warningError:
+                      code: '500.001.service_error_code'
+                      type: 'ERROR'
+                      description: 'Internal Server Error'
+      security:
+        - basicAuth: []
+  '/{lang}/attributes/{attrTechnicalName}/detail':
+    get:
+      tags:
+        - ProductCatalogue API
+      summary: Vráti zoznam hodnôt atribútu (distinct)
+      description: >-
+        Vráti zoznam hodnôt atribútu (distinct)
+
+      parameters:
+        - $ref: '#/components/parameters/XCorrelationIdHeaderParameterType'
+        - $ref: '#/components/parameters/XRequestIdHeaderParameterType'
+        - $ref: '#/components/parameters/InitiatorSystemQueryParameterType'
+        - $ref: '#/components/parameters/LangPathParameterType'
+        - name: attrTechnicalName
+          in: path
+          description: 'Technický názov atribútu'
+          required: true
+          style: simple
+          schema:
+            $ref: 'common/commonSimpleTypes.yaml#/components/schemas/Alpha2LangCodeType'
+        #FILTERS
+
+      responses:
+        '200':
+          description: >-
+            Successfull response for password activation verify response
+            operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProductAttributesDetailResponseType'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyErrorWarningResponseType'
+              example:
+                params:
+                  errorsAndWarnings:
+                    warningError:
+                      code: '400.001.service_error_code'
+                      type: 'ERROR'
+                      description: 'Bad Request'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyErrorWarningResponseType'
+              example:
+                params:
+                  errorsAndWarnings:
+                    warningError:
+                      code: '500.001.service_error_code'
+                      type: 'ERROR'
+                      description: 'Internal Server Error'
+      security:
+        - basicAuth: []
+  '/{lang}/search':
+    get:
+      tags:
+        - ProductCatalogue API
+      summary: Vráti zoznam nájdených productId
+      description: >-
+        Vráti zoznam nájdených productId
+
+
+      parameters:
+        - $ref: '#/components/parameters/XCorrelationIdHeaderParameterType'
+        - $ref: '#/components/parameters/XRequestIdHeaderParameterType'
+        - $ref: '#/components/parameters/InitiatorSystemQueryParameterType'
+        - $ref: '#/components/parameters/LangPathParameterType'
+        - name: searchQuery
+          in: query
+          description: 'Search query'
+          required: true
+          style: form
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: >-
+            Successfull response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchProductResponseType'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyErrorWarningResponseType'
+              example:
+                params:
+                  errorsAndWarnings:
+                    warningError:
+                      code: '400.001.service_error_code'
+                      type: 'ERROR'
+                      description: 'Bad Request'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyErrorWarningResponseType'
+              example:
+                params:
+                  errorsAndWarnings:
+                    warningError:
+                      code: '500.001.service_error_code'
+                      type: 'ERROR'
+                      description: 'Internal Server Error'
+      security:
+        - basicAuth: []
+components:
+  parameters:
+    InitiatorSystemQueryParameterType:
+      name: initiatorSystem
+      in: query
+      description: ''
+      required: false
+      style: form
+      schema:
+        $ref: 'common/initiatorSystem.yaml#/components/schemas/InitiatorSystemType'
+
+    PagingQueryParameterType:
+      name: paging
+      in: query
+      description: ''
+      required: false
+      style: form
+      schema:
+        $ref: 'common/paging.yaml#/components/schemas/PagingRequestType'
+
+    XCorrelationIdHeaderParameterType:
+      name: X-Correlation-ID
+      in: header
+      description: 'Correlation ID'
+      style: simple
+      schema:
+        type: string
+    XRequestIdHeaderParameterType:
+      name: X-Request-ID
+      in: header
+      description: 'Request ID'
+      style: simple
+      schema:
+        type: string
+
+    LangPathParameterType:
+      name: lang
+      in: path
+      description: '2 letter alphabetic code of language (ISO 639-1:2002)'
+      required: true
+      style: simple
+      schema:
+        $ref: '#/components/schemas/Alpha2LangCodeType'
+
+    CategoryIdPathParameterType:
+      name: categoryId
+      in: path
+      description: 'Category ID'
+      required: true
+      style: simple
+      schema:
+        $ref: '#/components/schemas/ProductCategoryIdType'
+
+    ProductIdPathParameterType:
+      name: productId
+      in: path
+      description: 'Product ID'
+      required: true
+      style: simple
+      schema:
+        $ref: '#/components/schemas/ProductIdType'
+
+    DateFromFilteringQueryParameterType:
+      name: dateFrom
+      in: query
+      description: 'Date from'
+      required: true
+      style: form
+      schema:
+        $ref: '#/components/schemas/FilterDateFromType'
+
+    DateToFilteringQueryParameterType:
+      name: dateTo
+      in: query
+      description: 'Date to'
+      required: true
+      style: form
+      schema:
+        $ref: '#/components/schemas/FilterDateToType'
+
+  schemas:
+    #Request complex types
+
+    #Response complex types
+    EmptyErrorWarningResponseType:
+      type: object
+      properties:
+        params:
+          $ref: 'common/common.yaml#/components/schemas/CommonResponseType'
+        data:
+          {}
+
+    CompareProductRequestBodyType:
+      type: object
+      properties:
+        listOfProductIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductIdType'
+        listOfProductAttrs:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductAttrTechnicalNameType'
+
+    SearchProductResponseType:
+      type: object
+      properties:
+        params:
+          $ref: 'common/common.yaml#/components/schemas/CommonResponseType'
+        data:
+          $ref: '#/components/schemas/SearchProductResponseBodyType'
+
+    GetProductAttributesDetailResponseType:
+      type: object
+      properties:
+        params:
+          $ref: 'common/common.yaml#/components/schemas/CommonResponseType'
+        data:
+          $ref: '#/components/schemas/GetProductAttributesDetailResponseBodyType'
+
+    GetProductAttributesResponseType:
+      type: object
+      properties:
+        params:
+          $ref: 'common/common.yaml#/components/schemas/CommonResponseType'
+        data:
+          $ref: '#/components/schemas/GetProductAttributesResponseBodyType'
+
+    CompareProductResponseType:
+      type: object
+      properties:
+        params:
+          $ref: 'common/common.yaml#/components/schemas/CommonResponseType'
+        data:
+          $ref: '#/components/schemas/CompareProductResponseBodyType'
+
+    GetProductPortfolioFundPerformanceResponseType:
+      type: object
+      properties:
+        params:
+          $ref: 'common/common.yaml#/components/schemas/CommonResponseType'
+        data:
+          $ref: '#/components/schemas/GetProductPortfolioFundPerformanceResponseBodyType'
+
+    GetProductPortfolioAssetStructureResponseType:
+      type: object
+      properties:
+        params:
+          $ref: 'common/common.yaml#/components/schemas/CommonResponseType'
+        data:
+          $ref: '#/components/schemas/GetProductPortfolioAssetStructureResponseBodyType'
+
+    GetProductSimpleGraphResponseType:
+      type: object
+      properties:
+        params:
+          $ref: 'common/common.yaml#/components/schemas/CommonResponseType'
+        data:
+          $ref: '#/components/schemas/GetProductSimpleGraphResponseBodyType'
+
+    GetProductDocumentsResponseType:
+      type: object
+      properties:
+        params:
+          $ref: 'common/common.yaml#/components/schemas/CommonResponseType'
+        data:
+          $ref: '#/components/schemas/GetProductDocumentsResponseBodyType'
+
+    GetProductDetailResponseType:
+      type: object
+      properties:
+        params:
+          $ref: 'common/common.yaml#/components/schemas/CommonResponseType'
+        data:
+          $ref: '#/components/schemas/GetProductDetailResponseBodyType'
+
+    GetListOfProductCategoriesResponseType:
+      type: object
+      properties:
+        params:
+          $ref: 'common/common.yaml#/components/schemas/CommonResponseType'
+        data:
+          $ref: '#/components/schemas/GetListOfProductCategoriesResponseBodyType'
+
+    GetListOfProductsInCategoryResponseType:
+      type: object
+      properties:
+        params:
+          $ref: 'common/common.yaml#/components/schemas/CommonResponseType'
+        data:
+          $ref: '#/components/schemas/GetListOfProductsInCategoryResponseBodyType'
+
+    GetProductPortfolioCompositionResponseType:
+      type: object
+      properties:
+        params:
+          $ref: 'common/common.yaml#/components/schemas/CommonResponseType'
+        data:
+          $ref: '#/components/schemas/GetProductPortfolioCompositionResponseBodyType'
+
+
+    #Complex types
+    GetProductPortfolioCompositionResponseBodyType:
+      type: object
+      properties:
+        lang:
+          $ref: 'common/commonSimpleTypes.yaml#/components/schemas/Alpha2LangCodeType'
+        productId:
+          $ref: 'common/commonSimpleTypes.yaml#/components/schemas/ProductIdType'
+        technicalProductId:
+          $ref: 'common/commonSimpleTypes.yaml#/components/schemas/TechnicalProductIdType'
+        dateOfValidity:
+          type: string
+          format: date
+          description: 'dátum platnosti záznamov k'
+        listOfValues:
+          type: array
+          items:
+            $ref: '#/components/schemas/ListOfValues'
+
+    SearchProductResponseBodyType:
+      type: object
+      properties:
+        listOfProductIds:
+          type: array
+          items:
+            $ref: 'common/commonSimpleTypes.yaml#/components/schemas/ProductIdType'
+
+
+    GetProductAttributesDetailResponseBodyType:
+      type: object
+      properties:
+        listOfTechnicalAttributes:
+          type: array
+          items:
+            properties:
+              attrTechnicalName:
+                type: string
+                description: 'technický názov atribútu – spoločný pre všetky jazykové mutácie'
+
+    GetProductAttributesResponseBodyType:
+      type: object
+      properties:
+        lang:
+          $ref: 'common/commonSimpleTypes.yaml#/components/schemas/Alpha2LangCodeType'
+        categoryId:
+          $ref: 'common/commonSimpleTypes.yaml#/components/schemas/ProductCategoryIdType'
+        listOfTechnicalAttributes:
+          type: array
+          items:
+            properties:
+              attrTechnicalName:
+                type: string
+
+    CompareProductResponseBodyType:
+      type: object
+      properties:
+        lang:
+          $ref: 'common/commonSimpleTypes.yaml#/components/schemas/Alpha2LangCodeType'
+        listOfProducts:
+          $ref: '#/components/schemas/ListOfProductsDetailType'
+
+    GetProductPortfolioFundPerformanceResponseBodyType:
+      type: object
+      properties:
+        lang:
+          $ref: 'common/commonSimpleTypes.yaml#/components/schemas/Alpha2LangCodeType'
+        productId:
+          $ref: 'common/commonSimpleTypes.yaml#/components/schemas/ProductIdType'
+        technicalProductId:
+          $ref: 'common/commonSimpleTypes.yaml#/components/schemas/TechnicalProductIdType'
+        dateOfValidity:
+          type: string
+          format: date
+          description: 'dátum platnosti záznamov k'
+        listOfProductAttributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ListOfProductAttributesDetailType'
+
+    GetProductPortfolioAssetStructureResponseBodyType:
+      type: object
+      properties:
+        lang:
+          $ref: 'common/commonSimpleTypes.yaml#/components/schemas/Alpha2LangCodeType'
+        productId:
+          $ref: 'common/commonSimpleTypes.yaml#/components/schemas/ProductIdType'
+        technicalProductId:
+          $ref: 'common/commonSimpleTypes.yaml#/components/schemas/TechnicalProductIdType'
+        dateOfValidity:
+          type: string
+          format: date
+          description: 'dátum platnosti záznamov k'
+        listOfValues:
+          type: array
+          items:
+            $ref: '#/components/schemas/ListOfValues'
+
+    GetProductSimpleGraphResponseBodyType:
+      type: object
+      properties:
+        lang:
+          $ref: 'common/commonSimpleTypes.yaml#/components/schemas/Alpha2LangCodeType'
+        productId:
+          $ref: 'common/commonSimpleTypes.yaml#/components/schemas/ProductIdType'
+        technicalProductId:
+          $ref: 'common/commonSimpleTypes.yaml#/components/schemas/TechnicalProductIdType'
+        isin:
+          $ref: 'common/commonSimpleTypes.yaml#/components/schemas/ISINNumberType'
+        currency:
+          $ref: 'common/commonSimpleTypes.yaml#/components/schemas/Alpha3CurrencyCodeType'
+        dateFrom:
+          type: string
+          format: date
+        dateTo:
+          type: string
+          format: date
+        listOfGraphData:
+          $ref: '#/components/schemas/ListOfSimpleGraphDataType'
+
+    GetProductDocumentsResponseBodyType:
+      type: object
+      properties:
+        lang:
+          $ref: 'common/commonSimpleTypes.yaml#/components/schemas/Alpha2LangCodeType'
+        productId:
+          $ref: 'common/commonSimpleTypes.yaml#/components/schemas/ProductIdType'
+        technicalProductId:
+          $ref: 'common/commonSimpleTypes.yaml#/components/schemas/TechnicalProductIdType'
+        listOfDocuments:
+          $ref: '#/components/schemas/ListOfDocumentsType'
+
+    GetProductDetailResponseBodyType:
+      type: object
+      properties:
+        lang:
+          $ref: 'common/commonSimpleTypes.yaml#/components/schemas/Alpha2LangCodeType'
+        categoryId:
+          $ref: 'common/commonSimpleTypes.yaml#/components/schemas/ProductCategoryIdType'
+        listOfProducts:
+          type: array
+          items:
+            $ref: '#/components/schemas/ListOfProductsDetailType'
+
+    GetListOfProductsInCategoryResponseBodyType:
+      type: object
+      properties:
+        lang:
+          $ref: 'common/commonSimpleTypes.yaml#/components/schemas/Alpha2LangCodeType'
+        categoryId:
+          $ref: 'common/commonSimpleTypes.yaml#/components/schemas/ProductCategoryIdType'
+        listOfProducts:
+          type: array
+          items:
+            $ref: '#/components/schemas/ListOfProductsType'
+
+    GetListOfProductCategoriesResponseBodyType:
+      type: object
+      properties:
+        lang:
+          $ref: 'common/commonSimpleTypes.yaml#/components/schemas/Alpha2LangCodeType'
+        listOfProductCategories:
+          type: array
+          items:
+            $ref: '#/components/schemas/ListOfProductCategoriesItemType'
+
+    ListOfProductCategoriesItemType:
+      type: object
+      properties:
+        categoryId:
+          $ref: 'common/commonSimpleTypes.yaml#/components/schemas/ProductCategoryIdType'
+        categoryName:
+          type: string
+          description: 'prezentovateľný názov kategórie'
+
+    ListOfProductsType:
+      type: object
+      properties:
+        productId:
+          $ref: 'common/commonSimpleTypes.yaml#/components/schemas/ProductIdType'
+        technicalProductId:
+          $ref: 'common/commonSimpleTypes.yaml#/components/schemas/TechnicalProductIdType'
+        listOfProductAttributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ListOfProductAttributesType'
+
+    ListOfProductsDetailType:
+      type: object
+      properties:
+        productId:
+          $ref: 'common/commonSimpleTypes.yaml#/components/schemas/ProductIdType'
+        technicalProductId:
+          $ref: 'common/commonSimpleTypes.yaml#/components/schemas/TechnicalProductIdType'
+        listOfProductAttributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ListOfProductAttributesDetailType'
+
+    ListOfProductAttributesDetailType:
+      type: object
+      properties:
+        attrName:
+          type: string
+          description: 'businessový názov atribútu (mení sa pri jazykovej mutácii)'
+        attrPresentationValue:
+          type: string
+          description: 'prezentačná (naformátovaná) hodnota pre atribút'
+        attrDataType:
+          type: string
+          enum: [number, date, date-time, string, list]
+          description: 'dátový typ (povolená množina: number, date, string, list)'
+        attrOrder:
+          type: integer
+          description: 'poradie atribútov v rámci zoznamu'
+        attrNumericValue:
+          type: number
+          description: 'numerická hodnota, v prípade, že attrDataType = „number“'
+        attrDateValue :
+          type: string
+          format: date-time
+          description: 'dátumová hodnota v prípade, že attrDataType = „date“'
+        listOfValues:
+          type: array
+          items:
+            $ref: '#/components/schemas/ListOfValues'
+
+    ListOfProductAttributesType:
+      type: object
+      properties:
+        attrName:
+          type: string
+          description: 'businessový názov atribútu (mení sa pri jazykovej mutácii)'
+        attrPresentationValue:
+          type: string
+          description: 'prezentačná (naformátovaná) hodnota pre atribút'
+        attrDataType:
+          type: string
+          enum: [number, date, date-time, string, list]
+          description: 'dátový typ (povolená množina: number, date, string, list)'
+        attrOrder:
+          type: string
+          description: 'poradie atribútov v rámci zoznamu'
+        attrNumericValue:
+          type: number
+          description: 'numerická hodnota, v prípade, že attrDataType = „number“'
+        attrDateValue :
+          type: string
+          format: date-time
+          description: 'dátumová hodnota v prípade, že attrDataType = „date“'
+
+    ListOfValues:
+      type: object
+      properties:
+        attrPresentationValue:
+          type: string
+          description: 'prezentačná hodnota, ktorá sa zobrazuje v pickliste/zozname'
+        attrNumericValue:
+          type: string
+          description: 'prezentačná hodnota, ktorá sa zobrazuje v pickliste/zozname'
+        attrOrder:
+          type: integer
+          description: 'prezentačná hodnota, ktorá sa zobrazuje v pickliste/zozname'
+
+    ListOfDocumentsType:
+      type: object
+      properties:
+        documentUrl :
+          type: string
+          description: 'URL dokumentu'
+        documentPresentationText :
+          type: string
+          description: 'názov dokumentu v prezentovateľnej forme (netechnický)'
+        urlLabel :
+          type: string
+          description: 'formát dokumentu (PDF, XLS,...)'
+        validFrom :
+          type: string
+          description: 'platnosť dokumentu od'
+          format: date
+        validTo :
+          type: string
+          format: date
+          description: 'platnosť dokumentu do'
+        documentOrder :
+          type: integer
+          description: 'poradie v zozname'
+
+    ListOfSimpleGraphDataType:
+      type: object
+      properties:
+        attrValue :
+          type: string
+          description: 'hodnota pre dátum špecifikovaný v dateValue'
+        dateValue :
+          type: string
+          format: date
+          description: 'dátum pre ktorý platí hodnota v attrValue'
+
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic

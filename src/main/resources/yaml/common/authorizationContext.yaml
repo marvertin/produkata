@@ -1,0 +1,48 @@
+#24/11/2020 - Milan Gajdos initial version
+components:
+  schemas:
+    AuthorizationContextType:
+      type: object
+      required:
+        - businessFunctionId
+      properties:
+        businessFunctionId:
+          type: string
+          description: 'The business operation requested. Codebook: BUSINESS_FUNCTION'
+        userSessionId:
+          type: string
+          description: 'A session, as defined by the requesting system.'
+        client:
+          $ref: '#/components/schemas/AuthorizationContextClientType'
+        signature:
+          $ref: '#/components/schemas/AuthorizationContextSignatureType'
+
+    AuthorizationContextClientType:
+      type: object
+      required:
+        - userId
+        - idType
+      properties:
+        clientId:
+          type: string
+          description: 'Bank client ID.'
+        idType:
+          type: string
+          description: 'Type or source of the party identifier. Codebook: EXTERNAL_IDENTIFICATION'
+      description: 'The actual owner of the product(s) associated with the requested business operation.'
+
+    AuthorizationContextSignatureType:
+      type: object
+      required:
+        - securityDeviceTypeId
+        - securityDeviceId
+      properties:
+        securityDeviceTypeId:
+          type: string
+          description: 'Type of the security device used to sign this request. Codebook: ST_TYPE'
+        securityDeviceId:
+          type: string
+          description: 'ID of the instance of the security device used to sign this request, e.g. ID of a piece of physical hardware or a phone number for SMS authentication.'
+        signatureId:
+          type: string
+          description: 'Unique identifier of the signature (or instance of the signing process) of this request, for tracking purposes.'

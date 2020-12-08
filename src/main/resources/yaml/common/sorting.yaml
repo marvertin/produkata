@@ -1,0 +1,27 @@
+#24/11/2020 - Milan Gajdos initial version
+components:
+  schemas:
+    SortingType:
+      type: object
+      required:
+        - sortingParam
+      properties:
+        sortingParam:
+          type: array
+          items:
+            $ref: '#/components/schemas/SortingParamType'
+
+    SortingParamType:
+      type: object
+      required:
+        - name
+        - direction
+      properties:
+        name:
+          type: string
+          enum: [asc, desc]
+          description: 'Parameter name'
+        direction:
+          type: string
+          description: 'Order value'
+      description: 'A single sorting criterium. It specifies the parameter name and asc/desc order.'

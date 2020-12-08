@@ -1,0 +1,37 @@
+#24/11/2020 - Milan Gajdos initial version
+components:
+  schemas:
+    PagingRequestType:
+      type: object
+      properties:
+        offset:
+          type: integer
+          description: 'Offset (number of records skipped = number of the last shown record on the last page)'
+        limit:
+          type: integer
+          description: 'Number of records, which should be displayed on a new page'
+        returnTotalCount:
+          type: boolean
+          description: 'Indicates if recordCountTotal in PagingResponseType should be returned'
+
+    PagingResponseType:
+      type: object
+      properties:
+        recordCount:
+          type: integer
+          description: 'Number of records returned in current response'
+        recordCountTotal:
+          type: integer
+          description: 'Total number of records  regardless of the paging settings'
+        hasNextPage:
+          type: integer
+          description: 'Indicates if result set has next page'
+        hasPreviousPage:
+          type: integer
+          description: 'Indicates if result set has previouis page'
+        offset:
+          type: integer
+          description: 'Offset (number of records skipped = number of the last shown record on the last page)'
+        limit:
+          type: integer
+          description: 'Number of records, which should be displayed on a new page'

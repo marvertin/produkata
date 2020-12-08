@@ -1,0 +1,31 @@
+#24/11/2020 - Milan Gajdos initial version
+components:
+  schemas:
+    InitiatorSystemType:
+      type: object
+      required:
+        - systemId
+        - requestTimestamp
+      properties:
+        systemId:
+          $ref: '#/components/schemas/SystemIdType'
+        channelId:
+          $ref: '#/components/schemas/ChannelIdType'
+        requestTimestamp:
+          $ref: '#/components/schemas/RequestTimestampType'
+        #branchId:
+          #type: string
+          #description: 'Branch identifier (only for relevant channels). Codebook: BRANCH_CODE'
+
+    SystemIdType:
+      type: string
+      description: 'Name of the initiator system. RDS Codebook: SYS_APL_COMPONENTS - Every system will be given fixed variable, which it will send in SystemId element.'
+
+    ChannelIdType:
+      type: string
+      description: 'Business channel. Codebook: USER_CHANNEL'
+
+    RequestTimestampType:
+      type: string
+      format: date-time
+      description: 'Date and time when request was created'

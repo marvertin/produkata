@@ -1,0 +1,199 @@
+#25/11/2020 - Milan Gajdos initial version - structure is from ElasticSearch 7.10 API -> subschema FilteringQueryContainer (represented as Filtering)
+components:
+  schemas:
+    FilteringQueryType:
+      type: object
+      properties:
+        match_all:
+          $ref: '#/components/schemas/MatchAllQuery'
+        exists:
+          $ref: '#/components/schemas/ExistsQuery'
+        term:
+          additionalProperties:
+            $ref: '#/components/schemas/TermQuery'
+          type: object
+        nested:
+          $ref: '#/components/schemas/NestedQuery'
+        prefix:
+          additionalProperties:
+            $ref: '#/components/schemas/PrefixQuery'
+          type: object
+        bool:
+          $ref: '#/components/schemas/BoolQuery'
+        query_string:
+          $ref: '#/components/schemas/QueryStringQuery'
+        range:
+          additionalProperties:
+            $ref: '#/components/schemas/RangeQuery'
+          type: object
+        match_none:
+          $ref: '#/components/schemas/MatchNoneQuery'
+        match:
+          additionalProperties:
+            $ref: '#/components/schemas/MatchQuery'
+          type: object
+      description: The container for all of the allowed queries. Specify only one property each time.
+
+    MatchAllQuery:
+      type: object
+      description: A query that matches all documents.
+
+    ExistsQuery:
+      required:
+        - field
+      type: object
+      properties:
+        field:
+          type: string
+          description: The field to check for non-null values in.
+      description: Matches documents that have at least one non-`null` value in the original field.
+
+    TermQuery:
+      required:
+        - value
+      type: object
+      properties:
+        value:
+          type: object
+          description: The exact value to query for.
+          properties: { }
+      description: A query for documents that contain the specified terms in the inverted index.
+
+    NestedQuery:
+      required:
+        - path
+        - query
+      type: object
+      properties:
+        query:
+          description: The actual query to execute on the nested objects.
+          $ref: '#/components/schemas/FilteringQueryType'
+        score_mode:
+          enum:
+            - avg
+            - sum
+            - min
+            - max
+            - none
+          type: string
+          description: Allows to specify how inner children matching affects score of the parent. Refer to the Elasticsearch documentation for details.
+        path:
+          type: string
+          description: The path to the nested object.
+      description: A query that matches nested objects.
+
+    PrefixQuery:
+      required:
+        - value
+      type: object
+      properties:
+        boost:
+          type: number
+          description: An optional boost value to apply to the query.
+          format: float
+        value:
+          type: string
+          description: The prefix to search for.
+      description: 'The query that matches documents with fields that contain terms with a specified, not analyzed, prefix.'
+
+    BoolQuery:
+      type: object
+      properties:
+        filter:
+          items:
+            $ref: '#/components/schemas/FilteringQueryType'
+          type: array
+        minimum_should_match:
+          type: integer
+          description: The minimum number of optional should clauses to match.
+          format: int32
+        should:
+          items:
+            $ref: '#/components/schemas/FilteringQueryType'
+          type: array
+        must_not:
+          items:
+            $ref: '#/components/schemas/FilteringQueryType'
+          type: array
+        must:
+          items:
+            $ref: '#/components/schemas/FilteringQueryType'
+          type: array
+      description: A query for documents that match boolean combinations of other queries.
+
+    QueryStringQuery:
+      required:
+        - query
+      type: object
+      properties:
+        query:
+          type: string
+          description: The actual query to be parsed.
+        default_operator:
+          type: string
+          description: The default operator used if no explicit operator is specified.
+        default_field:
+          type: string
+          description: The default field for query terms if no prefix field is specified.
+        allow_leading_wildcard:
+          type: boolean
+          description: 'When set, * or ? are allowed as the first character. Defaults to false.'
+        analyzer:
+          type: string
+          description: The analyzer used to analyze each term of the query when creating composite queries.
+      description: A query that uses the `SimpleQueryParser` for parsing.
+
+    RangeQuery:
+      type: object
+      properties:
+        gt:
+          type: object
+          description: Greater-than
+          properties: {}
+        gte:
+          type: object
+          description: Greater-than or equal to
+          properties: {}
+        format:
+          type: string
+          description: 'Formatted dates will be parsed using the format specified on the date field by default, but it can be overridden by passing the format parameter.'
+        time_zone:
+          type: string
+          description: 'Dates can be converted from another timezone to UTC either by specifying the time zone in the date value itself (if the format accepts it), or it can be specified as the time_zone parameter.'
+        lt:
+          type: object
+          description: Less-than
+          properties: {}
+        lte:
+          type: object
+          description: Less-than or equal to.
+          properties: {}
+        boost:
+          type: number
+          description: An optional boost value to apply to the query.
+          format: float
+      description: The query that matches documents with fields that contain terms within a specified range.
+
+    MatchNoneQuery:
+      type: object
+      description: A query that doesn't match any documents.
+
+    MatchQuery:
+      required:
+        - query
+      type: object
+      properties:
+        operator:
+          type: string
+          description: The operator flag can be set to or or and to control the boolean clauses (defaults to or).
+        query:
+          type: string
+          description: The text/numeric/date to query for.
+        minimum_should_match:
+          type: integer
+          description: The minimum number of optional should clauses to match.
+          format: int32
+        analyzer:
+          type: string
+          description: The analyzer that will be used to perform the analysis process on the text. Defaults to the analyzer that was used to index the field.
+      description: 'Consumes and analyzes text, numbers, and dates, then constructs a query.'

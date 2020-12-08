@@ -1,0 +1,52 @@
+#24/11/2020 - Milan Gajdos initial version
+components:
+  schemas:
+    WarningErrorParamsType:
+      type: object
+      properties:
+        warningError:
+          $ref: '#/components/schemas/WarningErrorType'
+        warningErrorDetail:
+          type: array
+          items:
+            $ref: '#/components/schemas/WarningErrorParameterListType'
+
+    WarningErrorType:
+      required:
+        - code
+        - type
+      type: object
+      properties:
+        code:
+          type: string
+          description: 'Result code: 0 - OK, otherwise error code (http_return_code,service_identificator,error/warning_identificator'
+        type:
+          type: string
+          description: 'ERROR/WARNING/INFO'
+        description:
+          type: string
+          description: 'Error/Warning/Info description'
+        systemId:
+          type: string
+          description: 'ID of a system that returns error/warning/info'
+        originSystemId:
+          type: string
+          description: 'ID of origin system that returns error/warining/info'
+      description: 'N/A'
+
+    WarningErrorParameterListType:
+      type: object
+      properties:
+        parameter:
+          $ref: '#/components/schemas/WarningErrorParameterItemType'
+
+
+    WarningErrorParameterItemType:
+      type: object
+      properties:
+        key:
+          type: string
+          description: 'Name of parameter'
+        value:
+          type: string
+          description: 'Value of parameter which specifies where problem occured'
