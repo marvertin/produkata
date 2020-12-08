@@ -795,8 +795,6 @@ components:
       properties:
         params:
           $ref: 'common/common.yaml#/components/schemas/CommonResponseType'
-        data:
-          {}
 
     CompareProductRequestBodyType:
       type: object
