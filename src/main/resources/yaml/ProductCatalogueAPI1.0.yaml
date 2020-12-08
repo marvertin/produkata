@@ -12,6 +12,7 @@ tags:
 paths:
   '/{lang}/productCategories':
     get:
+      operationId: getListOfProductCategories
       tags:
         - ProductCatalogue API
       summary: Vracia zoznam produktových kategórií
@@ -62,6 +63,7 @@ paths:
         - basicAuth: []
   '/{lang}/productCategories/{categoryId}/products':
     get:
+      operationId: getListOfProductsInCategory
       tags:
         - ProductCatalogue API
       summary: Vracia zoznam produktov v produktovej kategórii
@@ -114,6 +116,7 @@ paths:
         - basicAuth: []
   '/{lang}/productDetail/{productId}':
     get:
+      operationId: getProductDetail
       tags:
         - ProductCatalogue API
       summary: Vracia detail produktu
@@ -165,6 +168,7 @@ paths:
         - basicAuth: []
   '/{lang}/productDetail/{productId}/documents':
     get:
+      operationId: getProductDocuments
       tags:
         - ProductCatalogue API
       summary: Vracia zoznam dokumentov súvisiacich s produktom
@@ -219,6 +223,7 @@ paths:
         - basicAuth: []
   '/{lang}/productDetail/{productId}/graph':
     get:
+      operationId: getProductSimpleGraph
       tags:
         - ProductCatalogue API
       summary: Vracia dáta pre graf vývoja hodnôt
@@ -275,6 +280,7 @@ paths:
         - basicAuth: []
   '/{lang}/productDetail/{productId}/portfolio/assetStructure':
     get:
+      operationId: getProductPortfolioAssetStructure
       tags:
         - ProductCatalogue API
       summary: Vracia dáta pre koláčový graf pre štruktúru majetku
@@ -330,6 +336,7 @@ paths:
         - basicAuth: []
   '/{lang}/productDetail/{productId}/portfolio/fundPerformance':
     get:
+      operationId: getProductPortfolioFundPerformance
       tags:
         - ProductCatalogue API
       summary: Vracia dáta pre výkonnosť fondu
@@ -384,6 +391,7 @@ paths:
         - basicAuth: []
   '/{lang}/productDetail/{productId}/portfolio/portfolioComposition':
     get:
+      operationId: getProductPortfolioComposition
       tags:
         - ProductCatalogue API
       summary: Vracia dáta pre zloženie portfólia
@@ -441,6 +449,7 @@ paths:
         - basicAuth: []
   '/{lang}/compare':
     get:
+      operationId: compareProduct
       tags:
         - ProductCatalogue API
       summary: Vracia zoznam ID produktov pre porovnanie
@@ -513,6 +522,7 @@ paths:
         - basicAuth: []
   '/{lang}/attributes':
     get:
+      operationId: getProductAttributes
       tags:
         - ProductCatalogue API
       summary: Vráti zoznam technických atribútov pre konkrétnu kategóriu
@@ -579,6 +589,7 @@ paths:
         - basicAuth: []
   '/{lang}/attributes/{attrTechnicalName}/detail':
     get:
+      operationId: getProductAttributesDetail
       tags:
         - ProductCatalogue API
       summary: Vráti zoznam hodnôt atribútu (distinct)
@@ -638,6 +649,7 @@ paths:
         - basicAuth: []
   '/{lang}/search':
     get:
+      operationId: searchProduct
       tags:
         - ProductCatalogue API
       summary: Vráti zoznam nájdených productId
@@ -736,7 +748,7 @@ components:
       required: true
       style: simple
       schema:
-        $ref: '#/components/schemas/Alpha2LangCodeType'
+        $ref: 'common/commonSimpleTypes.yaml#/components/schemas/Alpha2LangCodeType'
 
     CategoryIdPathParameterType:
       name: categoryId
@@ -745,7 +757,7 @@ components:
       required: true
       style: simple
       schema:
-        $ref: '#/components/schemas/ProductCategoryIdType'
+        $ref: 'common/commonSimpleTypes.yaml#/components/schemas/ProductCategoryIdType'
 
     ProductIdPathParameterType:
       name: productId
@@ -754,7 +766,7 @@ components:
       required: true
       style: simple
       schema:
-        $ref: '#/components/schemas/ProductIdType'
+        $ref: 'common/commonSimpleTypes.yaml#/components/schemas/ProductIdType'
 
     DateFromFilteringQueryParameterType:
       name: dateFrom
@@ -763,7 +775,7 @@ components:
       required: true
       style: form
       schema:
-        $ref: '#/components/schemas/FilterDateFromType'
+        $ref: 'common/commonSimpleTypes.yaml#/components/schemas/FilterDateFromType'
 
     DateToFilteringQueryParameterType:
       name: dateTo
@@ -772,7 +784,7 @@ components:
       required: true
       style: form
       schema:
-        $ref: '#/components/schemas/FilterDateToType'
+        $ref: 'common/commonSimpleTypes.yaml#/components/schemas/FilterDateToType'
 
   schemas:
     #Request complex types
@@ -792,11 +804,11 @@ components:
         listOfProductIds:
           type: array
           items:
-            $ref: '#/components/schemas/ProductIdType'
+            $ref: 'common/commonSimpleTypes.yaml#/components/schemas/ProductIdType'
         listOfProductAttrs:
           type: array
           items:
-            $ref: '#/components/schemas/ProductAttrTechnicalNameType'
+            $ref: 'common/commonSimpleTypes.yaml#/components/schemas/ProductAttrTechnicalNameType'
 
     SearchProductResponseType:
       type: object
@@ -929,6 +941,7 @@ components:
         listOfTechnicalAttributes:
           type: array
           items:
+            type: object
             properties:
               attrTechnicalName:
                 type: string
@@ -944,6 +957,7 @@ components:
         listOfTechnicalAttributes:
           type: array
           items:
+            type: object
             properties:
               attrTechnicalName:
                 type: string
