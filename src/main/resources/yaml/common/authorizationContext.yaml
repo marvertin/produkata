@@ -20,12 +20,11 @@ components:
     AuthorizationContextClientType:
       type: object
       required:
-        - userId
+        - frameContractId
         - idType
       properties:
-        clientId:
-          type: string
-          description: 'Bank client ID.'
+        frameContractId:
+          $ref: 'commonSimpleTypes.yaml#/components/schemas/FrameContractIdType'
         idType:
           type: string
           description: 'Type or source of the party identifier. Codebook: EXTERNAL_IDENTIFICATION'

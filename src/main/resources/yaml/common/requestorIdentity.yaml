@@ -1,4 +1,11 @@
+#Režim vyplnenia                                                                 Responsible-User  Responsible-Operator  Accountable-User  AuthorizationContext.client
+#Disponent                                                                               X            -                         -               X
+#Bankár (impersonácia),Zástupca bankára (impersonácia), Pracovník Call-Centra            -            X                         X               X
+#Supervízor Call-Centra, BackOffice, Bankár ,Zástupca bankára                            -            X                         -               X
+#Systém                                                                                               X (idType = system)                       X
 #24/11/2020 - Milan Gajdos initial version
+
+
 components:
   schemas:
     RequestorIdentityType:

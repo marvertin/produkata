@@ -1,0 +1,235 @@
+components:
+  schemas:
+  
+  # Objekt pro seznamu operací v košíku pro autorizaci, kromě autorizační aspekty - typ předmentu a zda je prefferovaný  
+    OperationBasketDataForSignType:
+      description: Objekt pro vystavení seznamu operací v košíku pro autorizaci, kromě onformaci o operaci obsahuje autorizační aspekty - typ předmentu a zda je prefferovaný 
+      type: object
+      required:
+        - operation
+        - authorizationMethods
+      properties:
+        operations:
+          type: array
+          items:
+            $ref: '#/components/schemas/OperationDataType'
+        authorizationMethods:
+          type: array
+          items:
+             $ref: '#/components/schemas/AuthorizationMethodType'          
+        
+# Objekt pro vystavení operace pro autorizaci, kromě autorizační aspekty - typ předmentu a zda je prefferovaný  
+    OperationDataForSignType:
+      description: Objekt pro vystavení operace pro autorizaci, kromě onformaci o operaci obsahuje autorizační aspekty - typ předmentu a zda je prefferovaný 
+      type: object
+      required:
+        - operation
+        - authorizationMethods
+      properties:
+        operation:
+          $ref: '#/components/schemas/OperationDataType'
+        authorizationMethods:
+          type: array
+          items:
+             $ref: '#/components/schemas/AuthorizationMethodType'         
+
+
+# Objekt pro autorizační aspekty - typ předmentu a zda je prefferovaný
+    AuthorizationMethodType:
+      type: object
+      required:
+        - securityMethod
+        - isPrefferedsecurityMethod
+      properties:
+        securityMethod:
+          $ref: '#/components/schemas/SecurityToolType'       
+        isPrefferedsecurityMethod: 
+          type: boolean       
+# Objekt data pro operaci bez autorizačních aspektů
+    OperationDataListType:  
+      type: object
+      properties:
+        operations:
+          type: array
+          items:
+             $ref: '#/components/schemas/OperationDataSimpleType'         
+# Objekt data pro operaci zobrazená v seznamu          
+    OperationDataSimpleType:      
+      type: object
+      required:
+        - operationId
+        - operationKind
+        - operationDetail
+        - frameContractId
+      properties:
+        operationId:
+          $ref: '#/components/schemas/OperationIdType'
+        operationKind:
+          $ref: '#/components/schemas/OperationKindType'
+        frameContractId:
+          $ref: '#/components/schemas/FrameContractIdType'
+        amount: 
+          $ref: '#/components/schemas/OperationAmountType'
+        status: 
+          $ref: '#/components/schemas/OperationStatusType' 
+        valutaDate:
+          $ref: '#/components/schemas/ValutaDateType'              
+# Objekt data pro vytvoření operace
+    PostOperationDataType:      
+      type: object
+      required:
+        - operationKind
+        - frameContractId
+        - operationDetail
+      properties:
+        operationKind:
+          $ref: '#/components/schemas/OperationKindType'
+        frameContractId:
+          $ref: '#/components/schemas/FrameContractIdType'
+        amount: 
+          $ref: '#/components/schemas/OperationAmountType'
+        valutaDate:
+          $ref: '#/components/schemas/ValutaDateType'           
+        operationDetail:
+          type: object  
+           
+# Objekt data pro operaci bez autorizačních aspektů
+    OperationDataType:      
+      type: object
+      required:
+        - operationId
+        - operationKind
+        - operationDetail
+        - frameContractId
+      properties:
+        operationId:
+          $ref: '#/components/schemas/OperationIdType'
+        operationKind:
+          $ref: '#/components/schemas/OperationKindType'
+        frameContractId:
+          $ref: '#/components/schemas/FrameContractIdType'
+        amount: 
+          $ref: '#/components/schemas/OperationAmountType'
+        status: 
+          $ref: '#/components/schemas/OperationStatusType' 
+        valutaDate:
+          $ref: '#/components/schemas/ValutaDateType'  
+        createdByBankerLogin:
+           type: string
+        dateTimeCanceled:
+          $ref: '#/components/schemas/DateTimeCanceledType'     
+        dateTimeCreated:
+          $ref: '#/components/schemas/DateTimeCreatedType'             
+        dateTimeReady:
+          $ref: '#/components/schemas/DateTimeReadyType' 
+        dateTimeSigned:
+          $ref: '#/components/schemas/DateTimeSignedType'         
+        dateTimeVerified:
+          $ref: '#/components/schemas/DateTimeVerifiedType' 
+        verifiedByBankerLogin:
+          type: string                        
+        operationDetail:
+          type: object  
+        operationSignatures:
+          type: array
+          items:   
+            $ref: '#/components/schemas/OperationSignatureType'              
+ # Objekt pro operace uložené uvnitř košíka pro podpis 
+    OperationBasketDataForSignType:
+      type: object
+      required:
+        - operations
+        - authorizationMethods
+      properties:
+        operations:
+          type: array
+          items:
+            $ref: '#/components/schemas/OperationDataType'  
+        authorizationMethods:
+          type: array
+          items:
+             $ref: '#/components/schemas/AuthorizationMethodType'         
+            
+    OperationSignatureType:
+      type: object
+      properties:
+ #TODO správně doplnit dle fyzického DM     
+         createdByBankerLogin: string
+         challengeProcessID: number
+         manualBankerSignCheck: boolean
+         processDateTime : datetime
+         SezamSecToolID: string
+    
+    OperationIdType:
+      type: integer
+      description: 'Id operace'
+
+    OperationKindType:
+      type: string
+      description: 'Typ aktivní operace (jednorázová platba, nákup  papírů)'
+ #TODO Ověřit správný výčet OperationKindType
+      enum:
+        - SINGLE_ORDER
+        - STANDING_ORDER
+        - INKASO
+        
+    SecurityToolType:
+      type: string
+      description: 'Bezpečnostní metoda autorizace (SMS, mToken. ...)'
+ #TODO Ověřit správný výčet SecurityTool securityDeviceTypeId
+      enum:
+        - mToken
+        - SMS
+        - HWToken
+        - AuthCode     
+    OperationAmountType:
+      type: string
+      description: 'Anmount of the operace'
+      
+    OperationStatusType:
+      type: string
+      description: 'Stav operace v ECM (VYtvořená, částečne podepsaná podepsaná, ...)'
+ #TODO Ověřit správný výčet OperationStatusType
+      enum:
+        - CREATED
+        - PARTIALY_SIGNED
+        - SIGNED
+        - WAITING_FOR_SUPERVISOR
+        - IN_CORE_PROCESS
+        - PROCESSED
+        - CANCELED     
+    OperationAmountType:
+      type: string
+      description: 'Anmount of the operation'
+    ValutaDateType:
+      type: string
+      format: date
+      description: 'Valuta of the operation'
+    ChallengeIdType:
+      type: number
+      description: 'Challenge id created in SEZAM'
+
+    FrameContractIdType:
+      type: string
+      description: 'Unique identifier of frame contract'
+      
+    DateTimeCanceledType:
+      type: string
+      format: date-time
+      description: 'Cancel time of the operation'      
+    DateTimeCreatedType:
+      type: string
+      format: date-time
+      description: 'Created time of the operation'            
+    DateTimeReadyType:
+      type: string
+      format: date-time
+      description: 'Ready time of the operation'    
+    DateTimeSignedType:
+      type: string
+      format: date-time
+      description: 'Signture time of the operation'                    
+    DateTimeVerifiedType:
+      type: string
+      format: date-time
+      description: 'Verified time of the operation'          
