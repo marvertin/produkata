@@ -33,10 +33,10 @@ import com.asseco.ce.jtsr_digi.product_catalogue.model.SearchProductResponseType
  *
  */
 @Service
-public class ProductCatalogueApi implements ProductCatalogueApiApiDelegate {
+public class ProductCatalogueService implements ProductCatalogueApiApi {
 
     /**
-     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate#compareProduct(java.lang.String, java.util.List, java.util.List, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType)
+     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApi#compareProduct(java.lang.String, java.util.List, java.util.List, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType)
      */
     @Override
     public ResponseEntity<CompareProductResponseType> compareProduct(
@@ -44,25 +44,25 @@ public class ProductCatalogueApi implements ProductCatalogueApiApiDelegate {
             List<String> listOfProductAttrs, String xCorrelationID,
             String xRequestID, InitiatorSystemType initiatorSystem) {
         // TODO Auto-generated method stub
-        return ProductCatalogueApiApiDelegate.super.compareProduct(lang,
+        return ProductCatalogueApiApi.super.compareProduct(lang,
                 listOfProductIds, listOfProductAttrs, xCorrelationID, xRequestID,
                 initiatorSystem);
     }
 
     /**
-     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate#getListOfProductCategories(java.lang.String, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType)
+     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApi#getListOfProductCategories(java.lang.String, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType)
      */
     @Override
     public ResponseEntity<GetListOfProductCategoriesResponseType> getListOfProductCategories(
             String lang, String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem) {
         // TODO Auto-generated method stub
-        return ProductCatalogueApiApiDelegate.super.getListOfProductCategories(lang,
+        return ProductCatalogueApiApi.super.getListOfProductCategories(lang,
                 xCorrelationID, xRequestID, initiatorSystem);
     }
 
     /**
-     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate#getListOfProductsInCategory(java.lang.String, java.lang.String, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType, com.asseco.ce.jtsr_digi.product_catalogue.model.PagingRequestType)
+     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApi#getListOfProductsInCategory(java.lang.String, java.lang.String, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType, com.asseco.ce.jtsr_digi.product_catalogue.model.PagingRequestType)
      */
     @Override
     public ResponseEntity<GetListOfProductsInCategoryResponseType> getListOfProductsInCategory(
@@ -70,12 +70,12 @@ public class ProductCatalogueApi implements ProductCatalogueApiApiDelegate {
             String xRequestID, InitiatorSystemType initiatorSystem,
             PagingRequestType paging) {
         // TODO Auto-generated method stub
-        return ProductCatalogueApiApiDelegate.super.getListOfProductsInCategory(lang,
+        return ProductCatalogueApiApi.super.getListOfProductsInCategory(lang,
                 categoryId, xCorrelationID, xRequestID, initiatorSystem, paging);
     }
 
     /**
-     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate#getProductAttributes(java.lang.String, java.lang.String, java.lang.Boolean, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType)
+     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApi#getProductAttributes(java.lang.String, java.lang.String, java.lang.Boolean, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType)
      */
     @Override
     public ResponseEntity<GetProductAttributesResponseType> getProductAttributes(
@@ -83,37 +83,37 @@ public class ProductCatalogueApi implements ProductCatalogueApiApiDelegate {
             String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem) {
         // TODO Auto-generated method stub
-        return ProductCatalogueApiApiDelegate.super.getProductAttributes(lang,
+        return ProductCatalogueApiApi.super.getProductAttributes(lang,
                 categoryId, comboBoxAttributes, xCorrelationID, xRequestID,
                 initiatorSystem);
     }
 
     /**
-     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate#getProductAttributesDetail(java.lang.String, java.lang.String, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType)
+     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApi#getProductAttributesDetail(java.lang.String, java.lang.String, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType)
      */
     @Override
     public ResponseEntity<GetProductAttributesDetailResponseType> getProductAttributesDetail(
             String lang, String attrTechnicalName, String xCorrelationID,
             String xRequestID, InitiatorSystemType initiatorSystem) {
         // TODO Auto-generated method stub
-        return ProductCatalogueApiApiDelegate.super.getProductAttributesDetail(lang,
+        return ProductCatalogueApiApi.super.getProductAttributesDetail(lang,
                 attrTechnicalName, xCorrelationID, xRequestID, initiatorSystem);
     }
 
     /**
-     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate#getProductDetail(java.lang.String, java.lang.String, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType)
+     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApi#getProductDetail(java.lang.String, java.lang.String, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType)
      */
     @Override
     public ResponseEntity<GetProductDetailResponseType> getProductDetail(
             String lang, String productId, String xCorrelationID,
             String xRequestID, InitiatorSystemType initiatorSystem) {
         // TODO Auto-generated method stub
-        return ProductCatalogueApiApiDelegate.super.getProductDetail(lang, productId,
+        return ProductCatalogueApiApi.super.getProductDetail(lang, productId,
                 xCorrelationID, xRequestID, initiatorSystem);
     }
 
     /**
-     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate#getProductDocuments(java.lang.String, java.lang.String, java.time.LocalDate, java.time.LocalDate, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType)
+     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApi#getProductDocuments(java.lang.String, java.lang.String, java.time.LocalDate, java.time.LocalDate, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType)
      */
     @Override
     public ResponseEntity<GetProductDocumentsResponseType> getProductDocuments(
@@ -121,12 +121,12 @@ public class ProductCatalogueApi implements ProductCatalogueApiApiDelegate {
             String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem) {
         // TODO Auto-generated method stub
-        return ProductCatalogueApiApiDelegate.super.getProductDocuments(lang, productId,
+        return ProductCatalogueApiApi.super.getProductDocuments(lang, productId,
                 dateFrom, dateTo, xCorrelationID, xRequestID, initiatorSystem);
     }
 
     /**
-     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate#getProductPortfolioAssetStructure(java.lang.String, java.lang.String, java.time.LocalDate, java.time.LocalDate, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType, com.asseco.ce.jtsr_digi.product_catalogue.model.PagingRequestType)
+     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApi#getProductPortfolioAssetStructure(java.lang.String, java.lang.String, java.time.LocalDate, java.time.LocalDate, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType, com.asseco.ce.jtsr_digi.product_catalogue.model.PagingRequestType)
      */
     @Override
     public ResponseEntity<GetProductPortfolioAssetStructureResponseType> getProductPortfolioAssetStructure(
@@ -134,13 +134,13 @@ public class ProductCatalogueApi implements ProductCatalogueApiApiDelegate {
             String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem, PagingRequestType paging) {
         // TODO Auto-generated method stub
-        return ProductCatalogueApiApiDelegate.super.getProductPortfolioAssetStructure(
+        return ProductCatalogueApiApi.super.getProductPortfolioAssetStructure(
                 lang, productId, dateFrom, dateTo, xCorrelationID, xRequestID,
                 initiatorSystem, paging);
     }
 
     /**
-     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate#getProductPortfolioComposition(java.lang.String, java.lang.String, java.time.LocalDate, java.time.LocalDate, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType)
+     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApi#getProductPortfolioComposition(java.lang.String, java.lang.String, java.time.LocalDate, java.time.LocalDate, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType)
      */
     @Override
     public ResponseEntity<GetProductPortfolioCompositionResponseType> getProductPortfolioComposition(
@@ -148,13 +148,13 @@ public class ProductCatalogueApi implements ProductCatalogueApiApiDelegate {
             String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem) {
         // TODO Auto-generated method stub
-        return ProductCatalogueApiApiDelegate.super.getProductPortfolioComposition(lang,
+        return ProductCatalogueApiApi.super.getProductPortfolioComposition(lang,
                 productId, dateFrom, dateTo, xCorrelationID, xRequestID,
                 initiatorSystem);
     }
 
     /**
-     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate#getProductPortfolioFundPerformance(java.lang.String, java.lang.String, java.time.LocalDate, java.time.LocalDate, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType)
+     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApi#getProductPortfolioFundPerformance(java.lang.String, java.lang.String, java.time.LocalDate, java.time.LocalDate, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType)
      */
     @Override
     public ResponseEntity<GetProductPortfolioFundPerformanceResponseType> getProductPortfolioFundPerformance(
@@ -162,13 +162,13 @@ public class ProductCatalogueApi implements ProductCatalogueApiApiDelegate {
             String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem) {
         // TODO Auto-generated method stub
-        return ProductCatalogueApiApiDelegate.super.getProductPortfolioFundPerformance(
+        return ProductCatalogueApiApi.super.getProductPortfolioFundPerformance(
                 lang, productId, dateFrom, dateTo, xCorrelationID, xRequestID,
                 initiatorSystem);
     }
 
     /**
-     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate#getProductSimpleGraph(java.lang.String, java.lang.String, java.time.LocalDate, java.time.LocalDate, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType, com.asseco.ce.jtsr_digi.product_catalogue.model.PagingRequestType)
+     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApi#getProductSimpleGraph(java.lang.String, java.lang.String, java.time.LocalDate, java.time.LocalDate, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType, com.asseco.ce.jtsr_digi.product_catalogue.model.PagingRequestType)
      */
     @Override
     public ResponseEntity<GetProductSimpleGraphResponseType> getProductSimpleGraph(
@@ -176,20 +176,20 @@ public class ProductCatalogueApi implements ProductCatalogueApiApiDelegate {
             String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem, PagingRequestType paging) {
         // TODO Auto-generated method stub
-        return ProductCatalogueApiApiDelegate.super.getProductSimpleGraph(lang,
+        return ProductCatalogueApiApi.super.getProductSimpleGraph(lang,
                 productId, dateFrom, dateTo, xCorrelationID, xRequestID,
                 initiatorSystem, paging);
     }
 
     /**
-     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate#searchProduct(java.lang.String, java.lang.String, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType)
+     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApi#searchProduct(java.lang.String, java.lang.String, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType)
      */
     @Override
     public ResponseEntity<SearchProductResponseType> searchProduct(String lang,
             String searchQuery, String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem) {
         // TODO Auto-generated method stub
-        return ProductCatalogueApiApiDelegate.super.searchProduct(lang, searchQuery,
+        return ProductCatalogueApiApi.super.searchProduct(lang, searchQuery,
                 xCorrelationID, xRequestID, initiatorSystem);
     }
 

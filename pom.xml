@@ -46,7 +46,8 @@
                                 <apiPackage>com.asseco.ce.jtsr_digi.product_catalogue.api</apiPackage>
                                 <modelPackage>com.asseco.ce.jtsr_digi.product_catalogue.model</modelPackage>
                                 <invokerPackage>com.asseco.ce.jtsr_digi.product_catalogue</invokerPackage>
-                                <delegatePattern>true</delegatePattern>
+                                <delegatePattern>false</delegatePattern>
+                                <interfaceOnly>true</interfaceOnly>
                                 <swaggerDocketConfig>true</swaggerDocketConfig>
                                 <returnSuccessCode>true</returnSuccessCode>
                                 <useTags>true</useTags>
@@ -73,14 +74,14 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version> <!-- or newer version -->
                 <configuration>
-                    <source>1.8</source> <!-- depending on your project -->
-                    <target>1.8</target> <!-- depending on your project -->
+                    <source>11</source> <!-- depending on your project -->
+                    <target>11</target> <!-- depending on your project -->
                     <annotationProcessorPaths>
-                        <!--						<path>-->
-                        <!--							<groupId>org.mapstruct</groupId>-->
-                        <!--							<artifactId>mapstruct-processor</artifactId>-->
-                        <!--							<version>1.4.1.Final</version>-->
-                        <!--						</path>-->
+                        <!--<path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>1.4.1.Final</version>
+                        </path>-->
 
                         <path>
                             <groupId>org.projectlombok</groupId>
@@ -92,7 +93,7 @@
                 </configuration>
             </plugin>
 
-            <plugin>
+<!--            <plugin>
                 <groupId>org.hibernate.tool</groupId>
                 <artifactId>hibernate-tools-maven</artifactId>
                 <version>6.0.0.Alpha2</version>
@@ -120,12 +121,12 @@
                             <propertyFile>${project.basedir}/src/main/resources/hibernate.properties</propertyFile >
                             <ejb3>true</ejb3>
                             <jdk5>false</jdk5>
-                            <templatePath>${project.basedir}/src/main/resources/templates</templatePath>
+                            <templatePath>${project.basedir}/src/main/resources/templates/</templatePath>
                             <packageName>com.asseco.ce.jtsr_digi.product_catalogue.domain</packageName>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
@@ -188,7 +189,7 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>com.oracle.ojdbc</groupId>
             <artifactId>ojdbc8</artifactId>
             <version>19.3.0.0</version>
@@ -196,7 +197,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
+        </dependency>-->
     </dependencies>
 
 <!--    <profiles>-->
