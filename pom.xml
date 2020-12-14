@@ -46,8 +46,7 @@
                                 <apiPackage>com.asseco.ce.jtsr_digi.product_catalogue.api</apiPackage>
                                 <modelPackage>com.asseco.ce.jtsr_digi.product_catalogue.model</modelPackage>
                                 <invokerPackage>com.asseco.ce.jtsr_digi.product_catalogue</invokerPackage>
-                                <delegatePattern>false</delegatePattern>
-                                <interfaceOnly>true</interfaceOnly>
+                                <delegatePattern>true</delegatePattern>
                                 <swaggerDocketConfig>true</swaggerDocketConfig>
                                 <returnSuccessCode>true</returnSuccessCode>
                                 <useTags>true</useTags>
@@ -93,7 +92,7 @@
                 </configuration>
             </plugin>
 
-<!--            <plugin>
+            <!--<plugin>
                 <groupId>org.hibernate.tool</groupId>
                 <artifactId>hibernate-tools-maven</artifactId>
                 <version>6.0.0.Alpha2</version>
@@ -152,8 +151,30 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+
         <!--SpringFox dependencies -->
         <dependency>
             <groupId>io.springfox</groupId>
@@ -189,7 +210,36 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
-<!--        <dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>1.4.1.Final</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.springframework/spring-aspects -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aspects</artifactId>
+            <version>5.3.2</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.querydsl/querydsl-jpa -->
+        <dependency>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-jpa</artifactId>
+            <version>4.4.0</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.querydsl/querydsl-apt -->
+        <dependency>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-apt</artifactId>
+            <version>4.4.0</version>
+        </dependency>
+
+        <!--<dependency>
             <groupId>com.oracle.ojdbc</groupId>
             <artifactId>ojdbc8</artifactId>
             <version>19.3.0.0</version>

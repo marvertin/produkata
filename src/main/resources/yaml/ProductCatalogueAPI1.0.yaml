@@ -5,7 +5,7 @@ info:
     Defines API for productCatalogue
   version: '1.0'
 servers:
-  - url: 'https://localhost:8443/productcatalogue'
+  - url: 'http://localhost:8080/api'
 tags:
   - name: ProductCatalogue API
     description: Defines API for ProductCatalogue

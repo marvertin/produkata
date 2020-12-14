@@ -1,10 +1,21 @@
 server:
   port: 8080
+  servlet:
+    context-path: /productcatalogue
 spring:
   jackson:
     date-format: com.asseco.ce.jtsr_digi.product_catalogue.RFC3339DateFormat
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
+
+  datasource:
+    url: jdbc:oracle:thin:@//jtsr-ivp-db.assecosk.local:1521/JTDIGI_D
+    driverClassName: oracle.jdbc.OracleDriver
+    username: DATREP247_PUBLIC
+    password: DATREP247
+
+  jpa:
+    database-platform: org.hibernate.dialect.Oracle12cDialect
 
 springfox:
   documentation:
