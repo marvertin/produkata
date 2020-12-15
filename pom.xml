@@ -11,9 +11,12 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>11</java.version>
-<!--        <java.version>1.8</java.version>-->
+        <maven.compiler.release>${java.version}</maven.compiler.release>
+<!--
+        <java.version>1.8</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
+-->
         <springfox-version>2.8.0</springfox-version>
     </properties>
 
@@ -57,6 +60,7 @@
                     </execution>
                 </executions>
             </plugin>
+<!--
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -92,7 +96,7 @@
                 </configuration>
             </plugin>
 
-<!--            <plugin>
+            <!--<plugin>
                 <groupId>org.hibernate.tool</groupId>
                 <artifactId>hibernate-tools-maven</artifactId>
                 <version>6.0.0.Alpha2</version>
@@ -117,7 +121,7 @@
                             <goal>hbm2java</goal>
                         </goals>
                         <configuration>
-                            <propertyFile>${project.basedir}/src/main/resources/hibernate.properties</propertyFile>
+                            <propertyFile>${project.basedir}/src/main/resources/hibernate.properties</propertyFile >
                             <ejb3>true</ejb3>
                             <jdk5>false</jdk5>
                             <templatePath>${project.basedir}/src/main/resources/templates/</templatePath>
@@ -125,8 +129,8 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>-->
-
+            </plugin>
+-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
@@ -140,7 +144,7 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>${basedir}/target/generated-sources</source>
+                                <source>${basedir}/target/generated-sources/openapi/src/main/java</source>
                             </sources>
                         </configuration>
                     </execution>
@@ -240,7 +244,7 @@
             <version>4.4.0</version>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>com.oracle.ojdbc</groupId>
             <artifactId>ojdbc8</artifactId>
             <version>19.3.0.0</version>
@@ -248,7 +252,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
+        </dependency>-->
     </dependencies>
 
 <!--    <profiles>-->
