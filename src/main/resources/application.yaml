@@ -2,6 +2,7 @@ server:
   port: 8080
   servlet:
     context-path: /productcatalogue
+
 spring:
   jackson:
     date-format: com.asseco.ce.jtsr_digi.product_catalogue.RFC3339DateFormat
