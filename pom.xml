@@ -11,16 +11,18 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>11</java.version>
-<!--        <java.version>1.8</java.version>-->
+        <maven.compiler.release>${java.version}</maven.compiler.release>
+<!--
+        <java.version>1.8</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
+-->
         <springfox-version>2.8.0</springfox-version>
     </properties>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-<!--        <version>2.0.1.RELEASE</version>-->
         <version>2.4.0</version>
     </parent>
 
@@ -57,42 +59,8 @@
                     </execution>
                 </executions>
             </plugin>
+<!--
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version> <!-- or newer version -->
-                <configuration>
-                    <source>11</source> <!-- depending on your project -->
-                    <target>11</target> <!-- depending on your project -->
-                    <annotationProcessorPaths>
-                        <!--<path>
-                            <groupId>org.mapstruct</groupId>
-                            <artifactId>mapstruct-processor</artifactId>
-                            <version>1.4.1.Final</version>
-                        </path>-->
-
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                            <version>1.18.16</version>
-                        </path>
-                        <!-- other annotation processors -->
-                    </annotationProcessorPaths>
-                </configuration>
-            </plugin>
-
-            <!--<plugin>
                 <groupId>org.hibernate.tool</groupId>
                 <artifactId>hibernate-tools-maven</artifactId>
                 <version>6.0.0.Alpha2</version>
@@ -107,7 +75,6 @@
                         <artifactId>ojdbc8</artifactId>
                         <version>19.3.0.0</version>
                     </dependency>
-
                 </dependencies>
                 <executions>
                     <execution>
@@ -125,23 +92,55 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>-->
+            </plugin>
+-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.2.0</version>
                 <executions>
                     <execution>
-                        <id>test</id>
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>add-source</goal>
                         </goals>
                         <configuration>
                             <sources>
-                                <source>${basedir}/target/generated-sources</source>
+                                <source>${basedir}/target/generated-sources/openapi/src/main/java</source>
                             </sources>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <!--
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>1.4.1.Final</version>
+                        </path>
+                        -->
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.16</version>
+                        </path>
+                        <!-- other annotation processors -->
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -211,32 +210,24 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>1.4.1.Final</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.springframework/spring-aspects -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aspects</artifactId>
-            <version>5.3.2</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.querydsl/querydsl-jpa -->
         <dependency>
             <groupId>com.querydsl</groupId>
             <artifactId>querydsl-jpa</artifactId>
-            <version>4.4.0</version>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/com.querydsl/querydsl-apt -->
         <dependency>
             <groupId>com.querydsl</groupId>
             <artifactId>querydsl-apt</artifactId>
-            <version>4.4.0</version>
         </dependency>
 
         <!--<dependency>

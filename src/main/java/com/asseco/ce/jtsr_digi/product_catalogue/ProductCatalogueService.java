@@ -3,7 +3,7 @@
  *
  */
 
-package com.asseco.ce.jtsr_digi.product_catalogue.api;
+package com.asseco.ce.jtsr_digi.product_catalogue;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate;
 import com.asseco.ce.jtsr_digi.product_catalogue.model.CompareProductResponseType;
 import com.asseco.ce.jtsr_digi.product_catalogue.model.GetListOfProductCategoriesResponseType;
 import com.asseco.ce.jtsr_digi.product_catalogue.model.GetListOfProductsInCategoryResponseType;
