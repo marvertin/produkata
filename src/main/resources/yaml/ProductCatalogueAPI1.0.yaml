@@ -5,7 +5,7 @@ info:
     Defines API for productCatalogue
   version: '1.0'
 servers:
-  - url: 'http://localhost:8080/api'
+  - url: 'https://localhost:8443/productcatalogue'
 tags:
   - name: ProductCatalogue API
     description: Defines API for ProductCatalogue
@@ -542,7 +542,7 @@ paths:
           required: true
           style: form
           schema:
-            type: string
+            $ref: 'common/commonSimpleTypes.yaml#/components/schemas/ProductCategoryIdType'
         - name: comboBoxAttributes
           in: query
           description: 'boolean hodnota, či sa majú zobraziť iba atribúty, ktoré obsahujú combobox atribúty (distinct hodnoty)'
@@ -607,7 +607,7 @@ paths:
           required: true
           style: simple
           schema:
-            $ref: 'common/commonSimpleTypes.yaml#/components/schemas/Alpha2LangCodeType'
+            $ref: 'common/commonSimpleTypes.yaml#/components/schemas/ProductAttrTechnicalNameType'
         #FILTERS
 
       responses:
@@ -1126,7 +1126,7 @@ components:
           description: 'numerická hodnota, v prípade, že attrDataType = „number“'
         attrDateValue :
           type: string
-          format: date-time
+          format: date
           description: 'dátumová hodnota v prípade, že attrDataType = „date“'
         listOfValues:
           type: array
@@ -1154,7 +1154,7 @@ components:
           description: 'numerická hodnota, v prípade, že attrDataType = „number“'
         attrDateValue :
           type: string
-          format: date-time
+          format: date
           description: 'dátumová hodnota v prípade, že attrDataType = „date“'
 
     ListOfValues:

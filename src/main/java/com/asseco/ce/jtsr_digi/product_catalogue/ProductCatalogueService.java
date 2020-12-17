@@ -9,6 +9,10 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import com.asseco.ce.jtsr_digi.product_catalogue.domain.PcTProduct;
+import com.asseco.ce.jtsr_digi.product_catalogue.domain.PcTProductCatalogue;
+import com.asseco.ce.jtsr_digi.product_catalogue.repository.PcTProductCatalogueRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -37,7 +41,14 @@ import com.asseco.ce.jtsr_digi.product_catalogue.model.SearchProductResponseType
  *
  */
 @Service
+@Slf4j
 public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
+
+    @Autowired
+    private PcTProductCatalogueRepository pcTProductCatalogueRepository;
+
+    /*@Autowired
+    private ProductDetailMapper productDetailMapper;*/
 
     @Autowired
     private NativeWebRequest request;
@@ -122,6 +133,11 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
     public ResponseEntity<GetProductDetailResponseType> getProductDetail(
             String lang, String productId, String xCorrelationID,
             String xRequestID, InitiatorSystemType initiatorSystem) {
+
+        List<PcTProductCatalogue> pcTProductCatalogue = pcTProductCatalogueRepository.findAll();
+        log.info("########### optionalPcTProduct:: {}", pcTProductCatalogue.toString());
+        //Optional<GetProductDetailResponseType> getProductDetailResponseType = optionalPcTProduct.map(productDetailMapper::toDto);
+
         // TODO Auto-generated method stub
         return ProductCatalogueApiApiDelegate.super.getProductDetail(lang, productId,
                 xCorrelationID, xRequestID, initiatorSystem);

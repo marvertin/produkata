@@ -11,7 +11,7 @@ spring:
 
   datasource:
     url: jdbc:oracle:thin:@//jtsr-ivp-db.assecosk.local:1521/JTDIGI_D
-    driverClassName: oracle.jdbc.OracleDriver
+    driver-class-name: oracle.jdbc.OracleDriver
     username: DATREP247_PUBLIC
     password: DATREP247
 
