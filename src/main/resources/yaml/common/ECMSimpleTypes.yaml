@@ -1,12 +1,12 @@
 components:
   schemas:
-  
-  # Objekt pro seznamu operací v košíku pro autorizaci, kromě autorizační aspekty - typ předmentu a zda je prefferovaný  
+         
+# Objekt pro seznamu operací v košíku pro autorizaci, kromě autorizační aspekty - typ předmentu a zda je prefferovaný  
     OperationBasketDataForSignType:
       description: Objekt pro vystavení seznamu operací v košíku pro autorizaci, kromě onformaci o operaci obsahuje autorizační aspekty - typ předmentu a zda je prefferovaný 
       type: object
       required:
-        - operation
+        - operations
         - authorizationMethods
       properties:
         operations:
@@ -20,7 +20,7 @@ components:
         
 # Objekt pro vystavení operace pro autorizaci, kromě autorizační aspekty - typ předmentu a zda je prefferovaný  
     OperationDataForSignType:
-      description: Objekt pro vystavení operace pro autorizaci, kromě onformaci o operaci obsahuje autorizační aspekty - typ předmentu a zda je prefferovaný 
+      description: Objekt pro vystavení operace pro autorizaci, kromě informaci o operaci obsahuje autorizační aspekty - typ předmentu a zda je preferovaný 
       type: object
       required:
         - operation
@@ -59,7 +59,6 @@ components:
       required:
         - operationId
         - operationKind
-        - operationDetail
         - frameContractId
       properties:
         operationId:
@@ -67,13 +66,16 @@ components:
         operationKind:
           $ref: '#/components/schemas/OperationKindType'
         frameContractId:
-          $ref: '#/components/schemas/FrameContractIdType'
+          $ref: 'commonSimpleTypes.yaml#/components/schemas/FrameContractIdType'
         amount: 
           $ref: '#/components/schemas/OperationAmountType'
         status: 
           $ref: '#/components/schemas/OperationStatusType' 
         valutaDate:
-          $ref: '#/components/schemas/ValutaDateType'              
+          $ref: '#/components/schemas/ValutaDateType'   
+        disponentSignatureNeeded:
+          type: boolean
+          description: 'True if disponent signature is missing and disponent has a rights to sign'           
 # Objekt data pro vytvoření operace
     PostOperationDataType:      
       type: object
@@ -81,15 +83,18 @@ components:
         - operationKind
         - frameContractId
         - operationDetail
+        - manualSignature
       properties:
         operationKind:
           $ref: '#/components/schemas/OperationKindType'
         frameContractId:
-          $ref: '#/components/schemas/FrameContractIdType'
+          $ref: 'commonSimpleTypes.yaml#/components/schemas/FrameContractIdType'
         amount: 
           $ref: '#/components/schemas/OperationAmountType'
         valutaDate:
-          $ref: '#/components/schemas/ValutaDateType'           
+          $ref: '#/components/schemas/ValutaDateType'    
+        manualSignature:
+          $ref: '#/components/schemas/ManualSignatureType'
         operationDetail:
           type: object  
            
@@ -107,7 +112,7 @@ components:
         operationKind:
           $ref: '#/components/schemas/OperationKindType'
         frameContractId:
-          $ref: '#/components/schemas/FrameContractIdType'
+          $ref: 'commonSimpleTypes.yaml#/components/schemas/FrameContractIdType'
         amount: 
           $ref: '#/components/schemas/OperationAmountType'
         status: 
@@ -130,39 +135,33 @@ components:
           type: string                        
         operationDetail:
           type: object  
+        paperScanId:
+          $ref: '#/components/schemas/OperationPaperScanIdType' 
         operationSignatures:
           type: array
           items:   
-            $ref: '#/components/schemas/OperationSignatureType'              
- # Objekt pro operace uložené uvnitř košíka pro podpis 
-    OperationBasketDataForSignType:
-      type: object
-      required:
-        - operations
-        - authorizationMethods
-      properties:
-        operations:
-          type: array
-          items:
-            $ref: '#/components/schemas/OperationDataType'  
-        authorizationMethods:
-          type: array
-          items:
-             $ref: '#/components/schemas/AuthorizationMethodType'         
+            $ref: '#/components/schemas/OperationSignatureType'                  
             
     OperationSignatureType:
       type: object
-      properties:
- #TODO správně doplnit dle fyzického DM     
-         createdByBankerLogin: string
-         challengeProcessID: number
-         manualBankerSignCheck: boolean
-         processDateTime : datetime
-         SezamSecToolID: string
+      properties:  
+        createdByBankerLogin: 
+          type: string
+        challengeProcessID: 
+          type: number
+#TODO ověřit správně v datovém modelu
+        manualSignatureCheck: 
+          type: boolean
+        processDateTime: 
+          type: string
+          format: date-time
+        SezamSecToolID: 
+          type: string
     
     OperationIdType:
       type: integer
       description: 'Id operace'
+      format: int32
 
     OperationKindType:
       type: string
@@ -176,30 +175,58 @@ components:
     SecurityToolType:
       type: string
       description: 'Bezpečnostní metoda autorizace (SMS, mToken. ...)'
- #TODO Ověřit správný výčet SecurityTool securityDeviceTypeId
+ #TODO Ověřit správný výčet SecurityTool securityDeviceTypeId a hlavně ManualSignature a SMS_TEL
       enum:
-        - mToken
+        - MTOKEN
         - SMS
-        - HWToken
-        - AuthCode     
-    OperationAmountType:
-      type: string
-      description: 'Anmount of the operace'
+        - SMS_TEL
+        - HWTOKEN
+        - MTOKEN_OFFLINE 
+        - MANUAL_SIGNATURE
+
+      
+    ManualSignatureType:
+      type: boolean
+      description: 'Přiznak zda se bude operace ověřovat manuálním papírovám podpisem'  
+    
+    OperationPaperScanSimpleType:
+      type: object
+      properties:    
+        id:
+          $ref: '#/components/schemas/OperationPaperScanIdType' 
+        status:
+          $ref: '#/components/schemas/OperationPaperScanStatusType'  
+        paperScanURL:
+          $ref: '#/components/schemas/PaperScanURIType'          
+
+      description: 'Informace o scanu papíropvého pokynu bez binárního obsahu'            
+      
+    OperationPaperScanType:
+      type: object
+      properties:
+        scanInfo:
+          $ref: '#/components/schemas/OperationPaperScanSimpleType' 
+        data:
+          type: string
+          format: byte
+          description: Base64-encoded contents of image
+
+      description: 'Binární obsah scanu podpisu'   
       
     OperationStatusType:
       type: string
       description: 'Stav operace v ECM (VYtvořená, částečne podepsaná podepsaná, ...)'
- #TODO Ověřit správný výčet OperationStatusType
+ #TODO Ověřit správný výčet OperationStatusType WAIT_FOR_MANUAL_SIGNATURE_CHECK
       enum:
         - CREATED
         - PARTIALY_SIGNED
         - SIGNED
-        - WAITING_FOR_SUPERVISOR
+        - WAIT_FOR_MANUAL_SIGNATURE_CHECK
         - IN_CORE_PROCESS
         - PROCESSED
         - CANCELED     
     OperationAmountType:
-      type: string
+      type: number
       description: 'Anmount of the operation'
     ValutaDateType:
       type: string
@@ -209,10 +236,7 @@ components:
       type: number
       description: 'Challenge id created in SEZAM'
 
-    FrameContractIdType:
-      type: string
-      description: 'Unique identifier of frame contract'
-      
+     
     DateTimeCanceledType:
       type: string
       format: date-time
@@ -233,3 +257,20 @@ components:
       type: string
       format: date-time
       description: 'Verified time of the operation'          
+            
+    OperationPaperScanIdType:
+      type: integer
+      description: 'Id of operation paper scan '   
+      format: int32 
+      
+    OperationPaperScanStatusType:  
+      type: string
+      description: 'Paper scan status'
+      enum:
+        - CREATED
+        - PROCESSED
+        - CANCELED
+        
+    PaperScanURIType:
+      type: string
+      description: 'Paper scan URI in DMS system'
