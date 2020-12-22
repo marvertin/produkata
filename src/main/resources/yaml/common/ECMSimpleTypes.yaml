@@ -1,4 +1,12 @@
 components:
+  parameters:
+    CommonContextQueryParameterType:
+      name: commonContext
+      in: header
+      description: 'Common context '
+      required: true
+      schema:
+        $ref: 'common/common.yaml#/components/schemas/CommonContextType' 
   schemas:
          
 # Objekt pro seznamu operací v košíku pro autorizaci, kromě autorizační aspekty - typ předmentu a zda je prefferovaný  
