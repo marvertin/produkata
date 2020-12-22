@@ -21,12 +21,27 @@ Appenders:
 
 Loggers:
   Root:
-    level: info
+    level: warn
     AppenderRef:
       - ref: LogToConsole
       - ref: LogToFile
+
   Logger:
     - name: com.asseco.ce.jtsr_digi
+      level: debug
+      additivity: false
+      AppenderRef:
+        - ref: LogToConsole
+        - ref: LogToFile
+
+    - name: org.springframework
+      level: info
+      additivity: false
+      AppenderRef:
+        - ref: LogToConsole
+        - ref: LogToFile
+
+    - name: liquibase
       level: debug
       additivity: false
       AppenderRef:
