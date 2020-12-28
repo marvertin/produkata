@@ -16,6 +16,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -34,6 +35,7 @@ import lombok.NoArgsConstructor;
  * V prípade, že je naplnený viac ako 1 hodnotový atribút, je potrebné do C_ATTR_VALUE explicitne uviesť naformátovaný text do atribútu C_ATTR_VALUE.
  */
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity

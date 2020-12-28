@@ -5,34 +5,35 @@
 
 package com.asseco.ce.jtsr_digi.product_catalogue;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-
+import com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate;
 import com.asseco.ce.jtsr_digi.product_catalogue.domain.PcTProduct;
 import com.asseco.ce.jtsr_digi.product_catalogue.domain.PcTProductCatalogue;
+import com.asseco.ce.jtsr_digi.product_catalogue.mapper.ListOfProductAttributesDetailTypeMapper;
+import com.asseco.ce.jtsr_digi.product_catalogue.mapper.ListOfProductsDetailTypeMapper;
+import com.asseco.ce.jtsr_digi.product_catalogue.mapper.ListOfValuesMapper;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.*;
 import com.asseco.ce.jtsr_digi.product_catalogue.repository.PcTProductCatalogueRepository;
+import com.asseco.ce.jtsr_digi.product_catalogue.repository.PcTProductRepository;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.ListOfProductAttributesDetailType.AttrDataTypeEnum;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate;
-import com.asseco.ce.jtsr_digi.product_catalogue.model.CompareProductResponseType;
-import com.asseco.ce.jtsr_digi.product_catalogue.model.GetListOfProductCategoriesResponseType;
-import com.asseco.ce.jtsr_digi.product_catalogue.model.GetListOfProductsInCategoryResponseType;
-import com.asseco.ce.jtsr_digi.product_catalogue.model.GetProductAttributesDetailResponseType;
-import com.asseco.ce.jtsr_digi.product_catalogue.model.GetProductAttributesResponseType;
-import com.asseco.ce.jtsr_digi.product_catalogue.model.GetProductDetailResponseType;
-import com.asseco.ce.jtsr_digi.product_catalogue.model.GetProductDocumentsResponseType;
-import com.asseco.ce.jtsr_digi.product_catalogue.model.GetProductPortfolioAssetStructureResponseType;
-import com.asseco.ce.jtsr_digi.product_catalogue.model.GetProductPortfolioCompositionResponseType;
-import com.asseco.ce.jtsr_digi.product_catalogue.model.GetProductPortfolioFundPerformanceResponseType;
-import com.asseco.ce.jtsr_digi.product_catalogue.model.GetProductSimpleGraphResponseType;
-import com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType;
-import com.asseco.ce.jtsr_digi.product_catalogue.model.PagingRequestType;
-import com.asseco.ce.jtsr_digi.product_catalogue.model.SearchProductResponseType;
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Service.
@@ -47,8 +48,17 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
     @Autowired
     private PcTProductCatalogueRepository pcTProductCatalogueRepository;
 
-    /*@Autowired
-    private ProductDetailMapper productDetailMapper;*/
+    @Autowired
+    private PcTProductRepository pcTProductRepository;
+
+    @Autowired
+    private ListOfProductsDetailTypeMapper listOfProductsDetailTypeMapper;
+
+    @Autowired
+    private ListOfProductAttributesDetailTypeMapper listOfProductAttributesDetailTypeMapper;
+
+    @Autowired
+    private ListOfValuesMapper listOfValuesMapper;
 
     @Autowired
     private NativeWebRequest request;
@@ -134,13 +144,52 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String lang, String productId, String xCorrelationID,
             String xRequestID, InitiatorSystemType initiatorSystem) {
 
-        List<PcTProductCatalogue> pcTProductCatalogue = pcTProductCatalogueRepository.findAll();
-        log.info("########### optionalPcTProduct:: {}", pcTProductCatalogue.toString());
-        //Optional<GetProductDetailResponseType> getProductDetailResponseType = optionalPcTProduct.map(productDetailMapper::toDto);
+        Iterable<PcTProduct> pcTProducts = pcTProductRepository.findAllById(Arrays.asList(new BigInteger(productId)));
 
-        // TODO Auto-generated method stub
-        return ProductCatalogueApiApiDelegate.super.getProductDetail(lang, productId,
-                xCorrelationID, xRequestID, initiatorSystem);
+        log.info("######## pcTProducts = {}", pcTProducts);
+
+        List<PcTProductCatalogue> pcTProductCatalogues = pcTProductCatalogueRepository
+                .findByIdProductidAndIdLangCode(new BigInteger(productId), lang);
+
+        // TODO: namapovat aj params
+        GetProductDetailResponseType getProductDetailResponseType = new GetProductDetailResponseType();
+        CommonResponseType params = new CommonResponseType();
+        GetProductDetailResponseBodyType data = new GetProductDetailResponseBodyType();
+        data.setCategoryId(pcTProducts.iterator().next().getEntityType());
+        data.setLang(lang);
+        List<ListOfProductsDetailType> listOfProductsDetailTypeList = listOfProductsDetailTypeMapper
+                .ListOfProductsDetailTypeList(Lists.newArrayList(pcTProducts));
+
+        data.setListOfProducts(listOfProductsDetailTypeList.stream()
+                .flatMap(list -> {
+                    // Zoznam atributov DISTINCT
+                    List<ListOfProductAttributesDetailType> listOfProductAttributesDetailTypes =
+                            listOfProductAttributesDetailTypeMapper.ListOfProductsAttributesTypeList(
+                                    pcTProductCatalogues
+                                            .stream()
+                                            .collect(Collectors.groupingBy(p -> p.getId().getAttrId()))
+                                            .values().stream().map(plans -> plans.stream().findFirst().get())
+                                            .collect(Collectors.toList()));
+
+                    list.setListOfProductAttributes(listOfProductAttributesDetailTypes.stream()
+                            .flatMap(listOfProductAttributesDetailType -> {
+                                List<ListOfValues> listOfValues = listOfValuesMapper.ListOfValuesList(
+                                        pcTProductCatalogues
+                                                .stream()
+                                                .filter(pcTProductCatalogue -> (pcTProductCatalogue.getEnumTProdcatAttr().getAttrName() == listOfProductAttributesDetailType.getAttrName()))
+                                                .collect(Collectors.toList()));
+                                listOfProductAttributesDetailType.setListOfValues(listOfValues);
+
+                                return Stream.of(listOfProductAttributesDetailType);
+                            }).collect(Collectors.toList()));
+
+                    return Stream.of(list);
+                }).collect(Collectors.toList()));
+
+        getProductDetailResponseType.setParams(params);
+        getProductDetailResponseType.setData(data);
+
+        return new ResponseEntity<GetProductDetailResponseType>(getProductDetailResponseType, HttpStatus.OK);
     }
 
     /**

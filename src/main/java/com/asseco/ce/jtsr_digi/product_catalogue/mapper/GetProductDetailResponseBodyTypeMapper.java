@@ -8,7 +8,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
 @Slf4j
-@Mapper(componentModel = "spring", uses = {GetProductDetailResponseBodyTypeMapper.class})
+@Mapper(componentModel = "spring", uses = {ListOfProductsDetailTypeMapper.class})
 public abstract class GetProductDetailResponseBodyTypeMapper implements EntityMapper<GetProductDetailResponseBodyType, PcTProduct> {
 
     @Mappings({
@@ -18,6 +18,13 @@ public abstract class GetProductDetailResponseBodyTypeMapper implements EntityMa
 
     })
     public abstract GetProductDetailResponseBodyType toDto(PcTProduct source);
+
+    @Mappings({
+            @Mapping(target = "lang", source = "lang"),
+            @Mapping(target = "categoryId", source = "pcTProduct.entityType")
+
+    })
+    public abstract GetProductDetailResponseBodyType toDtoWithLangAndPcProduct(PcTProduct pcTProduct, String lang);
 
     @Mappings({
     })

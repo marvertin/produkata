@@ -15,6 +15,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -24,6 +25,7 @@ import lombok.NoArgsConstructor;
  * V prípade, že sa jedná o abstraktný produkt, je to uvedené v atribúte ABSTRACT (yes/no). Produkty môžu mať väzbu na abstraktný produkt, ktorá je uvedená v atribúte PARENT_PRODUCT.
  */
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
