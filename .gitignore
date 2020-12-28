@@ -1,5 +1,7 @@
 # Common / Maven
 target
+*.log
+*.log.gz
 
 # Eclipse
 .settings

@@ -1,0 +1,49 @@
+Configuration:
+  status: warn
+
+Appenders:
+  Console:
+    name: LogToConsole
+    PatternLayout:
+      Pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c - %msg%n"
+
+  RollingFile:
+    name: LogToFile
+    fileName: application.log
+    filePattern: application-%d{yyyyMMdd-HH}.%i.log.gz
+    PatternLayout:
+      pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c - %msg%n"
+    Policies:
+      SizeBasedTriggeringPolicy:
+        size: 10MB
+      TimeBasedTriggeringPolicy:
+        interval: 1
+
+Loggers:
+  Root:
+    level: warn
+    AppenderRef:
+      - ref: LogToConsole
+      - ref: LogToFile
+
+  Logger:
+    - name: com.asseco.ce.jtsr_digi
+      level: debug
+      additivity: false
+      AppenderRef:
+        - ref: LogToConsole
+        - ref: LogToFile
+
+    - name: org.springframework
+      level: info
+      additivity: false
+      AppenderRef:
+        - ref: LogToConsole
+        - ref: LogToFile
+
+    - name: liquibase
+      level: debug
+      additivity: false
+      AppenderRef:
+        - ref: LogToConsole
+        - ref: LogToFile

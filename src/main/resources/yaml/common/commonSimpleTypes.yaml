@@ -23,19 +23,31 @@ components:
 
     ISINNumberType:
       type: string
-      description: 'základný identifikátorom emisií cenných papierov (CP) a finančných nástrojov'
+      description: 'Základný identifikátor emisií cenných papierov (CP) a finančných nástrojov'
 
     ProductAttrTechnicalNameType:
       type: string
-      description: 'technický identifikátor atribútu'
+      description: 'Technical identificator of product attribute'
 
     FilterDateFromType:
       type: string
       format: date
-      description: 'dátum od'
+      description: 'Date from'
 
     FilterDateToType:
       type: string
       format: date
-      description: 'dátum do'
-      
+      description: 'Date to'
+     
+    FilterSpecificDateType:
+      type: string
+      format: date
+      description: 'Specific date'
+
+    Alpha2CountryCodeType:
+      type: string
+      description: '2 letter alphabetic code of country (ISO 3166)'
+
+    FrameContractIdType:
+      type: string
+      description: 'Unique identifier of frame contract'

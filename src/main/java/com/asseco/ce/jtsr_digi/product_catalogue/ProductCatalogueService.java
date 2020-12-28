@@ -5,35 +5,35 @@
 
 package com.asseco.ce.jtsr_digi.product_catalogue;
 
-import com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate;
-import com.asseco.ce.jtsr_digi.product_catalogue.domain.PcTProduct;
-import com.asseco.ce.jtsr_digi.product_catalogue.domain.PcTProductCatalogue;
-import com.asseco.ce.jtsr_digi.product_catalogue.mapper.ListOfProductAttributesDetailTypeMapper;
-import com.asseco.ce.jtsr_digi.product_catalogue.mapper.ListOfProductsDetailTypeMapper;
-import com.asseco.ce.jtsr_digi.product_catalogue.mapper.ListOfValuesMapper;
-import com.asseco.ce.jtsr_digi.product_catalogue.model.*;
-import com.asseco.ce.jtsr_digi.product_catalogue.repository.PcTProductCatalogueRepository;
-import com.asseco.ce.jtsr_digi.product_catalogue.repository.PcTProductRepository;
-import com.asseco.ce.jtsr_digi.product_catalogue.model.ListOfProductAttributesDetailType.AttrDataTypeEnum;
-import com.google.common.collect.Lists;
-import lombok.extern.slf4j.Slf4j;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.math.BigInteger;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate;
+import com.asseco.ce.jtsr_digi.product_catalogue.domain.PcTProductCatalogue;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.CompareProductResponseType;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.GetListOfProductCategoriesResponseType;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.GetListOfProductsInCategoryResponseType;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.GetProductAttributesDetailResponseType;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.GetProductAttributesResponseType;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.GetProductDetailResponseType;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.GetProductDocumentsResponseType;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.GetProductPortfolioAssetStructureResponseType;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.GetProductPortfolioCompositionResponseType;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.GetProductPortfolioFundPerformanceResponseType;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.GetProductSimpleGraphResponseType;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.PagingRequestType;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.SearchProductResponseType;
+import com.asseco.ce.jtsr_digi.product_catalogue.repository.PcTProductCatalogueRepository;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Service.
@@ -79,10 +79,17 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String lang, List<String> listOfProductIds,
             List<String> listOfProductAttrs, String xCorrelationID,
             String xRequestID, InitiatorSystemType initiatorSystem) {
+        if (log.isDebugEnabled()) {
+            log.debug("compareProduct({}, {}, {}, {}, {}, {}) - >", lang, listOfProductIds, listOfProductAttrs, xCorrelationID, xRequestID, initiatorSystem);
+        }
+
         // TODO Auto-generated method stub
-        return ProductCatalogueApiApiDelegate.super.compareProduct(lang,
-                listOfProductIds, listOfProductAttrs, xCorrelationID, xRequestID,
-                initiatorSystem);
+        ResponseEntity<CompareProductResponseType> returnResponseEntity = ProductCatalogueApiApiDelegate.super.compareProduct(lang, listOfProductIds, listOfProductAttrs, xCorrelationID, xRequestID, initiatorSystem);
+
+        if (log.isDebugEnabled()) {
+            log.debug("compareProduct() - < - return value={}", returnResponseEntity);
+        }
+        return returnResponseEntity;
     }
 
     /**
@@ -92,9 +99,17 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
     public ResponseEntity<GetListOfProductCategoriesResponseType> getListOfProductCategories(
             String lang, String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem) {
+        if (log.isDebugEnabled()) {
+            log.debug("getListOfProductCategories({}, {}, {}, {}) - >", lang, xCorrelationID, xRequestID, initiatorSystem);
+        }
+
         // TODO Auto-generated method stub
-        return ProductCatalogueApiApiDelegate.super.getListOfProductCategories(lang,
-                xCorrelationID, xRequestID, initiatorSystem);
+        ResponseEntity<GetListOfProductCategoriesResponseType> returnResponseEntity = ProductCatalogueApiApiDelegate.super.getListOfProductCategories(lang, xCorrelationID, xRequestID, initiatorSystem);
+
+        if (log.isDebugEnabled()) {
+            log.debug("getListOfProductCategories() - < - return value={}", returnResponseEntity);
+        }
+        return returnResponseEntity;
     }
 
     /**
@@ -105,9 +120,17 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String lang, String categoryId, String xCorrelationID,
             String xRequestID, InitiatorSystemType initiatorSystem,
             PagingRequestType paging) {
+        if (log.isDebugEnabled()) {
+            log.debug("getListOfProductsInCategory({}, {}, {}, {}, {}, {}) - >", lang, categoryId, xCorrelationID, xRequestID, initiatorSystem, paging);
+        }
+
         // TODO Auto-generated method stub
-        return ProductCatalogueApiApiDelegate.super.getListOfProductsInCategory(lang,
-                categoryId, xCorrelationID, xRequestID, initiatorSystem, paging);
+        ResponseEntity<GetListOfProductsInCategoryResponseType> returnResponseEntity = ProductCatalogueApiApiDelegate.super.getListOfProductsInCategory(lang, categoryId, xCorrelationID, xRequestID, initiatorSystem, paging);
+
+        if (log.isDebugEnabled()) {
+            log.debug("getListOfProductsInCategory() - < - return value={}", returnResponseEntity);
+        }
+        return returnResponseEntity;
     }
 
     /**
@@ -118,10 +141,17 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String lang, String categoryId, Boolean comboBoxAttributes,
             String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem) {
+        if (log.isDebugEnabled()) {
+            log.debug("getProductAttributes({}, {}, {}, {}, {}, {}) - >", lang, categoryId, comboBoxAttributes, xCorrelationID, xRequestID, initiatorSystem);
+        }
+
         // TODO Auto-generated method stub
-        return ProductCatalogueApiApiDelegate.super.getProductAttributes(lang,
-                categoryId, comboBoxAttributes, xCorrelationID, xRequestID,
-                initiatorSystem);
+        ResponseEntity<GetProductAttributesResponseType> returnResponseEntity = ProductCatalogueApiApiDelegate.super.getProductAttributes(lang, categoryId, comboBoxAttributes, xCorrelationID, xRequestID, initiatorSystem);
+
+        if (log.isDebugEnabled()) {
+            log.debug("getProductAttributes() - < - return value={}", returnResponseEntity);
+        }
+        return returnResponseEntity;
     }
 
     /**
@@ -131,9 +161,17 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
     public ResponseEntity<GetProductAttributesDetailResponseType> getProductAttributesDetail(
             String lang, String attrTechnicalName, String xCorrelationID,
             String xRequestID, InitiatorSystemType initiatorSystem) {
+        if (log.isDebugEnabled()) {
+            log.debug("getProductAttributesDetail({}, {}, {}, {}, {}) - >", lang, attrTechnicalName, xCorrelationID, xRequestID, initiatorSystem);
+        }
+
         // TODO Auto-generated method stub
-        return ProductCatalogueApiApiDelegate.super.getProductAttributesDetail(lang,
-                attrTechnicalName, xCorrelationID, xRequestID, initiatorSystem);
+        ResponseEntity<GetProductAttributesDetailResponseType> returnResponseEntity = ProductCatalogueApiApiDelegate.super.getProductAttributesDetail(lang, attrTechnicalName, xCorrelationID, xRequestID, initiatorSystem);
+
+        if (log.isDebugEnabled()) {
+            log.debug("getProductAttributesDetail() - < - return value={}", returnResponseEntity);
+        }
+        return returnResponseEntity;
     }
 
     /**
@@ -200,9 +238,17 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String lang, String productId, LocalDate dateFrom, LocalDate dateTo,
             String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem) {
+        if (log.isDebugEnabled()) {
+            log.debug("getProductDocuments({}, {}, {}, {}, {}, {}, {}) - >", lang, productId, dateFrom, dateTo, xCorrelationID, xRequestID, initiatorSystem);
+        }
+
         // TODO Auto-generated method stub
-        return ProductCatalogueApiApiDelegate.super.getProductDocuments(lang, productId,
-                dateFrom, dateTo, xCorrelationID, xRequestID, initiatorSystem);
+        ResponseEntity<GetProductDocumentsResponseType> returnResponseEntity = ProductCatalogueApiApiDelegate.super.getProductDocuments(lang, productId, dateFrom, dateTo, xCorrelationID, xRequestID, initiatorSystem);
+
+        if (log.isDebugEnabled()) {
+            log.debug("getProductDocuments() - < - return value={}", returnResponseEntity);
+        }
+        return returnResponseEntity;
     }
 
     /**
@@ -213,10 +259,17 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String lang, String productId, LocalDate dateFrom, LocalDate dateTo,
             String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem, PagingRequestType paging) {
+        if (log.isDebugEnabled()) {
+            log.debug("getProductPortfolioAssetStructure({}, {}, {}, {}, {}, {}, {}, {}) - >", lang, productId, dateFrom, dateTo, xCorrelationID, xRequestID, initiatorSystem, paging);
+        }
+
         // TODO Auto-generated method stub
-        return ProductCatalogueApiApiDelegate.super.getProductPortfolioAssetStructure(
-                lang, productId, dateFrom, dateTo, xCorrelationID, xRequestID,
-                initiatorSystem, paging);
+        ResponseEntity<GetProductPortfolioAssetStructureResponseType> returnResponseEntity = ProductCatalogueApiApiDelegate.super.getProductPortfolioAssetStructure(lang, productId, dateFrom, dateTo, xCorrelationID, xRequestID, initiatorSystem, paging);
+
+        if (log.isDebugEnabled()) {
+            log.debug("getProductPortfolioAssetStructure() - < - return value={}", returnResponseEntity);
+        }
+        return returnResponseEntity;
     }
 
     /**
@@ -227,10 +280,17 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String lang, String productId, LocalDate dateFrom, LocalDate dateTo,
             String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem) {
+        if (log.isDebugEnabled()) {
+            log.debug("getProductPortfolioComposition({}, {}, {}, {}, {}, {}, {}) - >", lang, productId, dateFrom, dateTo, xCorrelationID, xRequestID, initiatorSystem);
+        }
+
         // TODO Auto-generated method stub
-        return ProductCatalogueApiApiDelegate.super.getProductPortfolioComposition(lang,
-                productId, dateFrom, dateTo, xCorrelationID, xRequestID,
-                initiatorSystem);
+        ResponseEntity<GetProductPortfolioCompositionResponseType> returnResponseEntity = ProductCatalogueApiApiDelegate.super.getProductPortfolioComposition(lang, productId, dateFrom, dateTo, xCorrelationID, xRequestID, initiatorSystem);
+
+        if (log.isDebugEnabled()) {
+            log.debug("getProductPortfolioComposition() - < - return value={}", returnResponseEntity);
+        }
+        return returnResponseEntity;
     }
 
     /**
@@ -241,10 +301,17 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String lang, String productId, LocalDate dateFrom, LocalDate dateTo,
             String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem) {
+        if (log.isDebugEnabled()) {
+            log.debug("getProductPortfolioFundPerformance({}, {}, {}, {}, {}, {}, {}) - >", lang, productId, dateFrom, dateTo, xCorrelationID, xRequestID, initiatorSystem);
+        }
+
         // TODO Auto-generated method stub
-        return ProductCatalogueApiApiDelegate.super.getProductPortfolioFundPerformance(
-                lang, productId, dateFrom, dateTo, xCorrelationID, xRequestID,
-                initiatorSystem);
+        ResponseEntity<GetProductPortfolioFundPerformanceResponseType> returnResponseEntity = ProductCatalogueApiApiDelegate.super.getProductPortfolioFundPerformance(lang, productId, dateFrom, dateTo, xCorrelationID, xRequestID, initiatorSystem);
+
+        if (log.isDebugEnabled()) {
+            log.debug("getProductPortfolioFundPerformance() - < - return value={}", returnResponseEntity);
+        }
+        return returnResponseEntity;
     }
 
     /**
@@ -255,10 +322,17 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String lang, String productId, LocalDate dateFrom, LocalDate dateTo,
             String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem, PagingRequestType paging) {
+        if (log.isDebugEnabled()) {
+            log.debug("getProductSimpleGraph({}, {}, {}, {}, {}, {}, {}, {}) - >", lang, productId, dateFrom, dateTo, xCorrelationID, xRequestID, initiatorSystem, paging);
+        }
+
         // TODO Auto-generated method stub
-        return ProductCatalogueApiApiDelegate.super.getProductSimpleGraph(lang,
-                productId, dateFrom, dateTo, xCorrelationID, xRequestID,
-                initiatorSystem, paging);
+        ResponseEntity<GetProductSimpleGraphResponseType> returnResponseEntity = ProductCatalogueApiApiDelegate.super.getProductSimpleGraph(lang, productId, dateFrom, dateTo, xCorrelationID, xRequestID, initiatorSystem, paging);
+
+        if (log.isDebugEnabled()) {
+            log.debug("getProductSimpleGraph() - < - return value={}", returnResponseEntity);
+        }
+        return returnResponseEntity;
     }
 
     /**
@@ -266,11 +340,19 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
      */
     @Override
     public ResponseEntity<SearchProductResponseType> searchProduct(String lang,
-                                                                   String searchQuery, String xCorrelationID, String xRequestID,
-                                                                   InitiatorSystemType initiatorSystem) {
+            String searchQuery, String xCorrelationID, String xRequestID,
+            InitiatorSystemType initiatorSystem) {
+        if (log.isDebugEnabled()) {
+            log.debug("searchProduct({}, {}, {}, {}, {}) - >", lang, searchQuery, xCorrelationID, xRequestID, initiatorSystem);
+        }
+
         // TODO Auto-generated method stub
-        return ProductCatalogueApiApiDelegate.super.searchProduct(lang, searchQuery,
-                xCorrelationID, xRequestID, initiatorSystem);
+        ResponseEntity<SearchProductResponseType> returnResponseEntity = ProductCatalogueApiApiDelegate.super.searchProduct(lang, searchQuery, xCorrelationID, xRequestID, initiatorSystem);
+
+        if (log.isDebugEnabled()) {
+            log.debug("searchProduct() - < - return value={}", returnResponseEntity);
+        }
+        return returnResponseEntity;
     }
 
 }
