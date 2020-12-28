@@ -5,35 +5,30 @@
 
 package com.asseco.ce.jtsr_digi.product_catalogue;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-
+import com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate;
+import com.asseco.ce.jtsr_digi.product_catalogue.domain.PcTProduct;
+import com.asseco.ce.jtsr_digi.product_catalogue.domain.PcTProductCatalogue;
+import com.asseco.ce.jtsr_digi.product_catalogue.mapper.ListOfProductAttributesDetailTypeMapper;
+import com.asseco.ce.jtsr_digi.product_catalogue.mapper.ListOfProductsDetailTypeMapper;
+import com.asseco.ce.jtsr_digi.product_catalogue.mapper.ListOfValuesMapper;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.*;
+import com.asseco.ce.jtsr_digi.product_catalogue.repository.PcTProductCatalogueRepository;
+import com.asseco.ce.jtsr_digi.product_catalogue.repository.PcTProductRepository;
+import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate;
-import com.asseco.ce.jtsr_digi.product_catalogue.domain.PcTProductCatalogue;
-import com.asseco.ce.jtsr_digi.product_catalogue.model.CompareProductResponseType;
-import com.asseco.ce.jtsr_digi.product_catalogue.model.GetListOfProductCategoriesResponseType;
-import com.asseco.ce.jtsr_digi.product_catalogue.model.GetListOfProductsInCategoryResponseType;
-import com.asseco.ce.jtsr_digi.product_catalogue.model.GetProductAttributesDetailResponseType;
-import com.asseco.ce.jtsr_digi.product_catalogue.model.GetProductAttributesResponseType;
-import com.asseco.ce.jtsr_digi.product_catalogue.model.GetProductDetailResponseType;
-import com.asseco.ce.jtsr_digi.product_catalogue.model.GetProductDocumentsResponseType;
-import com.asseco.ce.jtsr_digi.product_catalogue.model.GetProductPortfolioAssetStructureResponseType;
-import com.asseco.ce.jtsr_digi.product_catalogue.model.GetProductPortfolioCompositionResponseType;
-import com.asseco.ce.jtsr_digi.product_catalogue.model.GetProductPortfolioFundPerformanceResponseType;
-import com.asseco.ce.jtsr_digi.product_catalogue.model.GetProductSimpleGraphResponseType;
-import com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType;
-import com.asseco.ce.jtsr_digi.product_catalogue.model.PagingRequestType;
-import com.asseco.ce.jtsr_digi.product_catalogue.model.SearchProductResponseType;
-import com.asseco.ce.jtsr_digi.product_catalogue.repository.PcTProductCatalogueRepository;
-
-import lombok.extern.slf4j.Slf4j;
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Service.
@@ -182,9 +177,11 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String lang, String productId, String xCorrelationID,
             String xRequestID, InitiatorSystemType initiatorSystem) {
 
-        Iterable<PcTProduct> pcTProducts = pcTProductRepository.findAllById(Arrays.asList(new BigInteger(productId)));
+        if (log.isDebugEnabled()) {
+            log.debug("getProductAttributesDetail({}, {}, {}, {}, {}) - >", lang, productId, xCorrelationID, xRequestID, initiatorSystem);
+        }
 
-        log.info("######## pcTProducts = {}", pcTProducts);
+        Iterable<PcTProduct> pcTProducts = pcTProductRepository.findAllById(Arrays.asList(new BigInteger(productId)));
 
         List<PcTProductCatalogue> pcTProductCatalogues = pcTProductCatalogueRepository
                 .findByIdProductidAndIdLangCode(new BigInteger(productId), lang);
@@ -226,6 +223,10 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
 
         getProductDetailResponseType.setParams(params);
         getProductDetailResponseType.setData(data);
+
+        if (log.isDebugEnabled()) {
+            log.debug("getProductDetail() - < - return value={}", getProductDetailResponseType);
+        }
 
         return new ResponseEntity<GetProductDetailResponseType>(getProductDetailResponseType, HttpStatus.OK);
     }
