@@ -8,15 +8,15 @@ package com.asseco.ce.jtsr_digi.product_catalogue;
 import com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate;
 import com.asseco.ce.jtsr_digi.product_catalogue.domain.PcTProduct;
 import com.asseco.ce.jtsr_digi.product_catalogue.domain.PcTProductCatalogue;
-import com.asseco.ce.jtsr_digi.product_catalogue.mapper.ListOfProductAttributesDetailTypeMapper;
-import com.asseco.ce.jtsr_digi.product_catalogue.mapper.ListOfProductsDetailTypeMapper;
-import com.asseco.ce.jtsr_digi.product_catalogue.mapper.ListOfValuesMapper;
+import com.asseco.ce.jtsr_digi.product_catalogue.mapper.*;
 import com.asseco.ce.jtsr_digi.product_catalogue.model.*;
 import com.asseco.ce.jtsr_digi.product_catalogue.repository.PcTProductCatalogueRepository;
 import com.asseco.ce.jtsr_digi.product_catalogue.repository.PcTProductRepository;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -50,7 +50,13 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
     private ListOfProductsDetailTypeMapper listOfProductsDetailTypeMapper;
 
     @Autowired
+    private ListOfProductsTypeMapper listOfProductsTypeMapper;
+
+    @Autowired
     private ListOfProductAttributesDetailTypeMapper listOfProductAttributesDetailTypeMapper;
+
+    @Autowired
+    private ListOfProductAttributesTypeMapper listOfProductAttributesTypeMapper;
 
     @Autowired
     private ListOfValuesMapper listOfValuesMapper;
@@ -115,17 +121,48 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String lang, String categoryId, String xCorrelationID,
             String xRequestID, InitiatorSystemType initiatorSystem,
             PagingRequestType paging) {
+
         if (log.isDebugEnabled()) {
             log.debug("getListOfProductsInCategory({}, {}, {}, {}, {}, {}) - >", lang, categoryId, xCorrelationID, xRequestID, initiatorSystem, paging);
         }
 
-        // TODO Auto-generated method stub
-        ResponseEntity<GetListOfProductsInCategoryResponseType> returnResponseEntity = ProductCatalogueApiApiDelegate.super.getListOfProductsInCategory(lang, categoryId, xCorrelationID, xRequestID, initiatorSystem, paging);
+        int pageSize = paging.getLimit().intValue();
+        int pageNo = paging.getOffset().intValue()/pageSize;
+
+        Page<PcTProduct> pcTProducts = pcTProductRepository.findByEntityType(categoryId, PageRequest.of(pageNo, pageSize));
+
+        log.info("######## pcTProducts = {}", pcTProducts.getContent());
+        /*List<PcTProductCatalogue> pcTProductCatalogues = pcTProductCatalogueRepository
+                .findByIdProductidAndIdLangCode(new BigInteger(productId), lang);*/
+
+        GetListOfProductsInCategoryResponseType getListOfProductsInCategoryResponseType = new GetListOfProductsInCategoryResponseType();
+
+        CommonResponseType params = new CommonResponseType();
+        PagingResponseType pagingResponseType  = new PagingResponseType();
+        pagingResponseType.setHasNextPage(pcTProducts.getTotalPages()-pageNo-1);
+        pagingResponseType.setHasPreviousPage(pageNo);
+        pagingResponseType.setLimit(paging.getLimit());
+        pagingResponseType.setOffset(paging.getOffset());
+        pagingResponseType.setRecordCount(pcTProducts.getNumberOfElements());
+        pagingResponseType.setRecordCountTotal(Integer.valueOf((int)pcTProducts.getTotalElements()));
+        params.setPaging(pagingResponseType);
+
+        GetListOfProductsInCategoryResponseBodyType data = new GetListOfProductsInCategoryResponseBodyType();
+        data.setCategoryId(categoryId);
+        data.setLang(lang);
+
+        List<ListOfProductsType> listOfProductsTypeList = listOfProductsTypeMapper
+                .ListOfProductsTypeList(pcTProducts.getContent());
+        data.setListOfProducts(listOfProductsTypeList);
+
+        getListOfProductsInCategoryResponseType.setParams(params);
+        getListOfProductsInCategoryResponseType.setData(data);
 
         if (log.isDebugEnabled()) {
-            log.debug("getListOfProductsInCategory() - < - return value={}", returnResponseEntity);
+            log.debug("getListOfProductsInCategory() - < - return value={}", getListOfProductsInCategoryResponseType);
         }
-        return returnResponseEntity;
+
+        return new ResponseEntity<GetListOfProductsInCategoryResponseType>(getListOfProductsInCategoryResponseType, HttpStatus.OK);
     }
 
     /**
@@ -178,7 +215,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String xRequestID, InitiatorSystemType initiatorSystem) {
 
         if (log.isDebugEnabled()) {
-            log.debug("getProductAttributesDetail({}, {}, {}, {}, {}) - >", lang, productId, xCorrelationID, xRequestID, initiatorSystem);
+            log.debug("getProductDetail({}, {}, {}, {}, {}) - >", lang, productId, xCorrelationID, xRequestID, initiatorSystem);
         }
 
         Iterable<PcTProduct> pcTProducts = pcTProductRepository.findAllById(Arrays.asList(new BigInteger(productId)));

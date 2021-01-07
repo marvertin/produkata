@@ -2,13 +2,18 @@ server:
   port: 8080
   servlet:
     context-path: /productcatalogue
+#    encoding:
+#      force: true
+#      enabled: true
+#      charset: UTF-8
 
 spring:
   jackson:
     date-format: com.asseco.ce.jtsr_digi.product_catalogue.RFC3339DateFormat
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
-
+#  mvc:
+#    throw-exception-if-no-handler-found: true
   datasource:
     url: jdbc:oracle:thin:@//jtsr-ivp-db.assecosk.local:1521/JTDIGI_D
     driver-class-name: oracle.jdbc.OracleDriver
@@ -17,6 +22,10 @@ spring:
 
   jpa:
     database-platform: org.hibernate.dialect.Oracle12cDialect
+#  web:
+#    resources:
+#      add-mappings: false
+
 
 springfox:
   documentation:
