@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -128,31 +129,45 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
 
         int pageSize = paging.getLimit().intValue();
         int pageNo = paging.getOffset().intValue()/pageSize;
+        long recordCountTotal = 0;
 
-        Page<PcTProduct> pcTProducts = pcTProductRepository.findByEntityType(categoryId, PageRequest.of(pageNo, pageSize));
+        Slice<PcTProduct> pcTProducts = pcTProductRepository.findByEntityType(categoryId, PageRequest.of(pageNo, pageSize));
 
-        log.info("######## pcTProducts = {}", pcTProducts.getContent());
-        /*List<PcTProductCatalogue> pcTProductCatalogues = pcTProductCatalogueRepository
-                .findByIdProductidAndIdLangCode(new BigInteger(productId), lang);*/
+        if (paging.getReturnTotalCount()) {
+            recordCountTotal = pcTProductRepository.countByEntityType(categoryId);
+        }
 
         GetListOfProductsInCategoryResponseType getListOfProductsInCategoryResponseType = new GetListOfProductsInCategoryResponseType();
 
         CommonResponseType params = new CommonResponseType();
         PagingResponseType pagingResponseType  = new PagingResponseType();
-        pagingResponseType.setHasNextPage(pcTProducts.getTotalPages()-pageNo-1);
-        pagingResponseType.setHasPreviousPage(pageNo);
+        pagingResponseType.setHasNextPage(pcTProducts.hasNext() ? 1 : 0);
+        pagingResponseType.setHasPreviousPage(pcTProducts.hasPrevious() ? 1 : 0);
         pagingResponseType.setLimit(paging.getLimit());
         pagingResponseType.setOffset(paging.getOffset());
         pagingResponseType.setRecordCount(pcTProducts.getNumberOfElements());
-        pagingResponseType.setRecordCountTotal(Integer.valueOf((int)pcTProducts.getTotalElements()));
+        if (paging.getReturnTotalCount())
+            pagingResponseType.setRecordCountTotal(Integer.valueOf((int)recordCountTotal));
         params.setPaging(pagingResponseType);
 
         GetListOfProductsInCategoryResponseBodyType data = new GetListOfProductsInCategoryResponseBodyType();
         data.setCategoryId(categoryId);
         data.setLang(lang);
 
-        List<ListOfProductsType> listOfProductsTypeList = listOfProductsTypeMapper
-                .ListOfProductsTypeList(pcTProducts.getContent());
+        List<ListOfProductsType> listOfProductsTypeList = pcTProducts.getContent().stream()
+                .flatMap(product -> {
+                    List<PcTProductCatalogue> pcTProductCatalogues = pcTProductCatalogueRepository
+                            .findByIdProductidAndIdLangCode(product.getProductid(), lang);
+
+                    List<ListOfProductAttributesType> listOfProductAttributesType = listOfProductAttributesTypeMapper
+                            .ListOfProductsAttributesTypeList(pcTProductCatalogues);
+
+                    ListOfProductsType listOfProductsType = listOfProductsTypeMapper.toDto(product);
+                    listOfProductsType.setListOfProductAttributes(listOfProductAttributesType);
+
+                    return Stream.of(listOfProductsType);
+                }).collect(Collectors.toList());
+
         data.setListOfProducts(listOfProductsTypeList);
 
         getListOfProductsInCategoryResponseType.setParams(params);

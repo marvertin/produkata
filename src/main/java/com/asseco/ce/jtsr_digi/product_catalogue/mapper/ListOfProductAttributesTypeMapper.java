@@ -1,7 +1,6 @@
 package com.asseco.ce.jtsr_digi.product_catalogue.mapper;
 
 import com.asseco.ce.jtsr_digi.product_catalogue.domain.PcTProductCatalogue;
-import com.asseco.ce.jtsr_digi.product_catalogue.model.ListOfProductAttributesDetailType;
 import com.asseco.ce.jtsr_digi.product_catalogue.model.ListOfProductAttributesType;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.*;
@@ -21,8 +20,7 @@ public abstract class ListOfProductAttributesTypeMapper implements EntityMapper<
             @Mapping(target = "attrDataType", source = "enumTProdcatAttr.attrType"),
             @Mapping(target = "attrOrder", source = "id.orderValue"),
             @Mapping(target = "attrNumericValue", source = "NAttrValue"),
-            @Mapping(target = "attrDateValue", source = "DAttrValue", qualifiedByName = "dateToLocalDate"),
-            //@Mapping(target = "listOfValues", ignore = true)
+            @Mapping(target = "attrDateValue", source = "DAttrValue", qualifiedByName = "dateToLocalDate")
 
     })
     public abstract ListOfProductAttributesType toDto(PcTProductCatalogue source);
