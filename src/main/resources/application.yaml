@@ -19,13 +19,11 @@ spring:
     driver-class-name: oracle.jdbc.OracleDriver
     username: DATREP247_PUBLIC
     password: DATREP247
-
   jpa:
     database-platform: org.hibernate.dialect.Oracle12cDialect
 #  web:
 #    resources:
 #      add-mappings: false
-
 
 springfox:
   documentation:
