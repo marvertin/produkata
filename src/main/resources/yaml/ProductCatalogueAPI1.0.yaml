@@ -19,6 +19,9 @@ paths:
       description: >-
         Získanie zoznamu produktových kategórií (Fondy, Dlhopisy, Investičné zlato, ... )
 
+
+        Získané produktové kategórie sa ďalej používajú v jednotlivých metódach ako vstup, napr. pre zobrazenie zoznamu produktov v produktovej kategórii
+
       parameters:
         - $ref: '#/components/parameters/XCorrelationIdHeaderParameterType'
         - $ref: '#/components/parameters/XRequestIdHeaderParameterType'
@@ -68,7 +71,10 @@ paths:
         - ProductCatalogue API
       summary: Vracia zoznam produktov v produktovej kategórii
       description: >-
-        Získanie zoznamu produktov v definovanej produktovej kategórií na vstupe
+        Získanie zoznamu produktov v definovanej produktovej kategórií na vstupe.
+
+
+        Získaný zoznam obsahuje iba vybranú množinu atribútov, ktoré sú prezentované v zozname produktov. Získané productId je možné využiť pri zobrazení celej množiny atribútov pre daný produkt (operationId: getProductDetail).
 
       parameters:
         - $ref: '#/components/parameters/XCorrelationIdHeaderParameterType'
@@ -121,7 +127,9 @@ paths:
         - ProductCatalogue API
       summary: Vracia detail produktu
       description: >-
-        Získanie detailu produktu
+        Získanie detailu produktu podľa definovaného productId na vstupe.
+
+        Metóda vráti celú množinu atribútov definovaných na danom produkte.
 
       parameters:
         - $ref: '#/components/parameters/XCorrelationIdHeaderParameterType'
@@ -549,7 +557,7 @@ paths:
           required: true
           style: form
           schema:
-            type: boolean
+            type: integer
 
       responses:
         '200':
@@ -613,8 +621,7 @@ paths:
       responses:
         '200':
           description: >-
-            Successfull response for password activation verify response
-            operation.
+           Successful response
           content:
             application/json:
               schema:

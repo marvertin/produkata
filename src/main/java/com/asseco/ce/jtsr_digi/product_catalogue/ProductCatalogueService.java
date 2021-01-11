@@ -5,24 +5,6 @@
 
 package com.asseco.ce.jtsr_digi.product_catalogue;
 
-import com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate;
-import com.asseco.ce.jtsr_digi.product_catalogue.domain.PcTProduct;
-import com.asseco.ce.jtsr_digi.product_catalogue.domain.PcTProductCatalogue;
-import com.asseco.ce.jtsr_digi.product_catalogue.mapper.*;
-import com.asseco.ce.jtsr_digi.product_catalogue.model.*;
-import com.asseco.ce.jtsr_digi.product_catalogue.repository.PcTProductCatalogueRepository;
-import com.asseco.ce.jtsr_digi.product_catalogue.repository.PcTProductRepository;
-import com.google.common.collect.Lists;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Slice;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.NativeWebRequest;
-
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -30,6 +12,52 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.NativeWebRequest;
+
+import com.google.common.collect.Lists;
+
+import com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate;
+import com.asseco.ce.jtsr_digi.product_catalogue.domain.PcTProduct;
+import com.asseco.ce.jtsr_digi.product_catalogue.domain.PcTProductCatalogue;
+import com.asseco.ce.jtsr_digi.product_catalogue.mapper.ListOfProductAttributesDetailTypeMapper;
+import com.asseco.ce.jtsr_digi.product_catalogue.mapper.ListOfProductAttributesTypeMapper;
+import com.asseco.ce.jtsr_digi.product_catalogue.mapper.ListOfProductsDetailTypeMapper;
+import com.asseco.ce.jtsr_digi.product_catalogue.mapper.ListOfProductsTypeMapper;
+import com.asseco.ce.jtsr_digi.product_catalogue.mapper.ListOfValuesMapper;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.CommonResponseType;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.CompareProductResponseType;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.GetListOfProductCategoriesResponseType;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.GetListOfProductsInCategoryResponseBodyType;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.GetListOfProductsInCategoryResponseType;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.GetProductAttributesDetailResponseType;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.GetProductAttributesResponseType;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.GetProductDetailResponseBodyType;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.GetProductDetailResponseType;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.GetProductDocumentsResponseType;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.GetProductPortfolioAssetStructureResponseType;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.GetProductPortfolioCompositionResponseType;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.GetProductPortfolioFundPerformanceResponseType;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.GetProductSimpleGraphResponseType;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.ListOfProductAttributesDetailType;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.ListOfProductAttributesType;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.ListOfProductsDetailType;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.ListOfProductsType;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.ListOfValues;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.PagingRequestType;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.PagingResponseType;
+import com.asseco.ce.jtsr_digi.product_catalogue.model.SearchProductResponseType;
+import com.asseco.ce.jtsr_digi.product_catalogue.repository.PcTProductCatalogueRepository;
+import com.asseco.ce.jtsr_digi.product_catalogue.repository.PcTProductRepository;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Service.
@@ -133,7 +161,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
 
         Slice<PcTProduct> pcTProducts = pcTProductRepository.findByEntityType(categoryId, PageRequest.of(pageNo, pageSize));
 
-        if (paging.getReturnTotalCount()) {
+        if (Boolean.TRUE.equals(paging.getReturnTotalCount())) {
             recordCountTotal = pcTProductRepository.countByEntityType(categoryId);
         }
 
@@ -146,8 +174,8 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
         pagingResponseType.setLimit(paging.getLimit());
         pagingResponseType.setOffset(paging.getOffset());
         pagingResponseType.setRecordCount(pcTProducts.getNumberOfElements());
-        if (paging.getReturnTotalCount())
-            pagingResponseType.setRecordCountTotal(Integer.valueOf((int)recordCountTotal));
+        if (Boolean.TRUE.equals(paging.getReturnTotalCount()))
+            pagingResponseType.setRecordCountTotal(Integer.valueOf((int) recordCountTotal));
         params.setPaging(pagingResponseType);
 
         GetListOfProductsInCategoryResponseBodyType data = new GetListOfProductsInCategoryResponseBodyType();
@@ -177,15 +205,15 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             log.debug("getListOfProductsInCategory() - < - return value={}", getListOfProductsInCategoryResponseType);
         }
 
-        return new ResponseEntity<GetListOfProductsInCategoryResponseType>(getListOfProductsInCategoryResponseType, HttpStatus.OK);
+        return new ResponseEntity<>(getListOfProductsInCategoryResponseType, HttpStatus.OK);
     }
 
     /**
-     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate#getProductAttributes(java.lang.String, java.lang.String, java.lang.Boolean, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType)
+     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate#getProductAttributes(java.lang.String, java.lang.String, java.lang.Integer, java.lang.String, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType)
      */
     @Override
     public ResponseEntity<GetProductAttributesResponseType> getProductAttributes(
-            String lang, String categoryId, Boolean comboBoxAttributes,
+            String lang, String categoryId, Integer comboBoxAttributes,
             String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem) {
         if (log.isDebugEnabled()) {
@@ -263,7 +291,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
                                 List<ListOfValues> listOfValues = listOfValuesMapper.ListOfValuesList(
                                         pcTProductCatalogues
                                                 .stream()
-                                                .filter(pcTProductCatalogue -> (pcTProductCatalogue.getEnumTProdcatAttr().getAttrName() == listOfProductAttributesDetailType.getAttrName()))
+                                                .filter(pcTProductCatalogue -> (pcTProductCatalogue.getEnumTProdcatAttr().getAttrName().equals(listOfProductAttributesDetailType.getAttrName())))
                                                 .collect(Collectors.toList()));
                                 listOfProductAttributesDetailType.setListOfValues(listOfValues);
 
@@ -280,7 +308,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             log.debug("getProductDetail() - < - return value={}", getProductDetailResponseType);
         }
 
-        return new ResponseEntity<GetProductDetailResponseType>(getProductDetailResponseType, HttpStatus.OK);
+        return new ResponseEntity<>(getProductDetailResponseType, HttpStatus.OK);
     }
 
     /**
