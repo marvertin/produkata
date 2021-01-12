@@ -10,12 +10,12 @@ import com.asseco.ce.jtsr_digi.product_catalogue.domain.PcTProduct;
 import com.asseco.ce.jtsr_digi.product_catalogue.domain.PcTProductCatalogue;
 import com.asseco.ce.jtsr_digi.product_catalogue.mapper.*;
 import com.asseco.ce.jtsr_digi.product_catalogue.model.*;
+import com.asseco.ce.jtsr_digi.product_catalogue.repository.EnumTProdcatAttrRepository;
 import com.asseco.ce.jtsr_digi.product_catalogue.repository.PcTProductCatalogueRepository;
 import com.asseco.ce.jtsr_digi.product_catalogue.repository.PcTProductRepository;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
@@ -25,11 +25,13 @@ import org.springframework.web.context.request.NativeWebRequest;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * Service.
@@ -48,6 +50,9 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
     private PcTProductRepository pcTProductRepository;
 
     @Autowired
+    private EnumTProdcatAttrRepository enumTProdcatAttrRepository;
+
+    @Autowired
     private ListOfProductsDetailTypeMapper listOfProductsDetailTypeMapper;
 
     @Autowired
@@ -58,6 +63,9 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
 
     @Autowired
     private ListOfProductAttributesTypeMapper listOfProductAttributesTypeMapper;
+
+    @Autowired
+    private GetProductAttributesResponseBodyTypeListOfTechnicalAttributesMapper getProductAttributesResponseBodyTypeListOfTechnicalAttributesMapper;
 
     @Autowired
     private ListOfValuesMapper listOfValuesMapper;
@@ -81,17 +89,63 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String lang, List<String> listOfProductIds,
             List<String> listOfProductAttrs, String xCorrelationID,
             String xRequestID, InitiatorSystemType initiatorSystem) {
+
         if (log.isDebugEnabled()) {
             log.debug("compareProduct({}, {}, {}, {}, {}, {}) - >", lang, listOfProductIds, listOfProductAttrs, xCorrelationID, xRequestID, initiatorSystem);
         }
 
-        // TODO Auto-generated method stub
-        ResponseEntity<CompareProductResponseType> returnResponseEntity = ProductCatalogueApiApiDelegate.super.compareProduct(lang, listOfProductIds, listOfProductAttrs, xCorrelationID, xRequestID, initiatorSystem);
+        List<BigInteger> productIds = listOfProductIds.stream().map(x -> new BigInteger(x)).collect(Collectors.toList());
+
+        Iterable<PcTProduct> pcTProducts = pcTProductRepository.findAllById(productIds);
+
+        CompareProductResponseType compareProductResponseType = new CompareProductResponseType();
+        CommonResponseType params = new CommonResponseType();
+        CompareProductResponseBodyType data = new CompareProductResponseBodyType();
+
+        data.setLang(lang);
+
+        List<ListOfProductsDetailType> listOfProductsDetailTypeList = listOfProductsDetailTypeMapper
+                .ListOfProductsDetailTypeList(Lists.newArrayList(pcTProducts));
+        data.setListOfProducts(StreamSupport.stream(pcTProducts.spliterator(), false)
+                .flatMap(product -> {
+
+                    List<PcTProductCatalogue> pcTProductCatalogues = pcTProductCatalogueRepository
+                            .findByLangAndProductIdsAndProductAttrs(lang, Arrays.asList(product.getProductid()), listOfProductAttrs);
+
+                    // Zoznam atributov DISTINCT pre konkretny produkt
+                    List<ListOfProductAttributesDetailType> listOfProductAttributesDetailTypes =
+                            listOfProductAttributesDetailTypeMapper.ListOfProductsAttributesTypeList(
+                                    pcTProductCatalogues
+                                            .stream()
+                                            .collect(Collectors.groupingBy(p -> p.getId().getAttrId()))
+                                            .values().stream().map(plans -> plans.stream().findFirst().get())
+                                            .collect(Collectors.toList()));
+
+                    ListOfProductsDetailType listOfProductsDetailType = listOfProductsDetailTypeMapper.toDto(product);
+
+                    listOfProductsDetailType.setListOfProductAttributes(listOfProductAttributesDetailTypes.stream()
+                            .flatMap(listOfProductAttributesDetailType -> {
+                                List<ListOfValues> listOfValues = listOfValuesMapper.ListOfValuesList(
+                                        pcTProductCatalogues
+                                                .stream()
+                                                .filter(pcTProductCatalogue -> (pcTProductCatalogue.getEnumTProdcatAttr().getAttrName() == listOfProductAttributesDetailType.getAttrName()))
+                                                .collect(Collectors.toList()));
+                                listOfProductAttributesDetailType.setListOfValues(listOfValues);
+
+                                return Stream.of(listOfProductAttributesDetailType);
+                            }).collect(Collectors.toList()));
+
+                    return Stream.of(listOfProductsDetailType);
+                }).collect(Collectors.toList()));
+
+        compareProductResponseType.setParams(params);
+        compareProductResponseType.setData(data);
 
         if (log.isDebugEnabled()) {
-            log.debug("compareProduct() - < - return value={}", returnResponseEntity);
+            log.debug("compareProduct() - < - return value={}", compareProductResponseType);
         }
-        return returnResponseEntity;
+
+        return new ResponseEntity<CompareProductResponseType>(compareProductResponseType, HttpStatus.OK);
     }
 
     /**
@@ -101,17 +155,29 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
     public ResponseEntity<GetListOfProductCategoriesResponseType> getListOfProductCategories(
             String lang, String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem) {
+
         if (log.isDebugEnabled()) {
             log.debug("getListOfProductCategories({}, {}, {}, {}) - >", lang, xCorrelationID, xRequestID, initiatorSystem);
         }
+// TODO: Milan dospecifikuje prepojenie ciselniku s produktom/produktovym katalogom
+        GetListOfProductCategoriesResponseType getListOfProductCategoriesResponseType = new GetListOfProductCategoriesResponseType();
+        CommonResponseType params = new CommonResponseType();
+        GetListOfProductCategoriesResponseBodyType data = new GetListOfProductCategoriesResponseBodyType();
+        data.setLang(lang);
 
-        // TODO Auto-generated method stub
-        ResponseEntity<GetListOfProductCategoriesResponseType> returnResponseEntity = ProductCatalogueApiApiDelegate.super.getListOfProductCategories(lang, xCorrelationID, xRequestID, initiatorSystem);
+        List<String> pcTProducts = pcTProductRepository.findDistinctEntityType();
+        log.info("######## pcTProducts = {}", pcTProducts);
+
+        //data.setListOfProductCategories();
+
+        getListOfProductCategoriesResponseType.setParams(params);
+        getListOfProductCategoriesResponseType.setData(data);
 
         if (log.isDebugEnabled()) {
-            log.debug("getListOfProductCategories() - < - return value={}", returnResponseEntity);
+            log.debug("getListOfProductCategories() - < - return value={}", getListOfProductCategoriesResponseType);
         }
-        return returnResponseEntity;
+
+        return new ResponseEntity<GetListOfProductCategoriesResponseType>(getListOfProductCategoriesResponseType, HttpStatus.OK);
     }
 
     /**
@@ -181,24 +247,42 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
     }
 
     /**
-     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate#getProductAttributes(java.lang.String, java.lang.String, java.lang.Boolean, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType)
+     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate#getProductAttributes(java.lang.String, java.lang.String, java.lang.Integer, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType)
      */
     @Override
     public ResponseEntity<GetProductAttributesResponseType> getProductAttributes(
-            String lang, String categoryId, Boolean comboBoxAttributes,
+            String lang, String categoryId, Integer comboBoxAttributes,
             String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem) {
+
         if (log.isDebugEnabled()) {
             log.debug("getProductAttributes({}, {}, {}, {}, {}, {}) - >", lang, categoryId, comboBoxAttributes, xCorrelationID, xRequestID, initiatorSystem);
         }
 
-        // TODO Auto-generated method stub
-        ResponseEntity<GetProductAttributesResponseType> returnResponseEntity = ProductCatalogueApiApiDelegate.super.getProductAttributes(lang, categoryId, comboBoxAttributes, xCorrelationID, xRequestID, initiatorSystem);
+        List<String> enumTProdcatAttrStringList = new ArrayList<String>();
+        if (comboBoxAttributes == 0)
+            enumTProdcatAttrStringList = enumTProdcatAttrRepository.findAttributesByLangAndCategoryId(lang, categoryId);
+        else
+            enumTProdcatAttrStringList = enumTProdcatAttrRepository.findComboBoxAttributesByLangAndCategoryId(lang, categoryId);
+
+        //List<EnumTProdcatAttr> enumTProdcatAttrs = new ArrayList<EnumTProdcatAttr>();
+
+        GetProductAttributesResponseType getProductAttributesResponseType = new GetProductAttributesResponseType();
+        CommonResponseType params = new CommonResponseType();
+        GetProductAttributesResponseBodyType data = new GetProductAttributesResponseBodyType();
+        data.setLang(lang);
+        data.setCategoryId(categoryId);
+        data.setListOfTechnicalAttributes(getProductAttributesResponseBodyTypeListOfTechnicalAttributesMapper
+                .ListStringToGetProductAttributesResponseBodyTypeListOfTechnicalAttributesList(enumTProdcatAttrStringList));
+
+        getProductAttributesResponseType.setParams(params);
+        getProductAttributesResponseType.setData(data);
 
         if (log.isDebugEnabled()) {
-            log.debug("getProductAttributes() - < - return value={}", returnResponseEntity);
+            log.debug("getProductAttributes() - < - return value={}", getProductAttributesResponseType);
         }
-        return returnResponseEntity;
+
+        return new ResponseEntity<GetProductAttributesResponseType>(getProductAttributesResponseType, HttpStatus.OK);
     }
 
     /**
@@ -208,17 +292,24 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
     public ResponseEntity<GetProductAttributesDetailResponseType> getProductAttributesDetail(
             String lang, String attrTechnicalName, String xCorrelationID,
             String xRequestID, InitiatorSystemType initiatorSystem) {
+
         if (log.isDebugEnabled()) {
             log.debug("getProductAttributesDetail({}, {}, {}, {}, {}) - >", lang, attrTechnicalName, xCorrelationID, xRequestID, initiatorSystem);
         }
+// TODO: Ked Milan fixne tak treba dorobit
+        GetProductAttributesDetailResponseType getProductAttributesDetailResponseType = new GetProductAttributesDetailResponseType();
+        CommonResponseType params = new CommonResponseType();
+        GetProductAttributesDetailResponseBodyType data = new GetProductAttributesDetailResponseBodyType();
 
-        // TODO Auto-generated method stub
-        ResponseEntity<GetProductAttributesDetailResponseType> returnResponseEntity = ProductCatalogueApiApiDelegate.super.getProductAttributesDetail(lang, attrTechnicalName, xCorrelationID, xRequestID, initiatorSystem);
+
+        getProductAttributesDetailResponseType.setParams(params);
+        getProductAttributesDetailResponseType.setData(data);
 
         if (log.isDebugEnabled()) {
-            log.debug("getProductAttributesDetail() - < - return value={}", returnResponseEntity);
+            log.debug("getProductAttributesDetail() - < - return value={}", getProductAttributesDetailResponseType);
         }
-        return returnResponseEntity;
+
+        return new ResponseEntity<GetProductAttributesDetailResponseType>(getProductAttributesDetailResponseType, HttpStatus.OK);
     }
 
     /**

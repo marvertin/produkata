@@ -19,6 +19,9 @@ paths:
       description: >-
         Získanie zoznamu produktových kategórií (Fondy, Dlhopisy, Investičné zlato, ... )
 
+
+        Získané produktové kategórie sa ďalej používajú v jednotlivých metódach ako vstup, napr. pre zobrazenie zoznamu produktov v produktovej kategórii
+
       parameters:
         - $ref: '#/components/parameters/XCorrelationIdHeaderParameterType'
         - $ref: '#/components/parameters/XRequestIdHeaderParameterType'
@@ -68,7 +71,10 @@ paths:
         - ProductCatalogue API
       summary: Vracia zoznam produktov v produktovej kategórii
       description: >-
-        Získanie zoznamu produktov v definovanej produktovej kategórií na vstupe
+        Získanie zoznamu produktov v definovanej produktovej kategórií na vstupe.
+
+
+        Získaný zoznam obsahuje iba vybranú množinu atribútov, ktoré sú prezentované v zozname produktov. Získané productId je možné využiť pri zobrazení celej množiny atribútov pre daný produkt (operationId: getProductDetail).
 
       parameters:
         - $ref: '#/components/parameters/XCorrelationIdHeaderParameterType'
@@ -121,7 +127,9 @@ paths:
         - ProductCatalogue API
       summary: Vracia detail produktu
       description: >-
-        Získanie detailu produktu
+        Získanie detailu produktu podľa definovaného productId na vstupe.
+
+        Metóda vráti celú množinu atribútov definovaných na danom produkte.
 
       parameters:
         - $ref: '#/components/parameters/XCorrelationIdHeaderParameterType'
@@ -549,7 +557,7 @@ paths:
           required: true
           style: form
           schema:
-            type: boolean
+            type: integer
 
       responses:
         '200':
@@ -596,6 +604,10 @@ paths:
       description: >-
         Vráti zoznam hodnôt atribútu (distinct)
 
+        V technicalAttributeDetail sa vracia distinct hodnoty z tabuľky PC_T_PRODUCT_CATALOGUE na stlpce D_ATTR_VALUE, E_ATTR_VALUE, C_ATTR_VALUE podľa PRODUCT_ID, ATTR_ID, LANG_CODE
+
+        Iba v prípade, že ATTR_ID, ktoré je uvedené v PC_T_PRODUCT_CATALOGUE má v ENUM_T_PRODCAT_ATTR uvedenú multiplicitu > 1
+
       parameters:
         - $ref: '#/components/parameters/XCorrelationIdHeaderParameterType'
         - $ref: '#/components/parameters/XRequestIdHeaderParameterType'
@@ -613,8 +625,7 @@ paths:
       responses:
         '200':
           description: >-
-            Successfull response for password activation verify response
-            operation.
+            Successful response
           content:
             application/json:
               schema:
@@ -936,14 +947,23 @@ components:
     GetProductAttributesDetailResponseBodyType:
       type: object
       properties:
-        listOfTechnicalAttributes:
-          type: array
-          items:
-            type: object
-            properties:
-              attrTechnicalName:
-                type: string
-                description: 'technický názov atribútu – spoločný pre všetky jazykové mutácie'
+        lang:
+          $ref: 'common/commonSimpleTypes.yaml#/components/schemas/Alpha2LangCodeType'
+        technicalAttributeDetail:
+          type: object
+          properties:
+            attrTechnicalName:
+              type: string
+              description: 'technický názov atribútu – spoločný pre všetky jazykové mutácie'
+            attrDataType:
+              type: string
+              enum: [ number, date, date-time, string, list ]
+              description: 'dátový typ (povolená množina: number, date, string, list)'
+            listOfValues:
+              type: array
+              items:
+                $ref: '#/components/schemas/ListOfValues'
+              description: 'Distinct hodnoty z tabuľky PC_T_PRODUCT_CATALOGUE na stlpce D_ATTR_VALUE, E_ATTR_VALUE, C_ATTR_VALUE podľa PRODUCT_ID, ATTR_ID, LANG_CODE'
 
     GetProductAttributesResponseBodyType:
       type: object
@@ -966,7 +986,9 @@ components:
         lang:
           $ref: 'common/commonSimpleTypes.yaml#/components/schemas/Alpha2LangCodeType'
         listOfProducts:
-          $ref: '#/components/schemas/ListOfProductsDetailType'
+          type: array
+          items:
+            $ref: '#/components/schemas/ListOfProductsDetailType'
 
     GetProductPortfolioFundPerformanceResponseBodyType:
       type: object
