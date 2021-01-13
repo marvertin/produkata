@@ -1,14 +1,14 @@
 package com.asseco.ce.jtsr_digi.product_catalogue.domain;
 
-import java.io.Serializable;
-import java.math.BigInteger;
-import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import java.io.Serializable;
+import java.math.BigInteger;
+import java.time.LocalDate;
 
 /**
  * Kompozitny klúč pre entitu PcTProductCatalogueDocuments
@@ -44,7 +44,7 @@ public class PcTProductCatalogueDocumentsId implements Serializable {
      * Dátum platnosti od
      */
     @Column(name = "VALID_FROM", nullable = false, length = 7)
-    private Date validFrom;
+    private LocalDate validFrom; //vygenerovane to bolo povodne s Date, len bol problem koly tomu ze z db chodil LocalDate
 
 }
 

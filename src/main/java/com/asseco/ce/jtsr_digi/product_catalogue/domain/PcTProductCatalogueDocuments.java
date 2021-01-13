@@ -1,23 +1,13 @@
 package com.asseco.ce.jtsr_digi.product_catalogue.domain;
 
-import java.io.Serializable;
-import java.sql.Blob;
-import java.util.Date;
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.sql.Blob;
+import java.time.LocalDate;
 
 /**
  * Tabuľka slúži pre uloženie dát pre:
@@ -49,7 +39,7 @@ public class PcTProductCatalogueDocuments implements Serializable {
             @AttributeOverride(name = "attrId", column = @Column(name = "ATTR_ID", nullable = false, precision = 30, scale = 0)),
             @AttributeOverride(name = "langCode", column = @Column(name = "LANG_CODE", nullable = false, length = 2)),
             @AttributeOverride(name = "orderValue", column = @Column(name = "ORDER_VALUE", nullable = false, precision = 22, scale = 0)),
-            @AttributeOverride(name = "validFrom", column = @Column(name = "VALID_FROM", nullable = false, length = 7))})
+            @AttributeOverride(name = "validFrom", column = @Column(name = "VALID_FROM", nullable = false))})
     private PcTProductCatalogueDocumentsId id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -85,9 +75,9 @@ public class PcTProductCatalogueDocuments implements Serializable {
     /**
      * Dátum platnosti do
      */
-    @Temporal(TemporalType.DATE)
-    @Column(name = "VALID_TO", length = 7)
-    private Date validTo;
+    //@Temporal(TemporalType.DATE)
+    @Column(name = "VALID_TO")
+    private LocalDate validTo; //vygenerovane to bolo povodne s Date, len bol problem koly tomu ze z db chodil LocalDate
 
 }
 

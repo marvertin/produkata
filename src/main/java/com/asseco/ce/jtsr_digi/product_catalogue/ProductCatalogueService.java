@@ -8,9 +8,11 @@ package com.asseco.ce.jtsr_digi.product_catalogue;
 import com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate;
 import com.asseco.ce.jtsr_digi.product_catalogue.domain.PcTProduct;
 import com.asseco.ce.jtsr_digi.product_catalogue.domain.PcTProductCatalogue;
+import com.asseco.ce.jtsr_digi.product_catalogue.domain.PcTProductCatalogueDocuments;
 import com.asseco.ce.jtsr_digi.product_catalogue.mapper.*;
 import com.asseco.ce.jtsr_digi.product_catalogue.model.*;
 import com.asseco.ce.jtsr_digi.product_catalogue.repository.EnumTProdcatAttrRepository;
+import com.asseco.ce.jtsr_digi.product_catalogue.repository.PcTProductCatalogueDocumentsRepository;
 import com.asseco.ce.jtsr_digi.product_catalogue.repository.PcTProductCatalogueRepository;
 import com.asseco.ce.jtsr_digi.product_catalogue.repository.PcTProductRepository;
 import com.google.common.collect.Lists;
@@ -53,6 +55,9 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
     private EnumTProdcatAttrRepository enumTProdcatAttrRepository;
 
     @Autowired
+    private PcTProductCatalogueDocumentsRepository pcTProductCatalogueDocumentsRepository;
+
+    @Autowired
     private ListOfProductsDetailTypeMapper listOfProductsDetailTypeMapper;
 
     @Autowired
@@ -69,6 +74,9 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
 
     @Autowired
     private ListOfValuesMapper listOfValuesMapper;
+
+    @Autowired
+    private ListOfDocumentsTypeMapper listOfDocumentsTypeMapper;
 
     @Autowired
     private NativeWebRequest request;
@@ -382,17 +390,37 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String lang, String productId, LocalDate dateFrom, LocalDate dateTo,
             String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem) {
+
         if (log.isDebugEnabled()) {
             log.debug("getProductDocuments({}, {}, {}, {}, {}, {}, {}) - >", lang, productId, dateFrom, dateTo, xCorrelationID, xRequestID, initiatorSystem);
         }
 
-        // TODO Auto-generated method stub
-        ResponseEntity<GetProductDocumentsResponseType> returnResponseEntity = ProductCatalogueApiApiDelegate.super.getProductDocuments(lang, productId, dateFrom, dateTo, xCorrelationID, xRequestID, initiatorSystem);
+        Optional<PcTProduct> pcTProduct = pcTProductRepository.findById(new BigInteger(productId));
+
+        List<PcTProductCatalogueDocuments> pcTProductCatalogueDocumentsList = pcTProductCatalogueDocumentsRepository
+                .findByIdProductidAndIdLangCodeAndDateBetween(new BigInteger(productId), lang, dateFrom, dateTo);
+
+        // TODO: namapovat aj params
+        GetProductDocumentsResponseType getProductDocumentsResponseType = new GetProductDocumentsResponseType();
+        CommonResponseType params = new CommonResponseType();
+        GetProductDocumentsResponseBodyType data = new GetProductDocumentsResponseBodyType();
+
+        data.setLang(lang);
+
+        pcTProduct.ifPresent(pctp -> {
+
+            data.setProductId(pctp.getProductBusinessId());
+            data.setTechnicalProductId(pctp.getProductTechnicalId());
+            data.setListOfDocuments(listOfDocumentsTypeMapper.ListOfDocumentsTypeList(pcTProductCatalogueDocumentsList));
+        });
+
+        getProductDocumentsResponseType.setParams(params);
+        getProductDocumentsResponseType.setData(data);
 
         if (log.isDebugEnabled()) {
-            log.debug("getProductDocuments() - < - return value={}", returnResponseEntity);
+            log.debug("getProductDocuments() - < - return value={}", getProductDocumentsResponseType);
         }
-        return returnResponseEntity;
+        return new ResponseEntity<GetProductDocumentsResponseType>(getProductDocumentsResponseType, HttpStatus.OK);
     }
 
     /**

@@ -1058,7 +1058,9 @@ components:
         technicalProductId:
           $ref: 'common/commonSimpleTypes.yaml#/components/schemas/TechnicalProductIdType'
         listOfDocuments:
-          $ref: '#/components/schemas/ListOfDocumentsType'
+          type: array
+          items:
+            $ref: '#/components/schemas/ListOfDocumentsType'
 
     GetProductDetailResponseBodyType:
       type: object
