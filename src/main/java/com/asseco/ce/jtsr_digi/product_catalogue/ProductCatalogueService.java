@@ -498,17 +498,40 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String lang, String productId, LocalDate dateFrom, LocalDate dateTo,
             String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem) {
+
         if (log.isDebugEnabled()) {
             log.debug("getProductPortfolioComposition({}, {}, {}, {}, {}, {}, {}) - >", lang, productId, dateFrom, dateTo, xCorrelationID, xRequestID, initiatorSystem);
         }
 
-        // TODO Auto-generated method stub
-        ResponseEntity<GetProductPortfolioCompositionResponseType> returnResponseEntity = ProductCatalogueApiApiDelegate.super.getProductPortfolioComposition(lang, productId, dateFrom, dateTo, xCorrelationID, xRequestID, initiatorSystem);
+        Optional<PcTProduct> pcTProduct = pcTProductRepository.findById(new BigInteger(productId));
+
+        List<PcTProductCatalogue> pcTProductCatalogues = pcTProductCatalogueRepository
+                .findByLangAndProductidAndDateBetween(lang, new BigInteger(productId), dateFrom, dateTo);
+
+        GetProductPortfolioCompositionResponseType getProductPortfolioCompositionResponseType = new GetProductPortfolioCompositionResponseType();
+        CommonResponseType params = new CommonResponseType();
+
+        GetProductPortfolioCompositionResponseBodyType data = new GetProductPortfolioCompositionResponseBodyType();
+
+        data.setLang(lang);
+
+        pcTProduct.ifPresent(pctp -> {
+
+            data.setProductId(pctp.getProductBusinessId());
+            data.setTechnicalProductId(pctp.getProductTechnicalId());
+            //data.setDateOfValidity(); //TODO: doplnit ked sa dospecifikuje
+            data.setListOfValues(listOfValuesMapper.ListOfValuesList(pcTProductCatalogues));
+
+        });
+
+        getProductPortfolioCompositionResponseType.setParams(params);
+        getProductPortfolioCompositionResponseType.setData(data);
 
         if (log.isDebugEnabled()) {
-            log.debug("getProductPortfolioComposition() - < - return value={}", returnResponseEntity);
+            log.debug("getProductPortfolioComposition() - < - return value={}", getProductPortfolioCompositionResponseType);
         }
-        return returnResponseEntity;
+
+        return new ResponseEntity<GetProductPortfolioCompositionResponseType>(getProductPortfolioCompositionResponseType, HttpStatus.OK);
     }
 
     /**
