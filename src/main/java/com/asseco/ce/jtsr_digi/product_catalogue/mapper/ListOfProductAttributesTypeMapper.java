@@ -5,8 +5,6 @@ import com.asseco.ce.jtsr_digi.product_catalogue.model.ListOfProductAttributesTy
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.*;
 
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -20,7 +18,7 @@ public abstract class ListOfProductAttributesTypeMapper implements EntityMapper<
             @Mapping(target = "attrDataType", source = "enumTProdcatAttr.attrType"),
             @Mapping(target = "attrOrder", source = "id.orderValue"),
             @Mapping(target = "attrNumericValue", source = "NAttrValue"),
-            @Mapping(target = "attrDateValue", source = "DAttrValue", qualifiedByName = "dateToLocalDate")
+            @Mapping(target = "attrDateValue", source = "DAttrValue")
 
     })
     public abstract ListOfProductAttributesType toDto(PcTProductCatalogue source);
@@ -33,7 +31,7 @@ public abstract class ListOfProductAttributesTypeMapper implements EntityMapper<
     public abstract PcTProductCatalogue toEntity(ListOfProductAttributesType source);
 
     // Mapstruct ma problem s konverziou java.util.Date na java.time.LocalDate
-    @Named("dateToLocalDate")
+    /*@Named("dateToLocalDate")
     static LocalDate localDateString(Date date) {
 
         if (date == null) return null;
@@ -43,5 +41,5 @@ public abstract class ListOfProductAttributesTypeMapper implements EntityMapper<
         } else {
             return LocalDate.from(date.toInstant());
         }
-    }
+    }*/
 }

@@ -1,22 +1,12 @@
 package com.asseco.ce.jtsr_digi.product_catalogue.domain;
 
-import java.io.Serializable;
-import java.util.Date;
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.time.LocalDate;
 
 /**
  * Tabuľka slúži pre uloženie dát, ktoré neskôr slúžia pre zobrazenie časového radu vývoja hodnoty daného produktu. (TS – time series)
@@ -60,9 +50,9 @@ public class PcTProductCatalogueTs implements Serializable {
     /**
      * Dátum platnosti do
      */
-    @Temporal(TemporalType.DATE)
+    //@Temporal(TemporalType.DATE)
     @Column(name = "DATE_TO", nullable = false, length = 7)
-    private Date dateTo;
+    private LocalDate dateTo; //vygenerovane to bolo povodne s Date, len bol problem koly tomu ze z db chodil LocalDate
 
 }
 

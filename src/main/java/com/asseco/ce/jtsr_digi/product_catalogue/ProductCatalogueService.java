@@ -9,12 +9,10 @@ import com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDeleg
 import com.asseco.ce.jtsr_digi.product_catalogue.domain.PcTProduct;
 import com.asseco.ce.jtsr_digi.product_catalogue.domain.PcTProductCatalogue;
 import com.asseco.ce.jtsr_digi.product_catalogue.domain.PcTProductCatalogueDocuments;
+import com.asseco.ce.jtsr_digi.product_catalogue.domain.PcTProductCatalogueTs;
 import com.asseco.ce.jtsr_digi.product_catalogue.mapper.*;
 import com.asseco.ce.jtsr_digi.product_catalogue.model.*;
-import com.asseco.ce.jtsr_digi.product_catalogue.repository.EnumTProdcatAttrRepository;
-import com.asseco.ce.jtsr_digi.product_catalogue.repository.PcTProductCatalogueDocumentsRepository;
-import com.asseco.ce.jtsr_digi.product_catalogue.repository.PcTProductCatalogueRepository;
-import com.asseco.ce.jtsr_digi.product_catalogue.repository.PcTProductRepository;
+import com.asseco.ce.jtsr_digi.product_catalogue.repository.*;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +56,9 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
     private PcTProductCatalogueDocumentsRepository pcTProductCatalogueDocumentsRepository;
 
     @Autowired
+    private PcTProductCatalogueTsRepository pcTProductCatalogueTsRepository;
+
+    @Autowired
     private ListOfProductsDetailTypeMapper listOfProductsDetailTypeMapper;
 
     @Autowired
@@ -77,6 +78,9 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
 
     @Autowired
     private ListOfDocumentsTypeMapper listOfDocumentsTypeMapper;
+
+    @Autowired
+    private ListOfSimpleGraphDataTypeMapper listOfSimpleGraphDataTypeMapper;
 
     @Autowired
     private NativeWebRequest request;
@@ -420,6 +424,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
         if (log.isDebugEnabled()) {
             log.debug("getProductDocuments() - < - return value={}", getProductDocumentsResponseType);
         }
+
         return new ResponseEntity<GetProductDocumentsResponseType>(getProductDocumentsResponseType, HttpStatus.OK);
     }
 
@@ -431,17 +436,57 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String lang, String productId, LocalDate dateFrom, LocalDate dateTo,
             String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem, PagingRequestType paging) {
+
         if (log.isDebugEnabled()) {
             log.debug("getProductPortfolioAssetStructure({}, {}, {}, {}, {}, {}, {}, {}) - >", lang, productId, dateFrom, dateTo, xCorrelationID, xRequestID, initiatorSystem, paging);
         }
 
-        // TODO Auto-generated method stub
-        ResponseEntity<GetProductPortfolioAssetStructureResponseType> returnResponseEntity = ProductCatalogueApiApiDelegate.super.getProductPortfolioAssetStructure(lang, productId, dateFrom, dateTo, xCorrelationID, xRequestID, initiatorSystem, paging);
+        int pageSize = paging.getLimit().intValue();
+        int pageNo = paging.getOffset().intValue()/pageSize;
+        long recordCountTotal = 0;
+
+        Optional<PcTProduct> pcTProduct = pcTProductRepository.findById(new BigInteger(productId));
+
+        Slice<PcTProductCatalogue> pcTProductCatalogues = pcTProductCatalogueRepository
+                .findByLangAndProductidAndDateBetween(lang, new BigInteger(productId), dateFrom, dateTo, PageRequest.of(pageNo, pageSize));
+
+        if (paging.getReturnTotalCount()) {
+            recordCountTotal = pcTProductCatalogueRepository.countByLangAndProductidAndDateBetween(lang, new BigInteger(productId), dateFrom, dateTo);
+        }
+
+        GetProductPortfolioAssetStructureResponseType getProductPortfolioAssetStructureResponseType = new GetProductPortfolioAssetStructureResponseType();
+        CommonResponseType params = new CommonResponseType();
+
+        PagingResponseType pagingResponseType  = new PagingResponseType();
+        pagingResponseType.setHasNextPage(pcTProductCatalogues.hasNext() ? 1 : 0);
+        pagingResponseType.setHasPreviousPage(pcTProductCatalogues.hasPrevious() ? 1 : 0);
+        pagingResponseType.setLimit(paging.getLimit());
+        pagingResponseType.setOffset(paging.getOffset());
+        pagingResponseType.setRecordCount(pcTProductCatalogues.getNumberOfElements());
+        if (paging.getReturnTotalCount())
+            pagingResponseType.setRecordCountTotal(Integer.valueOf((int)recordCountTotal));
+        params.setPaging(pagingResponseType);
+
+        GetProductPortfolioAssetStructureResponseBodyType data = new GetProductPortfolioAssetStructureResponseBodyType();
+
+        data.setLang(lang);
+
+        pcTProduct.ifPresent(pctp -> {
+
+            data.setProductId(pctp.getProductBusinessId());
+            data.setTechnicalProductId(pctp.getProductTechnicalId());
+            //data.setDateOfValidity();
+            data.setListOfValues(listOfValuesMapper.ListOfValuesList(pcTProductCatalogues.getContent()));
+        });
+
+        getProductPortfolioAssetStructureResponseType.setParams(params);
+        getProductPortfolioAssetStructureResponseType.setData(data);
 
         if (log.isDebugEnabled()) {
-            log.debug("getProductPortfolioAssetStructure() - < - return value={}", returnResponseEntity);
+            log.debug("getProductPortfolioAssetStructure() - < - return value={}", getProductPortfolioAssetStructureResponseType);
         }
-        return returnResponseEntity;
+
+        return new ResponseEntity<GetProductPortfolioAssetStructureResponseType>(getProductPortfolioAssetStructureResponseType, HttpStatus.OK);
     }
 
     /**
@@ -494,17 +539,42 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String lang, String productId, LocalDate dateFrom, LocalDate dateTo,
             String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem, PagingRequestType paging) {
+
         if (log.isDebugEnabled()) {
             log.debug("getProductSimpleGraph({}, {}, {}, {}, {}, {}, {}, {}) - >", lang, productId, dateFrom, dateTo, xCorrelationID, xRequestID, initiatorSystem, paging);
         }
 
-        // TODO Auto-generated method stub
-        ResponseEntity<GetProductSimpleGraphResponseType> returnResponseEntity = ProductCatalogueApiApiDelegate.super.getProductSimpleGraph(lang, productId, dateFrom, dateTo, xCorrelationID, xRequestID, initiatorSystem, paging);
+        List<PcTProductCatalogueTs> pcTProductCatalogueTs = pcTProductCatalogueTsRepository.findByProductidAndDateBetween(new BigInteger(productId), dateFrom, dateTo);
+
+        GetProductSimpleGraphResponseType getProductSimpleGraphResponseType = new GetProductSimpleGraphResponseType();
+
+        CommonResponseType params = new CommonResponseType();
+        GetProductSimpleGraphResponseBodyType data = new GetProductSimpleGraphResponseBodyType();
+
+        data.setLang(lang);
+
+        if (pcTProductCatalogueTs.size() > 0) {
+
+            PcTProductCatalogueTs pctpct = pcTProductCatalogueTs.get(0);
+
+            data.setProductId(pctpct.getPcTProduct().getProductBusinessId());
+            data.setTechnicalProductId(pctpct.getPcTProduct().getProductTechnicalId());
+            data.setIsin(pctpct.getPcTProduct().getIsin());
+            data.setCurrency(pctpct.getEnumTCurrency().getCurrencyCode());
+            data.setDateFrom(dateFrom);
+            data.setDateTo(dateTo);
+            data.setListOfGraphData(listOfSimpleGraphDataTypeMapper.ListOfDocumentsTypeList(pcTProductCatalogueTs));
+
+        }
+
+        getProductSimpleGraphResponseType.setParams(params);
+        getProductSimpleGraphResponseType.setData(data);
 
         if (log.isDebugEnabled()) {
-            log.debug("getProductSimpleGraph() - < - return value={}", returnResponseEntity);
+            log.debug("getProductSimpleGraph() - < - return value={}", getProductSimpleGraphResponseType);
         }
-        return returnResponseEntity;
+
+        return new ResponseEntity<GetProductSimpleGraphResponseType>(getProductSimpleGraphResponseType, HttpStatus.OK);
     }
 
     /**

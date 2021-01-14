@@ -1046,7 +1046,9 @@ components:
           type: string
           format: date
         listOfGraphData:
-          $ref: '#/components/schemas/ListOfSimpleGraphDataType'
+          type: array
+          items:
+            $ref: '#/components/schemas/ListOfSimpleGraphDataType'
 
     GetProductDocumentsResponseBodyType:
       type: object

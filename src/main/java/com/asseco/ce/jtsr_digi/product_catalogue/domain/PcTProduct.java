@@ -1,23 +1,14 @@
 package com.asseco.ce.jtsr_digi.product_catalogue.domain;
 
-import java.io.Serializable;
-import java.math.BigInteger;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.math.BigInteger;
+import java.util.Date;
 
 /**
  * Tabuľka obsahuje spoločné atribúty pre jednotlivé domény produktového katalógu.

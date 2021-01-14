@@ -1,24 +1,14 @@
 package com.asseco.ce.jtsr_digi.product_catalogue.domain;
 
-import java.io.Serializable;
-import java.math.BigInteger;
-import java.util.Date;
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.math.BigInteger;
+import java.time.LocalDate;
 
 /**
  * Tabuľka obsahuje spoločné atribúty pre jednotlivé domény produktového katalógu:
@@ -67,9 +57,9 @@ public class PcTProductCatalogue implements Serializable {
     /**
      * Dátumová hodnota
      */
-    @Temporal(TemporalType.DATE)
+    //@Temporal(TemporalType.DATE)
     @Column(name = "D_ATTR_VALUE", length = 7)
-    private Date dAttrValue;
+    private LocalDate dAttrValue;  //vygenerovane to bolo povodne s Date, len bol problem koly tomu ze z db chodil LocalDate
 
     /**
      * Číselníková hodnota (číselník/kód hodnoty)
@@ -92,9 +82,9 @@ public class PcTProductCatalogue implements Serializable {
     /**
      * Platnosť do
      */
-    @Temporal(TemporalType.DATE)
+    //@Temporal(TemporalType.DATE)
     @Column(name = "VALID_TO", length = 7)
-    private Date validTo;
+    private LocalDate validTo; //vygenerovane to bolo povodne s Date, len bol problem koly tomu ze z db chodil LocalDate
 
 }
 

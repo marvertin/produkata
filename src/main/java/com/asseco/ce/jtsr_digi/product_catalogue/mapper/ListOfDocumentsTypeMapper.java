@@ -5,8 +5,6 @@ import com.asseco.ce.jtsr_digi.product_catalogue.model.ListOfDocumentsType;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.*;
 
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Slf4j
