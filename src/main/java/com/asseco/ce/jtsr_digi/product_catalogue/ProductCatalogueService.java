@@ -15,6 +15,7 @@ import com.asseco.ce.jtsr_digi.product_catalogue.model.*;
 import com.asseco.ce.jtsr_digi.product_catalogue.repository.*;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -475,7 +476,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
 
             data.setProductId(pctp.getProductBusinessId());
             data.setTechnicalProductId(pctp.getProductTechnicalId());
-            //data.setDateOfValidity();
+            //data.setDateOfValidity(); //TODO: doplnit ked sa dospecifikuje
             data.setListOfValues(listOfValuesMapper.ListOfValuesList(pcTProductCatalogues.getContent()));
         });
 
@@ -518,17 +519,53 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String lang, String productId, LocalDate dateFrom, LocalDate dateTo,
             String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem) {
+
         if (log.isDebugEnabled()) {
             log.debug("getProductPortfolioFundPerformance({}, {}, {}, {}, {}, {}, {}) - >", lang, productId, dateFrom, dateTo, xCorrelationID, xRequestID, initiatorSystem);
         }
 
-        // TODO Auto-generated method stub
-        ResponseEntity<GetProductPortfolioFundPerformanceResponseType> returnResponseEntity = ProductCatalogueApiApiDelegate.super.getProductPortfolioFundPerformance(lang, productId, dateFrom, dateTo, xCorrelationID, xRequestID, initiatorSystem);
+        Optional<PcTProduct> pcTProduct = pcTProductRepository.findById(new BigInteger(productId));
+
+        List<PcTProductCatalogue> pcTProductCatalogues = pcTProductCatalogueRepository
+                .findByLangAndProductidAndDateBetween(lang, new BigInteger(productId), dateFrom, dateTo);
+
+        GetProductPortfolioFundPerformanceResponseType getProductPortfolioFundPerformanceResponseType = new GetProductPortfolioFundPerformanceResponseType();
+        CommonResponseType params = new CommonResponseType();
+
+        GetProductPortfolioFundPerformanceResponseBodyType data = new GetProductPortfolioFundPerformanceResponseBodyType();
+
+        data.setLang(lang);
+
+        pcTProduct.ifPresent(pctp -> {
+
+            data.setProductId(pctp.getProductBusinessId());
+            data.setTechnicalProductId(pctp.getProductTechnicalId());
+            //data.setDateOfValidity(); //TODO: doplnit ked sa dospecifikuje
+            data.setListOfProductAttributes(
+                    listOfProductAttributesDetailTypeMapper.ListOfProductsAttributesTypeList(pcTProductCatalogues)
+                            .stream()
+                            .flatMap(listOfProductAttributesDetailType -> {
+
+                                List<ListOfValues> listOfValues = listOfValuesMapper.ListOfValuesList(
+                                        pcTProductCatalogues
+                                                .stream()
+                                                .filter(pcTProductCatalogue -> (pcTProductCatalogue.getEnumTProdcatAttr().getAttrName() == listOfProductAttributesDetailType.getAttrName()))
+                                                .collect(Collectors.toList()));
+                                listOfProductAttributesDetailType.setListOfValues(listOfValues);
+
+                                return Stream.of(listOfProductAttributesDetailType);
+                            }).collect(Collectors.toList()));
+
+        });
+
+        getProductPortfolioFundPerformanceResponseType.setParams(params);
+        getProductPortfolioFundPerformanceResponseType.setData(data);
 
         if (log.isDebugEnabled()) {
-            log.debug("getProductPortfolioFundPerformance() - < - return value={}", returnResponseEntity);
+            log.debug("getProductPortfolioFundPerformance() - < - return value={}", getProductPortfolioFundPerformanceResponseType);
         }
-        return returnResponseEntity;
+
+        return new ResponseEntity<GetProductPortfolioFundPerformanceResponseType>(getProductPortfolioFundPerformanceResponseType, HttpStatus.OK);
     }
 
     /**
