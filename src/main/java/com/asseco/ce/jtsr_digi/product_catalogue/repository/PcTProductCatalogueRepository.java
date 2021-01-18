@@ -24,6 +24,14 @@ public interface PcTProductCatalogueRepository extends PagingAndSortingRepositor
             nativeQuery = true)
     List<PcTProductCatalogue> findByLangAndProductIdsAndProductAttrs(@Param("lang") String lang, @Param("productIds") List<BigInteger> productIds, @Param("productAttrs") List<String> productAttrs);
 
+    List<PcTProductCatalogue> findByEnumTProdcatAttr_AttrNameAndId_LangCode(String attrName, String langCode);
+
+    @Query(value = "SELECT DISTINCT ptpc.c_attr_value FROM ENUM_T_PRODCAT_ATTR etpa " +
+            "LEFT JOIN PC_T_PRODUCT_CATALOGUE ptpc on (etpa.attr_id=ptpc.attr_id)  " +
+            "WHERE etpa.attr_name = :attrName AND ptpc.lang_code = :langCode ",
+            nativeQuery = true)
+    List<String> findByAttrNameAndLangCodeDistinct(@Param("attrName") String attrName, @Param("langCode") String langCode);
+
     @Query(value = "SELECT * FROM PC_T_PRODUCT_CATALOGUE ptpc WHERE ptpc.PRODUCTID = :productId AND ptpc.LANG_CODE = :lang " +
             "AND (TO_DATE(ptpc.VALID_FROM) <= TO_DATE(:dateTo) OR ptpc.VALID_FROM IS NULL) " +
             "AND (TO_DATE(ptpc.VALID_TO) >= TO_DATE(:dateFrom) OR ptpc.VALID_TO IS NULL)",

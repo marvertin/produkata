@@ -2,6 +2,8 @@ package com.asseco.ce.jtsr_digi.product_catalogue.repository;
 
 import com.asseco.ce.jtsr_digi.product_catalogue.domain.PcTProductCatalogueTs;
 import com.asseco.ce.jtsr_digi.product_catalogue.domain.PcTProductCatalogueTsId;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -10,7 +12,6 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
-import java.util.List;
 
 @Repository
 public interface PcTProductCatalogueTsRepository extends PagingAndSortingRepository<PcTProductCatalogueTs, PcTProductCatalogueTsId>, QuerydslPredicateExecutor<PcTProductCatalogueTs> {
@@ -22,6 +23,6 @@ public interface PcTProductCatalogueTsRepository extends PagingAndSortingReposit
                     "AND (TO_DATE(ptpct.DATE_FROM) <= TO_DATE(:dateTo) OR ptpct.DATE_FROM IS NULL) " +
                     "AND (TO_DATE(ptpct.DATE_TO) >= TO_DATE(:dateFrom) OR ptpct.DATE_TO IS NULL)",
             nativeQuery = true)
-    List<PcTProductCatalogueTs> findByProductidAndDateBetween(@Param("productId")BigInteger productId, @Param("dateFrom") LocalDate dateFrom, @Param("dateTo") LocalDate dateTo);
+    Slice<PcTProductCatalogueTs> findByProductidAndDateBetween(@Param("productId")BigInteger productId, @Param("dateFrom") LocalDate dateFrom, @Param("dateTo") LocalDate dateTo, Pageable pageabled);
 
 }

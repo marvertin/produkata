@@ -23,6 +23,18 @@ public abstract class ListOfValuesMapper implements EntityMapper<ListOfValues, P
     @IterableMapping(qualifiedByName = "valuesListItemMapping")
     public abstract List<ListOfValues> ListOfValuesList(List<PcTProductCatalogue> record);
 
+    @Named("distinctValuesListItemMapping")
+    @Mappings({
+            @Mapping(target = "attrPresentationValue", expression = "java(source)"),
+            @Mapping(target = "attrNumericValue", ignore = true),
+            @Mapping(target = "attrOrder", ignore = true)
+
+    })
+    public abstract ListOfValues toDtoDistinct(String source);
+
+    @IterableMapping(qualifiedByName = "distinctValuesListItemMapping")
+    public abstract List<ListOfValues> DistinctListOfValuesList(List<String> record);
+
     @Mappings({
     })
     public abstract PcTProductCatalogue toEntity(ListOfValues source);
