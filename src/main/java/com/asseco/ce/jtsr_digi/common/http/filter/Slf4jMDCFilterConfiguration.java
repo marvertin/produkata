@@ -32,7 +32,7 @@ public class Slf4jMDCFilterConfiguration {
     @Bean
     public FilterRegistrationBean<Slf4jMDCFilter> servletRegistrationBean() {
         if (log.isDebugEnabled()) {
-            log.info("servletRegistrationBean() - requestHeader={}", requestHeader);
+            log.debug("servletRegistrationBean() - requestHeader={}", requestHeader);
         }
 
         Slf4jMDCFilter filter = new Slf4jMDCFilter();
