@@ -102,10 +102,6 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             List<String> listOfProductAttrs, String xCorrelationID,
             String xRequestID, InitiatorSystemType initiatorSystem) {
 
-        if (log.isDebugEnabled()) {
-            log.debug("compareProduct({}, {}, {}, {}, {}, {}) - >", lang, listOfProductIds, listOfProductAttrs, xCorrelationID, xRequestID, initiatorSystem);
-        }
-
         List<BigInteger> productIds = listOfProductIds.stream().map(x -> new BigInteger(x)).collect(Collectors.toList());
 
         Iterable<PcTProduct> pcTProducts = pcTProductRepository.findAllById(productIds);
@@ -153,10 +149,6 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
         compareProductResponseType.setParams(params);
         compareProductResponseType.setData(data);
 
-        if (log.isDebugEnabled()) {
-            log.debug("compareProduct() - < - return value={}", compareProductResponseType);
-        }
-
         return new ResponseEntity<CompareProductResponseType>(compareProductResponseType, HttpStatus.OK);
     }
 
@@ -168,9 +160,6 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String lang, String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem) {
 
-        if (log.isDebugEnabled()) {
-            log.debug("getListOfProductCategories({}, {}, {}, {}) - >", lang, xCorrelationID, xRequestID, initiatorSystem);
-        }
 // TODO: Milan dospecifikuje prepojenie ciselniku s produktom/produktovym katalogom
         GetListOfProductCategoriesResponseType getListOfProductCategoriesResponseType = new GetListOfProductCategoriesResponseType();
         CommonResponseType params = new CommonResponseType();
@@ -185,10 +174,6 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
         getListOfProductCategoriesResponseType.setParams(params);
         getListOfProductCategoriesResponseType.setData(data);
 
-        if (log.isDebugEnabled()) {
-            log.debug("getListOfProductCategories() - < - return value={}", getListOfProductCategoriesResponseType);
-        }
-
         return new ResponseEntity<GetListOfProductCategoriesResponseType>(getListOfProductCategoriesResponseType, HttpStatus.OK);
     }
 
@@ -200,10 +185,6 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String lang, String categoryId, String xCorrelationID,
             String xRequestID, InitiatorSystemType initiatorSystem,
             PagingRequestType paging) {
-
-        if (log.isDebugEnabled()) {
-            log.debug("getListOfProductsInCategory({}, {}, {}, {}, {}, {}) - >", lang, categoryId, xCorrelationID, xRequestID, initiatorSystem, paging);
-        }
 
         int pageSize = paging.getLimit().intValue();
         int pageNo = paging.getOffset().intValue()/pageSize;
@@ -251,10 +232,6 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
         getListOfProductsInCategoryResponseType.setParams(params);
         getListOfProductsInCategoryResponseType.setData(data);
 
-        if (log.isDebugEnabled()) {
-            log.debug("getListOfProductsInCategory() - < - return value={}", getListOfProductsInCategoryResponseType);
-        }
-
         return new ResponseEntity<GetListOfProductsInCategoryResponseType>(getListOfProductsInCategoryResponseType, HttpStatus.OK);
     }
 
@@ -266,10 +243,6 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String lang, String categoryId, Integer comboBoxAttributes,
             String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem) {
-
-        if (log.isDebugEnabled()) {
-            log.debug("getProductAttributes({}, {}, {}, {}, {}, {}) - >", lang, categoryId, comboBoxAttributes, xCorrelationID, xRequestID, initiatorSystem);
-        }
 
         List<String> enumTProdcatAttrStringList = new ArrayList<String>();
         if (comboBoxAttributes == 0)
@@ -288,10 +261,6 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
         getProductAttributesResponseType.setParams(params);
         getProductAttributesResponseType.setData(data);
 
-        if (log.isDebugEnabled()) {
-            log.debug("getProductAttributes() - < - return value={}", getProductAttributesResponseType);
-        }
-
         return new ResponseEntity<GetProductAttributesResponseType>(getProductAttributesResponseType, HttpStatus.OK);
     }
 
@@ -302,10 +271,6 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
     public ResponseEntity<GetProductAttributesDetailResponseType> getProductAttributesDetail(
             String lang, String attrTechnicalName, String xCorrelationID,
             String xRequestID, InitiatorSystemType initiatorSystem) {
-
-        if (log.isDebugEnabled()) {
-            log.debug("getProductAttributesDetail({}, {}, {}, {}, {}) - >", lang, attrTechnicalName, xCorrelationID, xRequestID, initiatorSystem);
-        }
 
         /*List<PcTProductCatalogue> pcTProductCatalogues = pcTProductCatalogueRepository
                 .findByEnumTProdcatAttr_AttrNameAndId_LangCode(attrTechnicalName, lang);*/
@@ -336,10 +301,6 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
         getProductAttributesDetailResponseType.setParams(params);
         getProductAttributesDetailResponseType.setData(data);
 
-        if (log.isDebugEnabled()) {
-            log.debug("getProductAttributesDetail() - < - return value={}", getProductAttributesDetailResponseType);
-        }
-
         return new ResponseEntity<GetProductAttributesDetailResponseType>(getProductAttributesDetailResponseType, HttpStatus.OK);
     }
 
@@ -350,10 +311,6 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
     public ResponseEntity<GetProductDetailResponseType> getProductDetail(
             String lang, String productId, String xCorrelationID,
             String xRequestID, InitiatorSystemType initiatorSystem) {
-
-        if (log.isDebugEnabled()) {
-            log.debug("getProductDetail({}, {}, {}, {}, {}) - >", lang, productId, xCorrelationID, xRequestID, initiatorSystem);
-        }
 
         Iterable<PcTProduct> pcTProducts = pcTProductRepository.findAllById(Arrays.asList(new BigInteger(productId)));
 
@@ -398,10 +355,6 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
         getProductDetailResponseType.setParams(params);
         getProductDetailResponseType.setData(data);
 
-        if (log.isDebugEnabled()) {
-            log.debug("getProductDetail() - < - return value={}", getProductDetailResponseType);
-        }
-
         return new ResponseEntity<GetProductDetailResponseType>(getProductDetailResponseType, HttpStatus.OK);
     }
 
@@ -413,10 +366,6 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String lang, String productId, LocalDate dateFrom, LocalDate dateTo,
             String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem) {
-
-        if (log.isDebugEnabled()) {
-            log.debug("getProductDocuments({}, {}, {}, {}, {}, {}, {}) - >", lang, productId, dateFrom, dateTo, xCorrelationID, xRequestID, initiatorSystem);
-        }
 
         Optional<PcTProduct> pcTProduct = pcTProductRepository.findById(new BigInteger(productId));
 
@@ -440,10 +389,6 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
         getProductDocumentsResponseType.setParams(params);
         getProductDocumentsResponseType.setData(data);
 
-        if (log.isDebugEnabled()) {
-            log.debug("getProductDocuments() - < - return value={}", getProductDocumentsResponseType);
-        }
-
         return new ResponseEntity<GetProductDocumentsResponseType>(getProductDocumentsResponseType, HttpStatus.OK);
     }
 
@@ -455,10 +400,6 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String lang, String productId, LocalDate dateFrom, LocalDate dateTo,
             String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem, PagingRequestType paging) {
-
-        if (log.isDebugEnabled()) {
-            log.debug("getProductPortfolioAssetStructure({}, {}, {}, {}, {}, {}, {}, {}) - >", lang, productId, dateFrom, dateTo, xCorrelationID, xRequestID, initiatorSystem, paging);
-        }
 
         int pageSize = paging.getLimit().intValue();
         int pageNo = paging.getOffset().intValue()/pageSize;
@@ -501,10 +442,6 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
         getProductPortfolioAssetStructureResponseType.setParams(params);
         getProductPortfolioAssetStructureResponseType.setData(data);
 
-        if (log.isDebugEnabled()) {
-            log.debug("getProductPortfolioAssetStructure() - < - return value={}", getProductPortfolioAssetStructureResponseType);
-        }
-
         return new ResponseEntity<GetProductPortfolioAssetStructureResponseType>(getProductPortfolioAssetStructureResponseType, HttpStatus.OK);
     }
 
@@ -516,10 +453,6 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String lang, String productId, LocalDate dateFrom, LocalDate dateTo,
             String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem) {
-
-        if (log.isDebugEnabled()) {
-            log.debug("getProductPortfolioComposition({}, {}, {}, {}, {}, {}, {}) - >", lang, productId, dateFrom, dateTo, xCorrelationID, xRequestID, initiatorSystem);
-        }
 
         Optional<PcTProduct> pcTProduct = pcTProductRepository.findById(new BigInteger(productId));
 
@@ -545,10 +478,6 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
         getProductPortfolioCompositionResponseType.setParams(params);
         getProductPortfolioCompositionResponseType.setData(data);
 
-        if (log.isDebugEnabled()) {
-            log.debug("getProductPortfolioComposition() - < - return value={}", getProductPortfolioCompositionResponseType);
-        }
-
         return new ResponseEntity<GetProductPortfolioCompositionResponseType>(getProductPortfolioCompositionResponseType, HttpStatus.OK);
     }
 
@@ -560,10 +489,6 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String lang, String productId, LocalDate dateFrom, LocalDate dateTo,
             String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem) {
-
-        if (log.isDebugEnabled()) {
-            log.debug("getProductPortfolioFundPerformance({}, {}, {}, {}, {}, {}, {}) - >", lang, productId, dateFrom, dateTo, xCorrelationID, xRequestID, initiatorSystem);
-        }
 
         Optional<PcTProduct> pcTProduct = pcTProductRepository.findById(new BigInteger(productId));
 
@@ -602,10 +527,6 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
         getProductPortfolioFundPerformanceResponseType.setParams(params);
         getProductPortfolioFundPerformanceResponseType.setData(data);
 
-        if (log.isDebugEnabled()) {
-            log.debug("getProductPortfolioFundPerformance() - < - return value={}", getProductPortfolioFundPerformanceResponseType);
-        }
-
         return new ResponseEntity<GetProductPortfolioFundPerformanceResponseType>(getProductPortfolioFundPerformanceResponseType, HttpStatus.OK);
     }
 
@@ -617,10 +538,6 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String lang, String productId, LocalDate dateFrom, LocalDate dateTo,
             String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem, PagingRequestType paging) {
-
-        if (log.isDebugEnabled()) {
-            log.debug("getProductSimpleGraph({}, {}, {}, {}, {}, {}, {}, {}) - >", lang, productId, dateFrom, dateTo, xCorrelationID, xRequestID, initiatorSystem, paging);
-        }
 
         int pageSize = paging.getLimit().intValue();
         int pageNo = paging.getOffset().intValue()/pageSize;
@@ -662,10 +579,6 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
         getProductSimpleGraphResponseType.setParams(params);
         getProductSimpleGraphResponseType.setData(data);
 
-        if (log.isDebugEnabled()) {
-            log.debug("getProductSimpleGraph() - < - return value={}", getProductSimpleGraphResponseType);
-        }
-
         return new ResponseEntity<GetProductSimpleGraphResponseType>(getProductSimpleGraphResponseType, HttpStatus.OK);
     }
 
@@ -677,10 +590,6 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String searchQuery, String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem) {
 
-        if (log.isDebugEnabled()) {
-            log.debug("searchProduct({}, {}, {}, {}, {}) - >", lang, searchQuery, xCorrelationID, xRequestID, initiatorSystem);
-        }
-
         SearchProductResponseType searchProductResponseType = new SearchProductResponseType();
         CommonResponseType params = new CommonResponseType();
         SearchProductResponseBodyType data = new SearchProductResponseBodyType();
@@ -689,10 +598,6 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
 
         searchProductResponseType.setParams(params);
         searchProductResponseType.setData(data);
-
-        if (log.isDebugEnabled()) {
-            log.debug("searchProduct() - < - return value={}", searchProductResponseType);
-        }
 
         return new ResponseEntity<SearchProductResponseType>(searchProductResponseType, HttpStatus.OK);
     }

@@ -9,7 +9,7 @@ server:
 
 spring:
   jackson:
-    date-format: com.asseco.ce.jtsr_digi.product_catalogue.RFC3339DateFormat
+    date-format: com.asseco.ce.jtsr_digi.RFC3339DateFormat
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
 #  mvc:
@@ -30,3 +30,8 @@ springfox:
     swagger:
       v2:
         path: /api-docs
+
+slf4jfilter:
+  request-header:
+    - X-Correlation-ID
+    - X-Request-ID
