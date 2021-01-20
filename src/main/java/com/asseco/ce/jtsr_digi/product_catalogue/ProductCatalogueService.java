@@ -187,7 +187,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             PagingRequestType paging) {
 
         int pageSize = paging.getLimit().intValue();
-        int pageNo = paging.getOffset().intValue()/pageSize;
+        int pageNo = paging.getOffset().intValue() / pageSize;
         long recordCountTotal = 0;
 
         Slice<PcTProduct> pcTProducts = pcTProductRepository.findByEntityType(categoryId, PageRequest.of(pageNo, pageSize));
@@ -402,7 +402,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             InitiatorSystemType initiatorSystem, PagingRequestType paging) {
 
         int pageSize = paging.getLimit().intValue();
-        int pageNo = paging.getOffset().intValue()/pageSize;
+        int pageNo = paging.getOffset().intValue() / pageSize;
         long recordCountTotal = 0;
 
         Optional<PcTProduct> pcTProduct = pcTProductRepository.findById(new BigInteger(productId));
@@ -540,7 +540,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             InitiatorSystemType initiatorSystem, PagingRequestType paging) {
 
         int pageSize = paging.getLimit().intValue();
-        int pageNo = paging.getOffset().intValue()/pageSize;
+        int pageNo = paging.getOffset().intValue() / pageSize;
         long recordCountTotal = 0;
 
         Slice<PcTProductCatalogueTs> pcTProductCatalogueTs = pcTProductCatalogueTsRepository.findByProductidAndDateBetween(new BigInteger(productId), dateFrom, dateTo, PageRequest.of(pageNo, pageSize));
