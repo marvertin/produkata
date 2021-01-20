@@ -2,8 +2,9 @@
 
 Product catalogue
 
+http://localhost:8080/productcatalogue/actuator  
 http://localhost:8080/productcatalogue/actuator/health  
-http://localhost:8080/productcatalogue/actuator/prometheus
+http://localhost:8080/productcatalogue/actuator/prometheus  
 http://localhost:8080/productcatalogue/actuator/info  
 http://localhost:8080/productcatalogue/swagger-ui.html
 
