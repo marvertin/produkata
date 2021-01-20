@@ -32,7 +32,8 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,prometheus # http://localhost:8080/productcatalogue/actuator/prometheus, http://localhost:8080/productcatalogue/actuator/info
+#        include: health,info,prometheus # http://localhost:8080/productcatalogue/actuator/prometheus, http://localhost:8080/productcatalogue/actuator/info
+        include: "*"
 
 springfox:
   documentation:
