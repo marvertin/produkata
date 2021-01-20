@@ -25,6 +25,15 @@ spring:
 #    resources:
 #      add-mappings: false
 
+management:
+  endpoint:
+    health:
+      show-details: never    # possible values:  never, always, when-authorized, http://localhost:8080/productcatalogue/actuator/health
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus # http://localhost:8080/productcatalogue/actuator/prometheus, http://localhost:8080/productcatalogue/actuator/info
+
 springfox:
   documentation:
     swagger:
