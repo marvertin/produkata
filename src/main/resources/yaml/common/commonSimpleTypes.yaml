@@ -38,7 +38,7 @@ components:
       type: string
       format: date
       description: 'Date to'
-     
+
     FilterSpecificDateType:
       type: string
       format: date

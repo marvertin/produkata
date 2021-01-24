@@ -79,8 +79,8 @@ components:
       schema:
         $ref: 'common/commonSimpleTypes.yaml#/components/schemas/FilterDateToType'
   schemas:
-   # Objekt kontextu volání služeb data potřebá pro vyhodnocení logiky a logování requestu
-    CommonContextType:      
+    # Objekt kontextu volání služeb data potřebá pro vyhodnocení logiky a logování requestu
+    CommonContextType:
       type: object
       required:
         - requestorIdentity

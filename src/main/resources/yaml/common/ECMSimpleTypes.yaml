@@ -6,12 +6,12 @@ components:
       description: 'Common context '
       required: true
       schema:
-        $ref: 'common/common.yaml#/components/schemas/CommonContextType' 
+        $ref: 'common/common.yaml#/components/schemas/CommonContextType'
   schemas:
-         
-# Objekt pro seznamu operací v košíku pro autorizaci, kromě autorizační aspekty - typ předmentu a zda je prefferovaný  
+
+    # Objekt pro seznamu operací v košíku pro autorizaci, kromě autorizační aspekty - typ předmentu a zda je prefferovaný
     OperationBasketDataForSignType:
-      description: Objekt pro vystavení seznamu operací v košíku pro autorizaci, kromě onformaci o operaci obsahuje autorizační aspekty - typ předmentu a zda je prefferovaný 
+      description: Objekt pro vystavení seznamu operací v košíku pro autorizaci, kromě onformaci o operaci obsahuje autorizační aspekty - typ předmentu a zda je prefferovaný
       type: object
       required:
         - operations
@@ -24,11 +24,11 @@ components:
         authorizationMethods:
           type: array
           items:
-             $ref: '#/components/schemas/AuthorizationMethodType'          
-        
-# Objekt pro vystavení operace pro autorizaci, kromě autorizační aspekty - typ předmentu a zda je prefferovaný  
+            $ref: '#/components/schemas/AuthorizationMethodType'
+
+    # Objekt pro vystavení operace pro autorizaci, kromě autorizační aspekty - typ předmentu a zda je prefferovaný
     OperationDataForSignType:
-      description: Objekt pro vystavení operace pro autorizaci, kromě informaci o operaci obsahuje autorizační aspekty - typ předmentu a zda je preferovaný 
+      description: Objekt pro vystavení operace pro autorizaci, kromě informaci o operaci obsahuje autorizační aspekty - typ předmentu a zda je preferovaný
       type: object
       required:
         - operation
@@ -39,10 +39,10 @@ components:
         authorizationMethods:
           type: array
           items:
-             $ref: '#/components/schemas/AuthorizationMethodType'         
+            $ref: '#/components/schemas/AuthorizationMethodType'
 
 
-# Objekt pro autorizační aspekty - typ předmentu a zda je prefferovaný
+    # Objekt pro autorizační aspekty - typ předmentu a zda je prefferovaný
     AuthorizationMethodType:
       type: object
       required:
@@ -50,19 +50,19 @@ components:
         - isPrefferedsecurityMethod
       properties:
         securityMethod:
-          $ref: '#/components/schemas/SecurityToolType'       
-        isPrefferedsecurityMethod: 
-          type: boolean       
-# Objekt data pro operaci bez autorizačních aspektů
-    OperationDataListType:  
+          $ref: '#/components/schemas/SecurityToolType'
+        isPrefferedsecurityMethod:
+          type: boolean
+    # Objekt data pro operaci bez autorizačních aspektů
+    OperationDataListType:
       type: object
       properties:
         operations:
           type: array
           items:
-             $ref: '#/components/schemas/OperationDataSimpleType'         
-# Objekt data pro operaci zobrazená v seznamu          
-    OperationDataSimpleType:      
+            $ref: '#/components/schemas/OperationDataSimpleType'
+    # Objekt data pro operaci zobrazená v seznamu
+    OperationDataSimpleType:
       type: object
       required:
         - operationId
@@ -75,17 +75,17 @@ components:
           $ref: '#/components/schemas/OperationKindType'
         frameContractId:
           $ref: 'commonSimpleTypes.yaml#/components/schemas/FrameContractIdType'
-        amount: 
+        amount:
           $ref: '#/components/schemas/OperationAmountType'
-        status: 
-          $ref: '#/components/schemas/OperationStatusType' 
+        status:
+          $ref: '#/components/schemas/OperationStatusType'
         valutaDate:
-          $ref: '#/components/schemas/ValutaDateType'   
+          $ref: '#/components/schemas/ValutaDateType'
         disponentSignatureNeeded:
           type: boolean
-          description: 'True if disponent signature is missing and disponent has a rights to sign'           
-# Objekt data pro vytvoření operace
-    PostOperationDataType:      
+          description: 'True if disponent signature is missing and disponent has a rights to sign'
+    # Objekt data pro vytvoření operace
+    PostOperationDataType:
       type: object
       required:
         - operationKind
@@ -97,17 +97,17 @@ components:
           $ref: '#/components/schemas/OperationKindType'
         frameContractId:
           $ref: 'commonSimpleTypes.yaml#/components/schemas/FrameContractIdType'
-        amount: 
+        amount:
           $ref: '#/components/schemas/OperationAmountType'
         valutaDate:
-          $ref: '#/components/schemas/ValutaDateType'    
+          $ref: '#/components/schemas/ValutaDateType'
         manualSignature:
           $ref: '#/components/schemas/ManualSignatureType'
         operationDetail:
-          type: object  
-           
-# Objekt data pro operaci bez autorizačních aspektů
-    OperationDataType:      
+          type: object
+
+    # Objekt data pro operaci bez autorizačních aspektů
+    OperationDataType:
       type: object
       required:
         - operationId
@@ -121,51 +121,51 @@ components:
           $ref: '#/components/schemas/OperationKindType'
         frameContractId:
           $ref: 'commonSimpleTypes.yaml#/components/schemas/FrameContractIdType'
-        amount: 
+        amount:
           $ref: '#/components/schemas/OperationAmountType'
-        status: 
-          $ref: '#/components/schemas/OperationStatusType' 
+        status:
+          $ref: '#/components/schemas/OperationStatusType'
         valutaDate:
-          $ref: '#/components/schemas/ValutaDateType'  
+          $ref: '#/components/schemas/ValutaDateType'
         createdByBankerLogin:
-           type: string
+          type: string
         dateTimeCanceled:
-          $ref: '#/components/schemas/DateTimeCanceledType'     
+          $ref: '#/components/schemas/DateTimeCanceledType'
         dateTimeCreated:
-          $ref: '#/components/schemas/DateTimeCreatedType'             
+          $ref: '#/components/schemas/DateTimeCreatedType'
         dateTimeReady:
-          $ref: '#/components/schemas/DateTimeReadyType' 
+          $ref: '#/components/schemas/DateTimeReadyType'
         dateTimeSigned:
-          $ref: '#/components/schemas/DateTimeSignedType'         
+          $ref: '#/components/schemas/DateTimeSignedType'
         dateTimeVerified:
-          $ref: '#/components/schemas/DateTimeVerifiedType' 
+          $ref: '#/components/schemas/DateTimeVerifiedType'
         verifiedByBankerLogin:
-          type: string                        
+          type: string
         operationDetail:
-          type: object  
+          type: object
         paperScanId:
-          $ref: '#/components/schemas/OperationPaperScanIdType' 
+          $ref: '#/components/schemas/OperationPaperScanIdType'
         operationSignatures:
           type: array
-          items:   
-            $ref: '#/components/schemas/OperationSignatureType'                  
-            
+          items:
+            $ref: '#/components/schemas/OperationSignatureType'
+
     OperationSignatureType:
       type: object
-      properties:  
-        createdByBankerLogin: 
+      properties:
+        createdByBankerLogin:
           type: string
-        challengeProcessID: 
+        challengeProcessID:
           type: number
-#TODO ověřit správně v datovém modelu
-        manualSignatureCheck: 
+        #TODO ověřit správně v datovém modelu
+        manualSignatureCheck:
           type: boolean
-        processDateTime: 
+        processDateTime:
           type: string
           format: date-time
-        SezamSecToolID: 
+        SezamSecToolID:
           type: string
-    
+
     OperationIdType:
       type: integer
       description: 'Id operace'
@@ -174,57 +174,57 @@ components:
     OperationKindType:
       type: string
       description: 'Typ aktivní operace (jednorázová platba, nákup  papírů)'
- #TODO Ověřit správný výčet OperationKindType
+      #TODO Ověřit správný výčet OperationKindType
       enum:
         - SINGLE_ORDER
         - STANDING_ORDER
         - INKASO
-        
+
     SecurityToolType:
       type: string
       description: 'Bezpečnostní metoda autorizace (SMS, mToken. ...)'
- #TODO Ověřit správný výčet SecurityTool securityDeviceTypeId a hlavně ManualSignature a SMS_TEL
+      #TODO Ověřit správný výčet SecurityTool securityDeviceTypeId a hlavně ManualSignature a SMS_TEL
       enum:
         - MTOKEN
-        - SMS
+        - SMS_EB
         - SMS_TEL
         - HWTOKEN
-        - MTOKEN_OFFLINE 
+        - MTOKEN_OFFLINE
         - MANUAL_SIGNATURE
 
-      
+
     ManualSignatureType:
       type: boolean
-      description: 'Přiznak zda se bude operace ověřovat manuálním papírovám podpisem'  
-    
+      description: 'Přiznak zda se bude operace ověřovat manuálním papírovám podpisem'
+
     OperationPaperScanSimpleType:
       type: object
-      properties:    
+      properties:
         id:
-          $ref: '#/components/schemas/OperationPaperScanIdType' 
+          $ref: '#/components/schemas/OperationPaperScanIdType'
         status:
-          $ref: '#/components/schemas/OperationPaperScanStatusType'  
+          $ref: '#/components/schemas/OperationPaperScanStatusType'
         paperScanURL:
-          $ref: '#/components/schemas/PaperScanURIType'          
+          $ref: '#/components/schemas/PaperScanURIType'
 
-      description: 'Informace o scanu papíropvého pokynu bez binárního obsahu'            
-      
+      description: 'Informace o scanu papíropvého pokynu bez binárního obsahu'
+
     OperationPaperScanType:
       type: object
       properties:
         scanInfo:
-          $ref: '#/components/schemas/OperationPaperScanSimpleType' 
+          $ref: '#/components/schemas/OperationPaperScanSimpleType'
         data:
           type: string
           format: byte
           description: Base64-encoded contents of image
 
-      description: 'Binární obsah scanu podpisu'   
-      
+      description: 'Binární obsah scanu podpisu'
+
     OperationStatusType:
       type: string
       description: 'Stav operace v ECM (VYtvořená, částečne podepsaná podepsaná, ...)'
- #TODO Ověřit správný výčet OperationStatusType WAIT_FOR_MANUAL_SIGNATURE_CHECK
+      #TODO Ověřit správný výčet OperationStatusType WAIT_FOR_MANUAL_SIGNATURE_CHECK
       enum:
         - CREATED
         - PARTIALY_SIGNED
@@ -232,7 +232,7 @@ components:
         - WAIT_FOR_MANUAL_SIGNATURE_CHECK
         - IN_CORE_PROCESS
         - PROCESSED
-        - CANCELED     
+        - CANCELED
     OperationAmountType:
       type: number
       description: 'Anmount of the operation'
@@ -244,41 +244,337 @@ components:
       type: number
       description: 'Challenge id created in SEZAM'
 
-     
+
     DateTimeCanceledType:
       type: string
       format: date-time
-      description: 'Cancel time of the operation'      
+      description: 'Cancel time of the operation'
     DateTimeCreatedType:
       type: string
       format: date-time
-      description: 'Created time of the operation'            
+      description: 'Created time of the operation'
     DateTimeReadyType:
       type: string
       format: date-time
-      description: 'Ready time of the operation'    
+      description: 'Ready time of the operation'
     DateTimeSignedType:
       type: string
       format: date-time
-      description: 'Signture time of the operation'                    
+      description: 'Signture time of the operation'
     DateTimeVerifiedType:
       type: string
       format: date-time
-      description: 'Verified time of the operation'          
-            
+      description: 'Verified time of the operation'
+
     OperationPaperScanIdType:
       type: integer
-      description: 'Id of operation paper scan '   
-      format: int32 
-      
-    OperationPaperScanStatusType:  
+      description: 'Id of operation paper scan '
+      format: int32
+
+    OperationPaperScanStatusType:
       type: string
       description: 'Paper scan status'
       enum:
         - CREATED
-        - PROCESSED
+        - USED
+        - VERIFIED
         - CANCELED
-        
+
     PaperScanURIType:
       type: string
       description: 'Paper scan URI in DMS system'
+
+    #----------------ECM DISPO SIMPLE TYPES-------#
+    #DISPONENT#
+    DisponentIdType:
+      type: integer
+      description: 'ECM disponent id'
+      format: int32
+
+    DisponentNameType:
+      type: string
+      description: 'Name of disponent'
+      example: 'John Dee'
+
+    DisponentNoteType:
+      type: string
+      description: 'Note to disponent'
+
+    DisponentPersonExternalIdNameType:
+      type: string
+      description: 'Disponents (person) Id from external system'
+      example: 'ABC123456'
+
+    DisponentPersonExternalSystemIdNameType:
+      type: string
+      description: 'The external system name from which the person external Id is taken'
+      example: 'SYSTEM-ABC'
+
+    DisponentPersonChannelsIdIdType:
+      type: integer
+      description: 'Person channel Id'
+      format: int32
+
+    #DISPOSITION#
+    DispositionIdType:
+      type: integer
+      description: 'ECM disposition id'
+      format: int32
+
+    DispositionValidityType:
+      type: boolean
+      description: 'Disposition validity'
+
+
+    DispositionValidSinceType:
+      type: date
+      description: 'date since the disposition is valid'
+
+    DispositionValidUntilType:
+      type: date
+      description: 'due date determines disposition is valid to'
+
+    DispositionPeremissionGroupType:
+      type: object
+      properties:
+        dispositionPeremissionGroupCode:
+          type: integer
+          description: 'Disposition peremission group code'
+          format: int32
+          example: 'A'
+
+        dispositionPeremissionGroupName:
+          type: string
+          description: 'Disposition peremission group name'
+          example: 'Active operations'
+
+        dispositionPeremissionGroupNote:
+          type: string
+          description: 'Disposition peremission group note'
+
+        dispositionPeremissionGroupValidity:
+          type: boolean
+          description: 'Disposition peremission group name validity'
+
+
+    #FRAME-CONTRACT#
+    FrameContractIdType:
+      $ref: 'commonSimpleTypes.yaml#/components/schemas/FrameContractIdType'
+
+    FrameContractNameType:
+      type: string
+      description: 'Frame contract name'
+
+    FrameContractHolderExternalIdType:
+      type: string
+      description: 'Frame contact holder (person) Id from external system'
+
+    FrameContractHolderExternalSystemIdType:
+      type: string
+      description: 'The external system name from which the holder external Id is taken'
+
+    FramecontractHolderChannelsIdType:
+      type: int32
+      description: 'Holder channel Id'
+
+    FrameContractValidityType:
+      type: boolean
+      description: 'Validity of Frame contract'
+
+    #PRODUCT -AKA- DISPOSITION OBJECT#
+    ProductIdType:
+      type: integer
+      description: 'ECM product id'
+      format: int32
+
+    ProductExternalIdType:
+      type: string
+      description: 'Product Id from external system'
+
+    ProductExternalSystemIdType:
+      type: string
+      description: 'The external system name from which the product external Id is taken'
+
+    ProductChannelsIdType:
+      type: int32
+      description: 'Product channel Id'
+
+    ProductNoteType:
+      type: string
+      description: 'Product note'
+
+    ProductTypeIdType:
+      type: string
+      enum:
+        - F
+        - P
+
+    #SECURITY-TOOL#
+    SecurityToolIdType:
+      type: integer
+      description: 'ECM security tool id'
+      format: int32
+
+
+    SecurityToolTypeIdType:
+      type: integer
+      description: 'ECM security tool type id'
+      format: int32
+    #SIGNATURE-GROUP#
+    SignatureGroupIdType:
+      type: integer
+      description: 'ECM signature group id'
+      format: int32
+
+    #LIMIT#
+    LimitIdType:
+      type: integer
+      description: 'ECM limit id'
+      format: int32
+
+
+    #----------------ECM DISPO POST / PUT PARAMETERS--------#
+    PostDisponentDataType:
+      type: object
+      #TODO
+
+    PutDisponentDataType:
+      type: object
+      properties:
+        disponent:
+          $ref: 'common/ECMSimpleTypes.yaml#/components/schemas/DisponentDataType'
+
+    PostCheckDispoAndLimitsDataType:
+      type: object
+      #TODO
+
+    CheckDispoAndLimitsRequestDataType:
+      type: object
+      #TODO
+
+    PostDispositionDataType:
+      type: object
+      #TODO
+
+    PutDispositionDataType:
+      type: object
+      properties:
+        disposition:
+          $ref: 'common/ECMSimpleTypes.yaml#/components/schemas/DispositionDataType'
+
+    PostSecurityToolDataType:
+      type: object
+      #TODO
+
+    PutSecurityToolDataType:
+      type: object
+      properties:
+        securityTool:
+          $ref: 'common/ECMSimpleTypes.yaml#/components/schemas/SecurityToolDataType'
+
+    PostFrameContractDataType:
+      type: object
+      #TODO
+
+    PutFrameContractDataType:
+      type: object
+      properties:
+        frameContract:
+          $ref: 'common/ECMSimpleTypes.yaml#/components/schemas/FrameContractDataType'
+
+    PostProductDataType:
+      type: object
+        #TODO
+
+    PutProductDataType:
+      type: object
+      properties:
+        product:
+          $ref: 'common/ECMSimpleTypes.yaml#/components/schemas/ProductDataType'
+
+
+    PostSignatureGroupDataType:
+      type: object
+        #TODO
+
+    PutSignatureGroupDataType:
+      type: object
+      properties:
+        signatureGroup:
+          $ref: 'common/ECMSimpleTypes.yaml#/components/schemas/SignatureGroupDataType'
+
+    PutSecurityToolTypeDataType:
+      type: object
+      properties:
+        disponent:
+          $ref: 'common/ECMSimpleTypes.yaml#/components/schemas/SecurityToolTypeDataType'
+
+
+    #----------------ECM DISPO SIMPLE OBJECTS------------#
+
+    DisponentDataType:
+      type: object
+      description: 'Disponent object'
+      properties:
+        disponentId:
+          $ref: '#/components/schemas/DisponentIdType'
+
+
+    DispositionDataType:
+      type: object
+      description: 'Disposition object'
+      properties:
+        dispositionId:
+          $ref: '#/components/schemas/DispositionIdType'
+        #TODO Doplnit další dle LDM
+
+    SecurityToolDataType:
+      type: object
+      description: 'Security tool object'
+      properties:
+        securityToolId:
+          $ref: '#/components/schemas/SecurityToolIdType'
+        type:
+          $ref: '#/components/schemas/SecurityToolType'
+          #TODO Doplnit další dle LDM
+
+    FrameContractDataType:
+      type: object
+      description: 'Frame contract object'
+      properties:
+        frameContractId:
+          $ref: 'commonSimpleTypes.yaml#/components/schemas/FrameContractIdType'
+        #TODO Doplnit další dle LDM
+
+    ProductDataType:
+      type: object
+      description: 'Product object'
+      properties:
+        productId:
+          $ref: '#/components/schemas/ProductIdType'
+        #TODO Doplnit další dle LDM
+
+    SignatureGroupDataType:
+      type: object
+      description: 'Signature group object'
+      properties:
+        signatureGroupId:
+          $ref: '#/components/schemas/SignatureGroupIdType'
+        #TODO Doplnit další dle LDM
+
+    SecurityToolTypeDataType:
+      type: object
+      description: 'Security tool type object'
+      properties:
+        securityToolTypeId:
+          $ref: '#/components/schemas/SecurityToolTypeId'
+        #TODO Doplnit další dle LDM
+
+    LimitCounterDataType:
+      type: object
+      description: 'Limit counter object'
+      properties:
+        limitId:
+          $ref: '#/components/schemas/LimitIDType'
+        #TODO Doplnit další dle LDM
+

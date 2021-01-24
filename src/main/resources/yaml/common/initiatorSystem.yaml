@@ -13,7 +13,7 @@ components:
           $ref: '#/components/schemas/ChannelIdType'
         requestTimestamp:
           $ref: '#/components/schemas/RequestTimestampType'
-        #branchId:
+          #branchId:
           #type: string
           #description: 'Branch identifier (only for relevant channels). Codebook: BRANCH_CODE'
 
