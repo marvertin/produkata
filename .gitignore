@@ -1,0 +1,12 @@
+# Common / Maven
+target
+*.log
+*.log.gz
+
+# Eclipse
+.settings
+.classpath
+.factorypath
+.project
+.springBeans
+.apt_generated*

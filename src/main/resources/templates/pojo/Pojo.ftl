@@ -1,0 +1,21 @@
+${pojo.getPackageDeclaration()}
+// Generated ${date} by Hibernate Tools ${version}
+
+<#assign classbody>
+<#include "PojoTypeDeclaration.ftl"/> {
+
+<#if !pojo.isInterface()>
+<#include "PojoFields.ftl"/>
+
+<#else>
+<#include "PojoInterfacePropertyAccessors.ftl"/>
+
+</#if>
+<#include "PojoExtraClassCode.ftl"/>
+
+}
+</#assign>
+
+${pojo.generateImports()}
+${classbody}
+

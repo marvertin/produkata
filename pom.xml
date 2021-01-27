@@ -1,0 +1,75 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.asseco.ce.jtsrdigi</groupId>
+    <artifactId>jtsrdigi-product-catalogue</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <parent>
+        <groupId>com.asseco.ce.jtsrdigi</groupId>
+        <artifactId>jtsrdigi-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>5.0.0</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.asseco.ce.jtsrdigi</groupId>
+                        <artifactId>jtsrdigi-api-definition</artifactId>
+                        <version>${jtsrdigi-api-definition.version}</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>ProductCatalogueAPI1.0.yaml</inputSpec>
+                            <generatorName>spring</generatorName>
+                            <library>spring-boot</library>
+                            <configOptions>
+                                <configPackage>com.asseco.ce.jtsrdigi.service.product_catalogue.configuration</configPackage>
+                                <apiPackage>com.asseco.ce.jtsrdigi.service.product_catalogue.api</apiPackage>
+                                <modelPackage>com.asseco.ce.jtsrdigi.service.product_catalogue.model</modelPackage>
+                                <invokerPackage>com.asseco.ce.jtsrdigi</invokerPackage>
+                                <delegatePattern>true</delegatePattern>
+                                <swaggerDocketConfig>true</swaggerDocketConfig>
+                                <returnSuccessCode>true</returnSuccessCode>
+                                <useTags>true</useTags>
+                                <dateLibrary>java8</dateLibrary>
+                                <hideGenerationTimestamp>true</hideGenerationTimestamp>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>com.mysema.maven</groupId>
+                <artifactId>apt-maven-plugin</artifactId>
+                <version>1.1.3</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>process</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>target/generated-sources/querydsl</outputDirectory>
+                            <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

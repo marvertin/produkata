@@ -1,0 +1,50 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /productcatalogue
+#    encoding:
+#      force: true
+#      enabled: true
+#      charset: UTF-8
+
+spring:
+  jackson:
+    date-format: com.asseco.ce.jtsrdigi.RFC3339DateFormat
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+#  mvc:
+#    throw-exception-if-no-handler-found: true
+  datasource:
+    url: jdbc:oracle:thin:@//jtsr-ivp-db.assecosk.local:1521/JTDIGI_D
+    driver-class-name: oracle.jdbc.OracleDriver
+    username: DATREP247_PUBLIC
+    password: DATREP247
+  jpa:
+    database-platform: org.hibernate.dialect.Oracle12cDialect
+#  web:
+#    resources:
+#      add-mappings: false
+
+management:
+  endpoint:
+    health:
+      show-details: never    # possible values:  never, always, when-authorized, http://localhost:8080/productcatalogue/actuator/health
+  endpoints:
+    web:
+      exposure:
+#        include: health,info,prometheus,metrics,threaddump # http://localhost:8080/productcatalogue/actuator/prometheus, http://localhost:8080/productcatalogue/actuator/info
+        include: "*"
+
+springfox:
+  documentation:
+    swagger:
+      v2:
+        path: /api-docs
+
+slf4jfilter:
+  request-header:
+    - X-Correlation-ID
+    - X-Request-ID
+  request-param:
+    - systemId
+    - requestTimestamp
