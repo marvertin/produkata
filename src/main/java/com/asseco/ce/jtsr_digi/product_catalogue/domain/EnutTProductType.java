@@ -1,36 +1,43 @@
 package com.asseco.ce.jtsr_digi.product_catalogue.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
 
 /**
  * Tabuľka obsahuje textové popisy pre jednotlivé typy produktov v rôznych jazykových mutáciách
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "ENUT_T_PRODUCT_TYPE")
-@Data
-@Accessors(chain = true)
 public class EnutTProductType implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * Primárny kľúč
+     * Kompozitny klúč EnutTProductTypeId
      */
-    @Id
-    @Column(name = "PRODUCT_TYPE_ID", nullable = false)
-    private String productTypeId;
+    @EmbeddedId
+    @AttributeOverrides({
+            @AttributeOverride(name = "productTypeId", column = @Column(name = "PRODUCT_TYPE_ID", nullable = false, precision = 22, scale = 0)),
+            @AttributeOverride(name = "langCode", column = @Column(name = "LANG_CODE", nullable = false, length = 2)),
+            @AttributeOverride(name = "validFrom", column = @Column(name = "VALID_FROM", nullable = false, length = 7))})
+    private EnutTProductTypeId id;
 
-    @Id
-    @Column(name = "LANG_CODE", nullable = false)
-    private String langCode;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "LANG_CODE", nullable = false, insertable = false, updatable = false)
+    private CfgTLang cfgTLang;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "PRODUCT_TYPE_ID", nullable = false, insertable = false, updatable = false)
+    private EnumTProductType enumTProductType;
 
     /**
      * Dlhý názov
@@ -49,13 +56,6 @@ public class EnutTProductType implements Serializable {
      */
     @Column(name = "TEXT_SHORT")
     private String textShort;
-
-    /**
-     * dátum platnosti záznamu
-     */
-    @Id
-    @Column(name = "VALID_FROM", nullable = false)
-    private Date validFrom;
 
     /**
      * Platnosť do

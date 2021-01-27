@@ -25,4 +25,9 @@ public interface PcTProductCatalogueTsRepository extends PagingAndSortingReposit
             nativeQuery = true)
     Slice<PcTProductCatalogueTs> findByProductidAndDateBetween(@Param("productId")BigInteger productId, @Param("dateFrom") LocalDate dateFrom, @Param("dateTo") LocalDate dateTo, Pageable pageabled);
 
+    @Query(value = "SELECT COUNT(*) FROM PC_T_PRODUCT_CATALOGUE_TS ptpct WHERE ptpct.PRODUCTID = :productId " +
+            "AND (TO_DATE(ptpct.DATE_FROM) <= TO_DATE(:dateTo) OR ptpct.DATE_FROM IS NULL) " +
+            "AND (TO_DATE(ptpct.DATE_TO) >= TO_DATE(:dateFrom) OR ptpct.DATE_TO IS NULL)",
+            nativeQuery = true)
+    long countByLangAndProductidAndDateBetween(@Param("productId")BigInteger productId, @Param("dateFrom") LocalDate dateFrom, @Param("dateTo") LocalDate dateTo);
 }

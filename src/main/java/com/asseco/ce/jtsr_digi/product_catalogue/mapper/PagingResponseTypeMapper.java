@@ -6,18 +6,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
+import org.springframework.data.domain.Slice;
 
 @Slf4j
 @Mapper(componentModel = "spring", uses = {})
 public abstract class PagingResponseTypeMapper implements EntityMapper<PagingResponseType, PcTProduct> {
 
     @Mappings({
-            @Mapping(target = "recordCount", source = "entityType"),
-            @Mapping(target = "recordCountTotal", source = "entityType"),
-            @Mapping(target = "hasNextPage", source = "entityType"),
-            @Mapping(target = "hasPreviousPage", source = "entityType"),
-            @Mapping(target = "offset", source = "entityType"),
-            @Mapping(target = "limit", source = "entityType")
+            @Mapping(target = "recordCount", ignore = true),
+            @Mapping(target = "recordCountTotal", ignore = true),
+            @Mapping(target = "hasNextPage", ignore = true),
+            @Mapping(target = "hasPreviousPage", ignore = true),
+            @Mapping(target = "offset", ignore = true),
+            @Mapping(target = "limit", ignore = true)
     })
     public abstract PagingResponseType toDto(PcTProduct source);
 

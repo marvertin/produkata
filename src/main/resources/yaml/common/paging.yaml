@@ -11,8 +11,8 @@ components:
           type: integer
           description: 'Number of records, which should be displayed on a new page'
         returnTotalCount:
-          type: boolean
-          description: 'Indicates if recordCountTotal in PagingResponseType should be returned'
+          type: integer
+          description: 'Indicates if recordCountTotal in PagingResponseType should be returned (1= true, 0=false)'
 
     PagingResponseType:
       type: object

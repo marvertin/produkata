@@ -20,7 +20,7 @@ public abstract class ListOfProductAttributesDetailTypeMapper implements EntityM
             @Mapping(target = "attrDataType", source = "enumTProdcatAttr.attrType"),
             @Mapping(target = "attrOrder", source = "id.orderValue"),
             @Mapping(target = "attrNumericValue", source = "NAttrValue"),
-            @Mapping(target = "attrDateValue", source = "DAttrValue", qualifiedByName = "dateToLocalDate"),
+            @Mapping(target = "attrDateValue", source = "DAttrValue"),
             @Mapping(target = "listOfValues", ignore = true)
 
     })

@@ -110,6 +110,16 @@ components:
     OperationDataType:
       type: object
       required:
+        - operationMetaData
+      properties:
+        operationMetaData:
+          $ref: '#/components/schemas/OperationType'
+        operationAttributes:
+          $ref: '#/components/schemas/OperationAttributesType'
+
+
+    OperationType:
+      required:
         - operationId
         - operationKind
         - operationDetail
@@ -150,6 +160,9 @@ components:
           items:
             $ref: '#/components/schemas/OperationSignatureType'
 
+    OperationAttributesType:
+      type: object
+
     OperationSignatureType:
       type: object
       properties:
@@ -174,11 +187,7 @@ components:
     OperationKindType:
       type: string
       description: 'Typ aktivní operace (jednorázová platba, nákup  papírů)'
-      #TODO Ověřit správný výčet OperationKindType
-      enum:
-        - SINGLE_ORDER
-        - STANDING_ORDER
-        - INKASO
+
 
     SecurityToolType:
       type: string
