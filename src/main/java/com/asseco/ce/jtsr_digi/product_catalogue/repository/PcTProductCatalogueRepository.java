@@ -33,23 +33,20 @@ public interface PcTProductCatalogueRepository extends PagingAndSortingRepositor
     List<String> findByAttrNameAndLangCodeDistinct(@Param("attrName") String attrName, @Param("langCode") String langCode);
 
     @Query(value = "SELECT * FROM PC_T_PRODUCT_CATALOGUE ptpc WHERE ptpc.PRODUCTID = :productId AND ptpc.LANG_CODE = :lang " +
-            "AND (TO_DATE(ptpc.VALID_FROM) <= TO_DATE(:dateTo) OR ptpc.VALID_FROM IS NULL) " +
-            "AND (TO_DATE(ptpc.VALID_TO) >= TO_DATE(:dateFrom) OR ptpc.VALID_TO IS NULL)",
-            countQuery = "SELECT COUNT(*) FROM PC_T_PRODUCT_CATALOGUE ptpc WHERE ptpc.PRODUCTID = :productId AND ptpc.LANG_CODE = :lang " +
-                    "AND (TO_DATE(ptpc.VALID_FROM) <= TO_DATE(:dateTo) OR ptpc.VALID_FROM IS NULL) " +
-                    "AND (TO_DATE(ptpc.VALID_TO) >= TO_DATE(:dateFrom) OR ptpc.VALID_TO IS NULL)",
+            "AND (ptpc.VALID_FROM <= :dateTo OR ptpc.VALID_FROM IS NULL) " +
+            "AND (ptpc.VALID_TO >= :dateFrom OR ptpc.VALID_TO IS NULL)",
             nativeQuery = true)
     Slice<PcTProductCatalogue> findByLangAndProductidAndDateBetween(@Param("lang") String lang, @Param("productId")BigInteger productId, @Param("dateFrom") LocalDate dateFrom, @Param("dateTo") LocalDate dateTo, Pageable pageabled);
 
     @Query(value = "SELECT * FROM PC_T_PRODUCT_CATALOGUE ptpc WHERE ptpc.PRODUCTID = :productId AND ptpc.LANG_CODE = :lang " +
-            "AND (TO_DATE(ptpc.VALID_FROM) <= TO_DATE(:dateTo) OR ptpc.VALID_FROM IS NULL) " +
-            "AND (TO_DATE(ptpc.VALID_TO) >= TO_DATE(:dateFrom) OR ptpc.VALID_TO IS NULL)",
+            "AND (ptpc.VALID_FROM <= :dateTo OR ptpc.VALID_FROM IS NULL) " +
+            "AND (ptpc.VALID_TO >= :dateFrom OR ptpc.VALID_TO IS NULL)",
             nativeQuery = true)
     List<PcTProductCatalogue> findByLangAndProductidAndDateBetween(@Param("lang") String lang, @Param("productId")BigInteger productId, @Param("dateFrom") LocalDate dateFrom, @Param("dateTo") LocalDate dateTo);
 
     @Query(value = "SELECT COUNT(*) FROM PC_T_PRODUCT_CATALOGUE ptpc WHERE ptpc.PRODUCTID = :productId AND ptpc.LANG_CODE = :lang " +
-            "AND (TO_DATE(ptpc.VALID_FROM) <= TO_DATE(:dateTo) OR ptpc.VALID_FROM IS NULL) " +
-            "AND (TO_DATE(ptpc.VALID_TO) >= TO_DATE(:dateFrom) OR ptpc.VALID_TO IS NULL)",
+            "AND (ptpc.VALID_FROM <= :dateTo OR ptpc.VALID_FROM IS NULL) " +
+            "AND (ptpc.VALID_TO >= :dateFrom OR ptpc.VALID_TO IS NULL)",
             nativeQuery = true)
     long countByLangAndProductidAndDateBetween(@Param("lang") String lang, @Param("productId")BigInteger productId, @Param("dateFrom") LocalDate dateFrom, @Param("dateTo") LocalDate dateTo);
 }
