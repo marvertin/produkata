@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:oracle:thin:@//jtsr-ivp-db.assecosk.local:1521/JTDIGI_D
+    driver-class-name: oracle.jdbc.OracleDriver
+    username: DATREP247_PUBLIC
+    password: DATREP247
+  jpa:
+    database-platform: org.hibernate.dialect.Oracle12cDialect
+
+logging:
+  level:
+    root: INFO
+    com.asseco.ce.jtsrdigi: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql: TRACE
+  file:
+    name: application.log
+  pattern:
+    rolling-file-name: "application-%d{yyyyMMdd-HH}.%i.log.gz"
+    file: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] [%X{X-Correlation-ID} %X{X-Request-ID}] %c - %msg%n"
