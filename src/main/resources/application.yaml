@@ -48,3 +48,16 @@ slf4jfilter:
   request-param:
     - systemId
     - requestTimestamp
+
+logging:
+  level:
+    root: WARN
+    com.asseco.ce.jtsrdigi: DEBUG
+    org.springframework: INFO
+    org.hibernate: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql: TRACE
+    com.querydsl: DEBUG
+    liquibase: DEBUG
+  pattern:
+    console: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] [%X{X-Correlation-ID} %X{X-Request-ID}] %c - %msg%n"
