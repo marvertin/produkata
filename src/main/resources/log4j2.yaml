@@ -7,24 +7,24 @@ Appenders:
     PatternLayout:
       Pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] [%X{X-Correlation-ID} %X{X-Request-ID}] %c - %msg%n"
 
-  RollingFile:
-    name: LogToFile
-    fileName: application.log
-    filePattern: application-%d{yyyyMMdd-HH}.%i.log.gz
-    PatternLayout:
-      pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] [%X{X-Correlation-ID} %X{X-Request-ID}] %c - %msg%n"
-    Policies:
-      SizeBasedTriggeringPolicy:
-        size: 10MB
-      TimeBasedTriggeringPolicy:
-        interval: 1
+#  RollingFile:
+#    name: LogToFile
+#    fileName: application.log
+#    filePattern: application-%d{yyyyMMdd-HH}.%i.log.gz
+#    PatternLayout:
+#      pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] [%X{X-Correlation-ID} %X{X-Request-ID}] %c - %msg%n"
+#    Policies:
+#      SizeBasedTriggeringPolicy:
+#        size: 10MB
+#      TimeBasedTriggeringPolicy:
+#        interval: 1
 
 Loggers:
   Root:
     level: warn
     AppenderRef:
       - ref: LogToConsole
-      - ref: LogToFile
+#      - ref: LogToFile
 
   Logger:
     - name: com.asseco.ce.jtsrdigi
@@ -32,44 +32,44 @@ Loggers:
       additivity: false
       AppenderRef:
         - ref: LogToConsole
-        - ref: LogToFile
+#        - ref: LogToFile
 
     - name: org.springframework
       level: info
       additivity: false
       AppenderRef:
         - ref: LogToConsole
-        - ref: LogToFile
+#        - ref: LogToFile
 
     - name: org.hibernate
       level: info
       additivity: false
       AppenderRef:
         - ref: LogToConsole
-        - ref: LogToFile
+#        - ref: LogToFile
     - name: org.hibernate.SQL
       level: debug
       additivity: false
       AppenderRef:
         - ref: LogToConsole
-        - ref: LogToFile
+#        - ref: LogToFile
     - name: org.hibernate.type.descriptor.sql
       level: trace
       additivity: false
       AppenderRef:
         - ref: LogToConsole
-        - ref: LogToFile
+#        - ref: LogToFile
 
     - name: com.querydsl
       level: debug
       additivity: false
       AppenderRef:
         - ref: LogToConsole
-        - ref: LogToFile
+#        - ref: LogToFile
 
     - name: liquibase
       level: debug
       additivity: false
       AppenderRef:
         - ref: LogToConsole
-        - ref: LogToFile
+#        - ref: LogToFile
