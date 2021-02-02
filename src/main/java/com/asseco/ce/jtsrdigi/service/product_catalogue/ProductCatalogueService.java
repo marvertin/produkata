@@ -139,7 +139,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
     private NativeWebRequest request;
 
     /**
-     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate#getRequest()
+     * @see com.asseco.ce.jtsrdigi.service.product_catalogue.api.ProductCatalogueApiApiDelegate#getRequest()
      */
     @Override
     public Optional<NativeWebRequest> getRequest() {
@@ -147,7 +147,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
     }
 
     /**
-     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate#compareProduct(java.lang.String, java.util.List, java.util.List, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType)
+     * @see com.asseco.ce.jtsrdigi.service.product_catalogue.api.ProductCatalogueApiApiDelegate#compareProduct(java.lang.String, java.util.List, java.util.List, java.lang.String, java.lang.String, com.asseco.ce.jtsrdigi.service.product_catalogue.model.InitiatorSystemType)
      */
     @LogExecutionTime
     @Override
@@ -166,8 +166,6 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
 
         data.setLang(lang);
 
-        /*List<ListOfProductsDetailType> listOfProductsDetailTypeList = listOfProductsDetailTypeMapper
-                .ListOfProductsDetailTypeList(Lists.newArrayList(pcTProducts));*/
         data.setListOfProducts(StreamSupport.stream(pcTProducts.spliterator(), false)
                 .flatMap(product -> {
 
@@ -207,7 +205,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
     }
 
     /**
-     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate#getListOfProductCategories(java.lang.String, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType)
+     * @see com.asseco.ce.jtsrdigi.service.product_catalogue.api.ProductCatalogueApiApiDelegate#getListOfProductCategories(java.lang.String, java.lang.String, java.lang.String, com.asseco.ce.jtsrdigi.service.product_catalogue.model.InitiatorSystemType)
      */
     @LogExecutionTime
     @Override
@@ -231,7 +229,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
     }
 
     /**
-     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate#getListOfProductsInCategory(java.lang.String, java.lang.String, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType, com.asseco.ce.jtsr_digi.product_catalogue.model.PagingRequestType)
+     * @see com.asseco.ce.jtsrdigi.service.product_catalogue.api.ProductCatalogueApiApiDelegate#getListOfProductsInCategory(java.lang.String, java.lang.String, java.lang.String, java.lang.String, com.asseco.ce.jtsrdigi.service.product_catalogue.model.InitiatorSystemType, com.asseco.ce.jtsrdigi.service.product_catalogue.model.PagingRequestType)
      */
     @LogExecutionTime
     @Override
@@ -285,7 +283,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
     }
 
     /**
-     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate#getProductAttributes(java.lang.String, java.lang.String, java.lang.Integer, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType)
+     * @see com.asseco.ce.jtsrdigi.service.product_catalogue.api.ProductCatalogueApiApiDelegate#getProductAttributes(java.lang.String, java.lang.String, java.lang.Integer, java.lang.String, java.lang.String, com.asseco.ce.jtsrdigi.service.product_catalogue.model.InitiatorSystemType)
      */
     @LogExecutionTime
     @Override
@@ -315,7 +313,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
     }
 
     /**
-     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate#getProductAttributesDetail(java.lang.String, java.lang.String, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType)
+     * @see com.asseco.ce.jtsrdigi.service.product_catalogue.api.ProductCatalogueApiApiDelegate#getProductAttributesDetail(java.lang.String, java.lang.String, java.lang.String, java.lang.String, com.asseco.ce.jtsrdigi.service.product_catalogue.model.InitiatorSystemType)
      */
     @LogExecutionTime
     @Override
@@ -323,11 +321,8 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String lang, String attrTechnicalName, String xCorrelationID,
             String xRequestID, InitiatorSystemType initiatorSystem) {
 
-        /*List<PcTProductCatalogue> pcTProductCatalogues = pcTProductCatalogueRepository
-                .findByEnumTProdcatAttr_AttrNameAndId_LangCode(attrTechnicalName, lang);*/
 
         List<String> attrValueListDistinct = pcTProductCatalogueRepository.findByAttrNameAndLangCodeDistinct(attrTechnicalName, lang);
-
 
         GetProductAttributesDetailResponseType getProductAttributesDetailResponseType = new GetProductAttributesDetailResponseType();
         CommonResponseType params = new CommonResponseType();
@@ -337,15 +332,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
 
         GetProductAttributesDetailResponseBodyTypeTechnicalAttributeDetail technicalAttributeDetail = new GetProductAttributesDetailResponseBodyTypeTechnicalAttributeDetail();
         technicalAttributeDetail.setAttrTechnicalName(attrTechnicalName);
-        /*technicalAttributeDetail.setAttrDataType(
-                GetProductAttributesDetailResponseBodyTypeTechnicalAttributeDetail
-                        .AttrDataTypeEnum.fromValue(pcTProductCatalogues.get(0).getEnumTProdcatAttr().getAttrType().toLowerCase()));*/
         technicalAttributeDetail.setListOfValues(listOfValuesMapper.DistinctListOfValuesList(attrValueListDistinct));
-            /*technicalAttributeDetail.setListOfValues(listOfValuesMapper.ListOfValuesList(pcTProductCatalogues
-                    .stream()
-                    .collect(Collectors.groupingBy(p -> p.getCAttrValue()))
-                    .values().stream().map(plans -> plans.stream().findFirst().get())
-                    .collect(Collectors.toList())));*/
 
         data.setTechnicalAttributeDetail(technicalAttributeDetail);
 
@@ -356,7 +343,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
     }
 
     /**
-     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate#getProductDetail(java.lang.String, java.lang.String, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType)
+     * @see com.asseco.ce.jtsrdigi.service.product_catalogue.api.ProductCatalogueApiApiDelegate#getProductDetail(java.lang.String, java.lang.String, java.lang.String, java.lang.String, com.asseco.ce.jtsrdigi.service.product_catalogue.model.InitiatorSystemType)
      */
     @LogExecutionTime
     @Override
@@ -414,7 +401,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
     }
 
     /**
-     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate#getProductDocuments(java.lang.String, java.lang.String, java.time.LocalDate, java.time.LocalDate, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType)
+     * @see com.asseco.ce.jtsrdigi.service.product_catalogue.api.ProductCatalogueApiApiDelegate#getProductDocuments(java.lang.String, java.lang.String, java.time.LocalDate, java.time.LocalDate, java.lang.String, java.lang.String, com.asseco.ce.jtsrdigi.service.product_catalogue.model.InitiatorSystemType)
      */
     @LogExecutionTime
     @Override
@@ -446,7 +433,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
     }
 
     /**
-     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate#getProductPortfolioAssetStructure(java.lang.String, java.lang.String, java.time.LocalDate, java.time.LocalDate, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType, com.asseco.ce.jtsr_digi.product_catalogue.model.PagingRequestType)
+     * @see com.asseco.ce.jtsrdigi.service.product_catalogue.api.ProductCatalogueApiApiDelegate#getProductPortfolioAssetStructure(java.lang.String, java.lang.String, java.time.LocalDate, java.time.LocalDate, java.lang.String, java.lang.String, com.asseco.ce.jtsrdigi.service.product_catalogue.model.InitiatorSystemType, com.asseco.ce.jtsrdigi.service.product_catalogue.model.PagingRequestType)
      */
     @LogExecutionTime
     @Override
@@ -493,7 +480,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
     }
 
     /**
-     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate#getProductPortfolioComposition(java.lang.String, java.lang.String, java.time.LocalDate, java.time.LocalDate, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType)
+     * @see com.asseco.ce.jtsrdigi.service.product_catalogue.api.ProductCatalogueApiApiDelegate#getProductPortfolioComposition(java.lang.String, java.lang.String, java.time.LocalDate, java.time.LocalDate, java.lang.String, java.lang.String, com.asseco.ce.jtsrdigi.service.product_catalogue.model.InitiatorSystemType)
      */
     @LogExecutionTime
     @Override
@@ -526,7 +513,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
     }
 
     /**
-     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate#getProductPortfolioFundPerformance(java.lang.String, java.lang.String, java.time.LocalDate, java.time.LocalDate, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType)
+     * @see com.asseco.ce.jtsrdigi.service.product_catalogue.api.ProductCatalogueApiApiDelegate#getProductPortfolioFundPerformance(java.lang.String, java.lang.String, java.time.LocalDate, java.time.LocalDate, java.lang.String, java.lang.String, com.asseco.ce.jtsrdigi.service.product_catalogue.model.InitiatorSystemType)
      */
     @LogExecutionTime
     @Override
@@ -572,7 +559,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
     }
 
     /**
-     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate#getProductSimpleGraph(java.lang.String, java.lang.String, java.time.LocalDate, java.time.LocalDate, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType, com.asseco.ce.jtsr_digi.product_catalogue.model.PagingRequestType)
+     * @see com.asseco.ce.jtsrdigi.service.product_catalogue.api.ProductCatalogueApiApiDelegate#getProductSimpleGraph(java.lang.String, java.lang.String, java.time.LocalDate, java.time.LocalDate, java.lang.String, java.lang.String, com.asseco.ce.jtsrdigi.service.product_catalogue.model.InitiatorSystemType, com.asseco.ce.jtsrdigi.service.product_catalogue.model.PagingRequestType)
      */
     @LogExecutionTime
     @Override
@@ -623,7 +610,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
     }
 
     /**
-     * @see com.asseco.ce.jtsr_digi.product_catalogue.api.ProductCatalogueApiApiDelegate#searchProduct(java.lang.String, java.lang.String, java.lang.String, java.lang.String, com.asseco.ce.jtsr_digi.product_catalogue.model.InitiatorSystemType)
+     * @see com.asseco.ce.jtsrdigi.service.product_catalogue.api.ProductCatalogueApiApiDelegate#searchProduct(java.lang.String, java.lang.String, java.lang.String, java.lang.String, com.asseco.ce.jtsrdigi.service.product_catalogue.model.InitiatorSystemType)
      */
     @LogExecutionTime
     @Override
