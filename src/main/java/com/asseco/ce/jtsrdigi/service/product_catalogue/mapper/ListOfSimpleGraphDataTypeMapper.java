@@ -11,18 +11,12 @@ import org.mapstruct.Named;
 import com.asseco.ce.jtsrdigi.service.product_catalogue.domain.PcTProductCatalogueTs;
 import com.asseco.ce.jtsrdigi.service.product_catalogue.model.ListOfSimpleGraphDataType;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @Mapper(componentModel = "spring", uses = {})
 public abstract class ListOfSimpleGraphDataTypeMapper implements EntityMapper<ListOfSimpleGraphDataType, PcTProductCatalogueTs> {
 
     @Named("listOfSimpleGraphDataTypeMapping")
-    @Mappings({
-            @Mapping(target = "attrValue", source = "value"),
-            @Mapping(target = "dateValue", source = "id.dateFrom")
-
-    })
+    @Mapping(target = "attrValue", source = "value")
+    @Mapping(target = "dateValue", source = "id.dateFrom")
     public abstract ListOfSimpleGraphDataType toDto(PcTProductCatalogueTs source);
 
     @IterableMapping(qualifiedByName = "listOfSimpleGraphDataTypeMapping")

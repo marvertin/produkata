@@ -11,24 +11,15 @@ import org.mapstruct.Named;
 import com.asseco.ce.jtsrdigi.service.product_catalogue.domain.EnumTProdcatAttr;
 import com.asseco.ce.jtsrdigi.service.product_catalogue.model.GetProductAttributesResponseBodyTypeListOfTechnicalAttributes;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @Mapper(componentModel = "spring", uses = {})
 public abstract class GetProductAttributesResponseBodyTypeListOfTechnicalAttributesMapper implements EntityMapper<GetProductAttributesResponseBodyTypeListOfTechnicalAttributes, EnumTProdcatAttr> {
 
     @Named("attributesListItemMapping")
-    @Mappings({
-            @Mapping(target = "attrTechnicalName", source = "attrName")
-
-    })
+    @Mapping(target = "attrTechnicalName", source = "attrName")
     public abstract GetProductAttributesResponseBodyTypeListOfTechnicalAttributes toDto(EnumTProdcatAttr source);
 
     @Named("stringListItemMapping")
-    @Mappings({
-            @Mapping(target = "attrTechnicalName", expression = "java(source)")
-
-    })
+    @Mapping(target = "attrTechnicalName", expression = "java(source)")
     public abstract GetProductAttributesResponseBodyTypeListOfTechnicalAttributes stringToDto(String source);
 
     @IterableMapping(qualifiedByName = "attributesListItemMapping")

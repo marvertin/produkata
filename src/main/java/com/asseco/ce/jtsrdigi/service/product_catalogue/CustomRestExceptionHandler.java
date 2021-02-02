@@ -42,7 +42,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
             HttpHeaders headers,
             HttpStatus status,
             WebRequest request) {
-        List<String> errors = new ArrayList<String>();
+        List<String> errors = new ArrayList<>();
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             errors.add(error.getField() + ": " + error.getDefaultMessage());
         }
@@ -97,7 +97,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
             log.debug("Handle MissingServletRequestParameterException :: {}\n---------\n{}\n---------\n", ex.getLocalizedMessage(), printStackTrace(ex.getStackTrace()));
         }
 
-        return new ResponseEntity<Object>(
+        return new ResponseEntity<>(
                 getProductDetailResponseType, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
@@ -108,7 +108,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleConstraintViolation(
             ConstraintViolationException ex, WebRequest request) {
 
-        List<String> errors = new ArrayList<String>();
+        List<String> errors = new ArrayList<>();
         for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
             errors.add(violation.getRootBeanClass().getName() + " " +
                     violation.getPropertyPath() + ": " + violation.getMessage());
@@ -131,7 +131,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
             log.debug("Handle ConstrainViolationException :: {}\n---------\n{}\n---------\n", ex.getLocalizedMessage(), printStackTrace(ex.getStackTrace()));
         }
 
-        return new ResponseEntity<Object>(
+        return new ResponseEntity<>(
                 getProductDetailResponseType, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
@@ -161,7 +161,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
             log.debug("Handle MethodArgumentTypeMismatchException :: {}\n---------\n{}\n---------\n", ex.getLocalizedMessage(), printStackTrace(ex.getStackTrace()));
         }
 
-        return new ResponseEntity<Object>(
+        return new ResponseEntity<>(
                 getProductDetailResponseType, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
@@ -191,7 +191,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
             log.debug("Handle NoHandlerFoundException :: {}\n---------\n{}\n---------\n", ex.getLocalizedMessage(), printStackTrace(ex.getStackTrace()));
         }
 
-        return new ResponseEntity<Object>(getProductDetailResponseType, new HttpHeaders(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(getProductDetailResponseType, new HttpHeaders(), HttpStatus.NOT_FOUND);
     }
 
     /**
@@ -226,7 +226,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
             log.debug("Handle HttpRequestMethodNotSupportedException :: {}\n---------\n{}\n---------\n", ex.getLocalizedMessage(), printStackTrace(ex.getStackTrace()));
         }
 
-        return new ResponseEntity<Object>(
+        return new ResponseEntity<>(
                 getProductDetailResponseType, new HttpHeaders(), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
@@ -262,7 +262,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
             log.debug("Handle HttpMediaTypeNotSupportedException :: {}\n---------\n{}\n---------\n", ex.getLocalizedMessage(), printStackTrace(ex.getStackTrace()));
         }
 
-        return new ResponseEntity<Object>(
+        return new ResponseEntity<>(
                 getProductDetailResponseType, new HttpHeaders(), HttpStatus.UNSUPPORTED_MEDIA_TYPE);
     }
 
@@ -289,7 +289,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
             log.debug("Default Handler :: {}\n---------\n{}\n---------\n", ex.getLocalizedMessage(), printStackTrace(ex.getStackTrace()));
         }
 
-        return new ResponseEntity<Object>(
+        return new ResponseEntity<>(
                 getProductDetailResponseType, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

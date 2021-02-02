@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -28,14 +27,15 @@ import lombok.NoArgsConstructor;
 @Table(name = "PC_T_PRODUCT_CATALOGUE_TS")
 public class PcTProductCatalogueTs implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * Kompozitny klúč PcTProductCatalogueTsId
      */
     @EmbeddedId
-    @AttributeOverrides({
-            @AttributeOverride(name = "productid", column = @Column(name = "PRODUCTID", nullable = false, precision = 22, scale = 0)),
-            @AttributeOverride(name = "dateFrom", column = @Column(name = "DATE_FROM", nullable = false, length = 7)),
-            @AttributeOverride(name = "attrId", column = @Column(name = "ATTR_ID", nullable = false, precision = 30, scale = 0))})
+    @AttributeOverride(name = "productid", column = @Column(name = "PRODUCTID", nullable = false, precision = 22, scale = 0))
+    @AttributeOverride(name = "dateFrom", column = @Column(name = "DATE_FROM", nullable = false, length = 7))
+    @AttributeOverride(name = "attrId", column = @Column(name = "ATTR_ID", nullable = false, precision = 30, scale = 0))
     private PcTProductCatalogueTsId id;
 
     @ManyToOne(fetch = FetchType.LAZY)

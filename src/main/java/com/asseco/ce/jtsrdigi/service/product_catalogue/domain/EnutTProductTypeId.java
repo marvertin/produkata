@@ -1,41 +1,40 @@
 package com.asseco.ce.jtsrdigi.service.product_catalogue.domain;
 
-import java.io.Serializable;
-import java.math.BigInteger;
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import java.io.Serializable;
+import java.math.BigInteger;
+import java.util.Date;
+
 /**
- * Kompozitny klúč pre entitu EnutTProdcatAttr
+ * Kompozitny klúč pre entitu EnutTProductType
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Embeddable
-public class EnutTProdcatAttrId implements Serializable {
+public class EnutTProductTypeId implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * ID Atribútu
+     * Primárny kľúč
      */
-    @Column(name = "ATTR_ID", nullable = false, precision = 30, scale = 0)
-    private BigInteger attrId;
+    @Column(name = "PRODUCT_TYPE_ID", nullable = false, precision = 22, scale = 0)
+    private BigInteger productTypeId;
 
     /**
-     * ID jazykovej mutácie (FK na LANG.LANG_CODE)
+     * 2 znakový Kód jazyka podľa ISO 639
      */
     @Column(name = "LANG_CODE", nullable = false, length = 2)
     private String langCode;
 
     /**
-     * Platnosť od
+     * dátum platnosti záznamu
      */
     @Column(name = "VALID_FROM", nullable = false, length = 7)
     private Date validFrom;

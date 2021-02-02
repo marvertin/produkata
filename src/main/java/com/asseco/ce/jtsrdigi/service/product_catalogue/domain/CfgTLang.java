@@ -48,7 +48,7 @@ public class CfgTLang implements Serializable {
     @Column(name = "TEXT_SHORT", length = 30)
     private String textShort;
 
-/*    @OneToMany(fetch = FetchType.LAZY, mappedBy = "cfgTLang")
+    /*@OneToMany(fetch = FetchType.LAZY, mappedBy = "cfgTLang")
     private Set enutTCurrencies = new HashSet(0);
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "cfgTLang")

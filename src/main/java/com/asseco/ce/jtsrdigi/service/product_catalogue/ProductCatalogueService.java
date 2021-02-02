@@ -7,7 +7,6 @@ package com.asseco.ce.jtsrdigi.service.product_catalogue;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +26,7 @@ import com.google.common.collect.Lists;
 
 import com.asseco.ce.jtsrdigi.common.aop.logging.LogExecutionTime;
 import com.asseco.ce.jtsrdigi.service.product_catalogue.api.ProductCatalogueApiApiDelegate;
+import com.asseco.ce.jtsrdigi.service.product_catalogue.domain.EnumTProductType;
 import com.asseco.ce.jtsrdigi.service.product_catalogue.domain.PcTProduct;
 import com.asseco.ce.jtsrdigi.service.product_catalogue.domain.PcTProductCatalogue;
 import com.asseco.ce.jtsrdigi.service.product_catalogue.domain.PcTProductCatalogueDocuments;
@@ -35,6 +35,7 @@ import com.asseco.ce.jtsrdigi.service.product_catalogue.mapper.GetProductAttribu
 import com.asseco.ce.jtsrdigi.service.product_catalogue.mapper.ListOfDocumentsTypeMapper;
 import com.asseco.ce.jtsrdigi.service.product_catalogue.mapper.ListOfProductAttributesDetailTypeMapper;
 import com.asseco.ce.jtsrdigi.service.product_catalogue.mapper.ListOfProductAttributesTypeMapper;
+import com.asseco.ce.jtsrdigi.service.product_catalogue.mapper.ListOfProductCategoriesItemMapper;
 import com.asseco.ce.jtsrdigi.service.product_catalogue.mapper.ListOfProductsDetailTypeMapper;
 import com.asseco.ce.jtsrdigi.service.product_catalogue.mapper.ListOfProductsTypeMapper;
 import com.asseco.ce.jtsrdigi.service.product_catalogue.mapper.ListOfSimpleGraphDataTypeMapper;
@@ -74,12 +75,11 @@ import com.asseco.ce.jtsrdigi.service.product_catalogue.model.PagingResponseType
 import com.asseco.ce.jtsrdigi.service.product_catalogue.model.SearchProductResponseBodyType;
 import com.asseco.ce.jtsrdigi.service.product_catalogue.model.SearchProductResponseType;
 import com.asseco.ce.jtsrdigi.service.product_catalogue.repository.EnumTProdcatAttrRepository;
+import com.asseco.ce.jtsrdigi.service.product_catalogue.repository.EnumTProductTypeRepository;
 import com.asseco.ce.jtsrdigi.service.product_catalogue.repository.PcTProductCatalogueDocumentsRepository;
 import com.asseco.ce.jtsrdigi.service.product_catalogue.repository.PcTProductCatalogueRepository;
 import com.asseco.ce.jtsrdigi.service.product_catalogue.repository.PcTProductCatalogueTsRepository;
 import com.asseco.ce.jtsrdigi.service.product_catalogue.repository.PcTProductRepository;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Service.
@@ -88,7 +88,6 @@ import lombok.extern.slf4j.Slf4j;
  *
  */
 @Service
-@Slf4j
 public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
 
     @Autowired
@@ -105,6 +104,9 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
 
     @Autowired
     private PcTProductCatalogueTsRepository pcTProductCatalogueTsRepository;
+
+    @Autowired
+    private EnumTProductTypeRepository enumTProductTypeRepository;
 
     @Autowired
     private ListOfProductsDetailTypeMapper listOfProductsDetailTypeMapper;
@@ -131,6 +133,9 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
     private ListOfSimpleGraphDataTypeMapper listOfSimpleGraphDataTypeMapper;
 
     @Autowired
+    private ListOfProductCategoriesItemMapper listOfProductCategoriesItemMapper;
+
+    @Autowired
     private NativeWebRequest request;
 
     /**
@@ -151,7 +156,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             List<String> listOfProductAttrs, String xCorrelationID,
             String xRequestID, InitiatorSystemType initiatorSystem) {
 
-        List<BigInteger> productIds = listOfProductIds.stream().map(x -> new BigInteger(x)).collect(Collectors.toList());
+        List<BigInteger> productIds = listOfProductIds.stream().map(BigInteger::new).collect(Collectors.toList());
 
         Iterable<PcTProduct> pcTProducts = pcTProductRepository.findAllById(productIds);
 
@@ -161,8 +166,8 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
 
         data.setLang(lang);
 
-        List<ListOfProductsDetailType> listOfProductsDetailTypeList = listOfProductsDetailTypeMapper
-                .ListOfProductsDetailTypeList(Lists.newArrayList(pcTProducts));
+        /*List<ListOfProductsDetailType> listOfProductsDetailTypeList = listOfProductsDetailTypeMapper
+                .ListOfProductsDetailTypeList(Lists.newArrayList(pcTProducts));*/
         data.setListOfProducts(StreamSupport.stream(pcTProducts.spliterator(), false)
                 .flatMap(product -> {
 
@@ -185,7 +190,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
                                 List<ListOfValues> listOfValues = listOfValuesMapper.ListOfValuesList(
                                         pcTProductCatalogues
                                                 .stream()
-                                                .filter(pcTProductCatalogue -> (pcTProductCatalogue.getEnumTProdcatAttr().getAttrName() == listOfProductAttributesDetailType.getAttrName()))
+                                                .filter(pcTProductCatalogue -> (pcTProductCatalogue.getEnumTProdcatAttr().getAttrName().equals(listOfProductAttributesDetailType.getAttrName())))
                                                 .collect(Collectors.toList()));
                                 listOfProductAttributesDetailType.setListOfValues(listOfValues);
 
@@ -198,7 +203,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
         compareProductResponseType.setParams(params);
         compareProductResponseType.setData(data);
 
-        return new ResponseEntity<CompareProductResponseType>(compareProductResponseType, HttpStatus.OK);
+        return new ResponseEntity<>(compareProductResponseType, HttpStatus.OK);
     }
 
     /**
@@ -210,21 +215,19 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String lang, String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem) {
 
-// TODO: Milan dospecifikuje prepojenie ciselniku s produktom/produktovym katalogom
         GetListOfProductCategoriesResponseType getListOfProductCategoriesResponseType = new GetListOfProductCategoriesResponseType();
         CommonResponseType params = new CommonResponseType();
         GetListOfProductCategoriesResponseBodyType data = new GetListOfProductCategoriesResponseBodyType();
         data.setLang(lang);
 
-        List<String> pcTProducts = pcTProductRepository.findDistinctEntityType();
-        log.info("######## pcTProducts = {}", pcTProducts);
+        List<EnumTProductType> enumTProductTypes = enumTProductTypeRepository.findAllByLangCode(lang);
 
-        //data.setListOfProductCategories();
+        data.setListOfProductCategories(listOfProductCategoriesItemMapper.ListOfProductCategoriesItemList(enumTProductTypes));
 
         getListOfProductCategoriesResponseType.setParams(params);
         getListOfProductCategoriesResponseType.setData(data);
 
-        return new ResponseEntity<GetListOfProductCategoriesResponseType>(getListOfProductCategoriesResponseType, HttpStatus.OK);
+        return new ResponseEntity<>(getListOfProductCategoriesResponseType, HttpStatus.OK);
     }
 
     /**
@@ -237,15 +240,10 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String xRequestID, InitiatorSystemType initiatorSystem,
             PagingRequestType paging) {
 
-        int pageSize = paging.getLimit().intValue();
-        int pageNo = paging.getOffset().intValue() / pageSize;
-        long recordCountTotal = 0;
+        int pageSize = paging.getLimit() == null ? 10 : paging.getLimit().intValue();
+        int pageNo = paging.getOffset() == null ? 0 : paging.getOffset().intValue() / pageSize;
 
         Slice<PcTProduct> pcTProducts = pcTProductRepository.findByEntityType(categoryId, PageRequest.of(pageNo, pageSize));
-
-        if (paging.getReturnTotalCount() != 0) {
-            recordCountTotal = pcTProductRepository.countByEntityType(categoryId);
-        }
 
         GetListOfProductsInCategoryResponseType getListOfProductsInCategoryResponseType = new GetListOfProductsInCategoryResponseType();
 
@@ -256,8 +254,8 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
         pagingResponseType.setLimit(paging.getLimit());
         pagingResponseType.setOffset(paging.getOffset());
         pagingResponseType.setRecordCount(pcTProducts.getNumberOfElements());
-        if (paging.getReturnTotalCount() != 0)
-            pagingResponseType.setRecordCountTotal(Integer.valueOf((int)recordCountTotal));
+        if (paging.getReturnTotalCount() != null && paging.getReturnTotalCount() != 0)
+            pagingResponseType.setRecordCountTotal(Integer.valueOf((int)pcTProductRepository.countByEntityType(categoryId)));
         params.setPaging(pagingResponseType);
 
         GetListOfProductsInCategoryResponseBodyType data = new GetListOfProductsInCategoryResponseBodyType();
@@ -283,7 +281,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
         getListOfProductsInCategoryResponseType.setParams(params);
         getListOfProductsInCategoryResponseType.setData(data);
 
-        return new ResponseEntity<GetListOfProductsInCategoryResponseType>(getListOfProductsInCategoryResponseType, HttpStatus.OK);
+        return new ResponseEntity<>(getListOfProductsInCategoryResponseType, HttpStatus.OK);
     }
 
     /**
@@ -296,7 +294,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem) {
 
-        List<String> enumTProdcatAttrStringList = new ArrayList<String>();
+        List<String> enumTProdcatAttrStringList;
         if (comboBoxAttributes == 0)
             enumTProdcatAttrStringList = enumTProdcatAttrRepository.findAttributesByLangAndCategoryId(lang, categoryId);
         else
@@ -313,7 +311,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
         getProductAttributesResponseType.setParams(params);
         getProductAttributesResponseType.setData(data);
 
-        return new ResponseEntity<GetProductAttributesResponseType>(getProductAttributesResponseType, HttpStatus.OK);
+        return new ResponseEntity<>(getProductAttributesResponseType, HttpStatus.OK);
     }
 
     /**
@@ -354,7 +352,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
         getProductAttributesDetailResponseType.setParams(params);
         getProductAttributesDetailResponseType.setData(data);
 
-        return new ResponseEntity<GetProductAttributesDetailResponseType>(getProductAttributesDetailResponseType, HttpStatus.OK);
+        return new ResponseEntity<>(getProductAttributesDetailResponseType, HttpStatus.OK);
     }
 
     /**
@@ -366,50 +364,53 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String lang, String productId, String xCorrelationID,
             String xRequestID, InitiatorSystemType initiatorSystem) {
 
-        Iterable<PcTProduct> pcTProducts = pcTProductRepository.findAllById(Arrays.asList(new BigInteger(productId)));
-
-        List<PcTProductCatalogue> pcTProductCatalogues = pcTProductCatalogueRepository
-                .findByIdProductidAndIdLangCode(new BigInteger(productId), lang);
-
-        // TODO: namapovat aj params
         GetProductDetailResponseType getProductDetailResponseType = new GetProductDetailResponseType();
         CommonResponseType params = new CommonResponseType();
         GetProductDetailResponseBodyType data = new GetProductDetailResponseBodyType();
-        data.setCategoryId(pcTProducts.iterator().next().getEntityType());
         data.setLang(lang);
-        List<ListOfProductsDetailType> listOfProductsDetailTypeList = listOfProductsDetailTypeMapper
-                .ListOfProductsDetailTypeList(Lists.newArrayList(pcTProducts));
 
-        data.setListOfProducts(listOfProductsDetailTypeList.stream()
-                .flatMap(list -> {
-                    // Zoznam atributov DISTINCT
-                    List<ListOfProductAttributesDetailType> listOfProductAttributesDetailTypes =
-                            listOfProductAttributesDetailTypeMapper.ListOfProductsAttributesTypeList(
-                                    pcTProductCatalogues
-                                            .stream()
-                                            .collect(Collectors.groupingBy(p -> p.getId().getAttrId()))
-                                            .values().stream().map(plans -> plans.stream().findFirst().get())
-                                            .collect(Collectors.toList()));
+        pcTProductRepository.findByProductidExt(productId).ifPresent(pctp -> {
 
-                    list.setListOfProductAttributes(listOfProductAttributesDetailTypes.stream()
-                            .flatMap(listOfProductAttributesDetailType -> {
-                                List<ListOfValues> listOfValues = listOfValuesMapper.ListOfValuesList(
+            List<PcTProductCatalogue> pcTProductCatalogues = pcTProductCatalogueRepository
+                    .findByIdProductidAndIdLangCode(pctp.getProductid(), lang);
+
+            data.setCategoryId(pctp.getEntityType());
+
+            List<ListOfProductsDetailType> listOfProductsDetailTypeList = listOfProductsDetailTypeMapper
+                    .ListOfProductsDetailTypeList(Lists.newArrayList(pctp));
+
+            data.setListOfProducts(listOfProductsDetailTypeList.stream()
+                    .flatMap(list -> {
+                        // Zoznam atributov DISTINCT
+                        List<ListOfProductAttributesDetailType> listOfProductAttributesDetailTypes =
+                                listOfProductAttributesDetailTypeMapper.ListOfProductsAttributesTypeList(
                                         pcTProductCatalogues
                                                 .stream()
-                                                .filter(pcTProductCatalogue -> (pcTProductCatalogue.getEnumTProdcatAttr().getAttrName() == listOfProductAttributesDetailType.getAttrName()))
+                                                .collect(Collectors.groupingBy(p -> p.getId().getAttrId()))
+                                                .values().stream().map(plans -> plans.stream().findFirst().get())
                                                 .collect(Collectors.toList()));
-                                listOfProductAttributesDetailType.setListOfValues(listOfValues);
 
-                                return Stream.of(listOfProductAttributesDetailType);
-                            }).collect(Collectors.toList()));
+                        list.setListOfProductAttributes(listOfProductAttributesDetailTypes.stream()
+                                .flatMap(listOfProductAttributesDetailType -> {
+                                    List<ListOfValues> listOfValues = listOfValuesMapper.ListOfValuesList(
+                                            pcTProductCatalogues
+                                                    .stream()
+                                                    .filter(pcTProductCatalogue -> (pcTProductCatalogue.getEnumTProdcatAttr().getAttrName().equals(listOfProductAttributesDetailType.getAttrName())))
+                                                    .collect(Collectors.toList()));
+                                    listOfProductAttributesDetailType.setListOfValues(listOfValues);
 
-                    return Stream.of(list);
-                }).collect(Collectors.toList()));
+                                    return Stream.of(listOfProductAttributesDetailType);
+                                }).collect(Collectors.toList()));
+
+                        return Stream.of(list);
+                    }).collect(Collectors.toList()));
+
+        });
 
         getProductDetailResponseType.setParams(params);
         getProductDetailResponseType.setData(data);
 
-        return new ResponseEntity<GetProductDetailResponseType>(getProductDetailResponseType, HttpStatus.OK);
+        return new ResponseEntity<>(getProductDetailResponseType, HttpStatus.OK);
     }
 
     /**
@@ -422,29 +423,26 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem) {
 
-        Optional<PcTProduct> pcTProduct = pcTProductRepository.findById(new BigInteger(productId));
-
-        List<PcTProductCatalogueDocuments> pcTProductCatalogueDocumentsList = pcTProductCatalogueDocumentsRepository
-                .findByIdProductidAndIdLangCodeAndDateBetween(new BigInteger(productId), lang, dateFrom, dateTo);
-
-        // TODO: namapovat aj params
         GetProductDocumentsResponseType getProductDocumentsResponseType = new GetProductDocumentsResponseType();
         CommonResponseType params = new CommonResponseType();
         GetProductDocumentsResponseBodyType data = new GetProductDocumentsResponseBodyType();
-
         data.setLang(lang);
 
-        pcTProduct.ifPresent(pctp -> {
+        pcTProductRepository.findByProductidExt(productId).ifPresent(pctp -> {
+
+            List<PcTProductCatalogueDocuments> pcTProductCatalogueDocumentsList = pcTProductCatalogueDocumentsRepository
+                    .findByIdProductidAndIdLangCodeAndDateBetween(pctp.getProductid(), lang, dateFrom, dateTo);
 
             data.setProductId(pctp.getProductBusinessId());
             data.setTechnicalProductId(pctp.getProductTechnicalId());
             data.setListOfDocuments(listOfDocumentsTypeMapper.ListOfDocumentsTypeList(pcTProductCatalogueDocumentsList));
+
         });
 
         getProductDocumentsResponseType.setParams(params);
         getProductDocumentsResponseType.setData(data);
 
-        return new ResponseEntity<GetProductDocumentsResponseType>(getProductDocumentsResponseType, HttpStatus.OK);
+        return new ResponseEntity<>(getProductDocumentsResponseType, HttpStatus.OK);
     }
 
     /**
@@ -457,48 +455,41 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem, PagingRequestType paging) {
 
-        int pageSize = paging.getLimit().intValue();
-        int pageNo = paging.getOffset().intValue() / pageSize;
-        long recordCountTotal = 0;
-
-        Optional<PcTProduct> pcTProduct = pcTProductRepository.findById(new BigInteger(productId));
-
-        Slice<PcTProductCatalogue> pcTProductCatalogues = pcTProductCatalogueRepository
-                .findByLangAndProductidAndDateBetween(lang, new BigInteger(productId), dateFrom, dateTo, PageRequest.of(pageNo, pageSize));
-
-        if (paging.getReturnTotalCount() != 0) {
-            recordCountTotal = pcTProductCatalogueRepository.countByLangAndProductidAndDateBetween(lang, new BigInteger(productId), dateFrom, dateTo);
-        }
-
         GetProductPortfolioAssetStructureResponseType getProductPortfolioAssetStructureResponseType = new GetProductPortfolioAssetStructureResponseType();
         CommonResponseType params = new CommonResponseType();
-
-        PagingResponseType pagingResponseType  = new PagingResponseType();
-        pagingResponseType.setHasNextPage(pcTProductCatalogues.hasNext() ? 1 : 0);
-        pagingResponseType.setHasPreviousPage(pcTProductCatalogues.hasPrevious() ? 1 : 0);
-        pagingResponseType.setLimit(paging.getLimit());
-        pagingResponseType.setOffset(paging.getOffset());
-        pagingResponseType.setRecordCount(pcTProductCatalogues.getNumberOfElements());
-        if (paging.getReturnTotalCount() != 0)
-            pagingResponseType.setRecordCountTotal(Integer.valueOf((int)recordCountTotal));
-        params.setPaging(pagingResponseType);
-
         GetProductPortfolioAssetStructureResponseBodyType data = new GetProductPortfolioAssetStructureResponseBodyType();
-
         data.setLang(lang);
 
-        pcTProduct.ifPresent(pctp -> {
+        pcTProductRepository.findByProductidExt(productId).ifPresent(pctp -> {
+
+            int pageSize = paging.getLimit() == null ? 10 : paging.getLimit().intValue();
+            int pageNo = paging.getOffset() == null ? 0 : paging.getOffset().intValue() / pageSize;
+
+            Slice<PcTProductCatalogue> pcTProductCatalogues = pcTProductCatalogueRepository
+                    .findByLangAndProductidAndDateBetween(lang, pctp.getProductid(), dateFrom, dateTo, PageRequest.of(pageNo, pageSize));
 
             data.setProductId(pctp.getProductBusinessId());
             data.setTechnicalProductId(pctp.getProductTechnicalId());
             //data.setDateOfValidity(); //TODO: doplnit ked sa dospecifikuje
             data.setListOfValues(listOfValuesMapper.ListOfValuesList(pcTProductCatalogues.getContent()));
+
+            PagingResponseType pagingResponseType  = new PagingResponseType();
+            pagingResponseType.setHasNextPage(pcTProductCatalogues.hasNext() ? 1 : 0);
+            pagingResponseType.setHasPreviousPage(pcTProductCatalogues.hasPrevious() ? 1 : 0);
+            pagingResponseType.setLimit(paging.getLimit());
+            pagingResponseType.setOffset(paging.getOffset());
+            pagingResponseType.setRecordCount(pcTProductCatalogues.getNumberOfElements());
+            if (paging.getReturnTotalCount() != null && paging.getReturnTotalCount() != 0)
+                pagingResponseType.setRecordCountTotal(Integer.valueOf((int)pcTProductCatalogueRepository
+                        .countByLangAndProductidAndDateBetween(lang, pctp.getProductid(), dateFrom, dateTo)));
+            params.setPaging(pagingResponseType);
+
         });
 
         getProductPortfolioAssetStructureResponseType.setParams(params);
         getProductPortfolioAssetStructureResponseType.setData(data);
 
-        return new ResponseEntity<GetProductPortfolioAssetStructureResponseType>(getProductPortfolioAssetStructureResponseType, HttpStatus.OK);
+        return new ResponseEntity<>(getProductPortfolioAssetStructureResponseType, HttpStatus.OK);
     }
 
     /**
@@ -511,19 +502,15 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem) {
 
-        Optional<PcTProduct> pcTProduct = pcTProductRepository.findById(new BigInteger(productId));
-
-        List<PcTProductCatalogue> pcTProductCatalogues = pcTProductCatalogueRepository
-                .findByLangAndProductidAndDateBetween(lang, new BigInteger(productId), dateFrom, dateTo);
-
         GetProductPortfolioCompositionResponseType getProductPortfolioCompositionResponseType = new GetProductPortfolioCompositionResponseType();
         CommonResponseType params = new CommonResponseType();
-
         GetProductPortfolioCompositionResponseBodyType data = new GetProductPortfolioCompositionResponseBodyType();
-
         data.setLang(lang);
 
-        pcTProduct.ifPresent(pctp -> {
+        pcTProductRepository.findByProductidExt(productId).ifPresent(pctp -> {
+
+            List<PcTProductCatalogue> pcTProductCatalogues = pcTProductCatalogueRepository
+                    .findByLangAndProductidAndDateBetween(lang, pctp.getProductid(), dateFrom, dateTo);
 
             data.setProductId(pctp.getProductBusinessId());
             data.setTechnicalProductId(pctp.getProductTechnicalId());
@@ -535,7 +522,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
         getProductPortfolioCompositionResponseType.setParams(params);
         getProductPortfolioCompositionResponseType.setData(data);
 
-        return new ResponseEntity<GetProductPortfolioCompositionResponseType>(getProductPortfolioCompositionResponseType, HttpStatus.OK);
+        return new ResponseEntity<>(getProductPortfolioCompositionResponseType, HttpStatus.OK);
     }
 
     /**
@@ -548,19 +535,15 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem) {
 
-        Optional<PcTProduct> pcTProduct = pcTProductRepository.findById(new BigInteger(productId));
-
-        List<PcTProductCatalogue> pcTProductCatalogues = pcTProductCatalogueRepository
-                .findByLangAndProductidAndDateBetween(lang, new BigInteger(productId), dateFrom, dateTo);
-
         GetProductPortfolioFundPerformanceResponseType getProductPortfolioFundPerformanceResponseType = new GetProductPortfolioFundPerformanceResponseType();
         CommonResponseType params = new CommonResponseType();
-
         GetProductPortfolioFundPerformanceResponseBodyType data = new GetProductPortfolioFundPerformanceResponseBodyType();
-
         data.setLang(lang);
 
-        pcTProduct.ifPresent(pctp -> {
+        pcTProductRepository.findByProductidExt(productId).ifPresent(pctp -> {
+
+            List<PcTProductCatalogue> pcTProductCatalogues = pcTProductCatalogueRepository
+                    .findByLangAndProductidAndDateBetween(lang, pctp.getProductid(), dateFrom, dateTo);
 
             data.setProductId(pctp.getProductBusinessId());
             data.setTechnicalProductId(pctp.getProductTechnicalId());
@@ -573,7 +556,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
                                 List<ListOfValues> listOfValues = listOfValuesMapper.ListOfValuesList(
                                         pcTProductCatalogues
                                                 .stream()
-                                                .filter(pcTProductCatalogue -> (pcTProductCatalogue.getEnumTProdcatAttr().getAttrName() == listOfProductAttributesDetailType.getAttrName()))
+                                                .filter(pcTProductCatalogue -> (pcTProductCatalogue.getEnumTProdcatAttr().getAttrName().equals(listOfProductAttributesDetailType.getAttrName())))
                                                 .collect(Collectors.toList()));
                                 listOfProductAttributesDetailType.setListOfValues(listOfValues);
 
@@ -585,7 +568,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
         getProductPortfolioFundPerformanceResponseType.setParams(params);
         getProductPortfolioFundPerformanceResponseType.setData(data);
 
-        return new ResponseEntity<GetProductPortfolioFundPerformanceResponseType>(getProductPortfolioFundPerformanceResponseType, HttpStatus.OK);
+        return new ResponseEntity<>(getProductPortfolioFundPerformanceResponseType, HttpStatus.OK);
     }
 
     /**
@@ -598,47 +581,45 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String xCorrelationID, String xRequestID,
             InitiatorSystemType initiatorSystem, PagingRequestType paging) {
 
-        int pageSize = paging.getLimit().intValue();
-        int pageNo = paging.getOffset().intValue() / pageSize;
-        long recordCountTotal = 0;
-
-        Slice<PcTProductCatalogueTs> pcTProductCatalogueTs = pcTProductCatalogueTsRepository.findByProductidAndDateBetween(new BigInteger(productId), dateFrom, dateTo, PageRequest.of(pageNo, pageSize));
-
         GetProductSimpleGraphResponseType getProductSimpleGraphResponseType = new GetProductSimpleGraphResponseType();
-
         CommonResponseType params = new CommonResponseType();
-        PagingResponseType pagingResponseType  = new PagingResponseType();
-        pagingResponseType.setHasNextPage(pcTProductCatalogueTs.hasNext() ? 1 : 0);
-        pagingResponseType.setHasPreviousPage(pcTProductCatalogueTs.hasPrevious() ? 1 : 0);
-        pagingResponseType.setLimit(paging.getLimit());
-        pagingResponseType.setOffset(paging.getOffset());
-        pagingResponseType.setRecordCount(pcTProductCatalogueTs.getNumberOfElements());
-        if (paging.getReturnTotalCount() != 0)
-            pagingResponseType.setRecordCountTotal(Integer.valueOf((int)recordCountTotal));
-        params.setPaging(pagingResponseType);
-
         GetProductSimpleGraphResponseBodyType data = new GetProductSimpleGraphResponseBodyType();
-
         data.setLang(lang);
 
-        if (!pcTProductCatalogueTs.getContent().isEmpty()) {
+        pcTProductRepository.findByProductidExt(productId).ifPresent(pctp -> {
 
-            PcTProductCatalogueTs pctpct = pcTProductCatalogueTs.getContent().get(0);
+            int pageSize = paging.getLimit() == null ? 10 : paging.getLimit().intValue();
+            int pageNo = paging.getOffset() == null ? 0 : paging.getOffset().intValue() / pageSize;
 
-            data.setProductId(pctpct.getPcTProduct().getProductBusinessId());
-            data.setTechnicalProductId(pctpct.getPcTProduct().getProductTechnicalId());
-            data.setIsin(pctpct.getPcTProduct().getIsin());
-            data.setCurrency(pctpct.getEnumTCurrency().getCurrencyCode());
+            Slice<PcTProductCatalogueTs> pcTProductCatalogueTs = pcTProductCatalogueTsRepository.findByProductidAndDateBetween(pctp.getProductid(), dateFrom, dateTo, PageRequest.of(pageNo, pageSize));
+
+            PagingResponseType pagingResponseType  = new PagingResponseType();
+            pagingResponseType.setHasNextPage(pcTProductCatalogueTs.hasNext() ? 1 : 0);
+            pagingResponseType.setHasPreviousPage(pcTProductCatalogueTs.hasPrevious() ? 1 : 0);
+            pagingResponseType.setLimit(paging.getLimit());
+            pagingResponseType.setOffset(paging.getOffset());
+            pagingResponseType.setRecordCount(pcTProductCatalogueTs.getNumberOfElements());
+            if (paging.getReturnTotalCount() != null && paging.getReturnTotalCount() != 0)
+                pagingResponseType.setRecordCountTotal(Integer.valueOf((int)pcTProductCatalogueTsRepository
+                        .countByLangAndProductidAndDateBetween(pctp.getProductid(), dateFrom, dateTo)));
+            params.setPaging(pagingResponseType);
+
+            data.setProductId(pctp.getProductBusinessId());
+            data.setTechnicalProductId(pctp.getProductTechnicalId());
+            data.setIsin(pctp.getIsin());
             data.setDateFrom(dateFrom);
             data.setDateTo(dateTo);
             data.setListOfGraphData(listOfSimpleGraphDataTypeMapper.ListOfDocumentsTypeList(pcTProductCatalogueTs.getContent()));
+            if (!pcTProductCatalogueTs.getContent().isEmpty()) {
+                data.setCurrency(pcTProductCatalogueTs.getContent().get(0).getEnumTCurrency().getCurrencyCode());
+            }
 
-        }
+        });
 
         getProductSimpleGraphResponseType.setParams(params);
         getProductSimpleGraphResponseType.setData(data);
 
-        return new ResponseEntity<GetProductSimpleGraphResponseType>(getProductSimpleGraphResponseType, HttpStatus.OK);
+        return new ResponseEntity<>(getProductSimpleGraphResponseType, HttpStatus.OK);
     }
 
     /**
@@ -654,12 +635,14 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
         CommonResponseType params = new CommonResponseType();
         SearchProductResponseBodyType data = new SearchProductResponseBodyType();
 
+        List<String> pcTProducts = pcTProductRepository.findTechnicalProductIdByIsinContainsOrProductBusinessNameContains("%" + searchQuery.toLowerCase() + "%");
 
+        data.setListOfProductIds(pcTProducts);
 
         searchProductResponseType.setParams(params);
         searchProductResponseType.setData(data);
 
-        return new ResponseEntity<SearchProductResponseType>(searchProductResponseType, HttpStatus.OK);
+        return new ResponseEntity<>(searchProductResponseType, HttpStatus.OK);
     }
 
 }

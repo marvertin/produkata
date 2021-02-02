@@ -20,6 +20,8 @@ import lombok.NoArgsConstructor;
 @Embeddable
 public class EnutTCurrencyId implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * Primárny kľúč
      */

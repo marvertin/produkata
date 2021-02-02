@@ -20,6 +20,8 @@ import lombok.NoArgsConstructor;
 @Embeddable
 public class PcTProductCatalogueDocumentsId implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * FK na PRODUCT_CATALOGUE.ID
      */

@@ -11,19 +11,13 @@ import org.mapstruct.Named;
 import com.asseco.ce.jtsrdigi.service.product_catalogue.domain.PcTProduct;
 import com.asseco.ce.jtsrdigi.service.product_catalogue.model.ListOfProductsType;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @Mapper(componentModel = "spring", uses = {ListOfProductAttributesTypeMapper.class})
 public abstract class ListOfProductsTypeMapper implements EntityMapper<ListOfProductsType, PcTProduct> {
 
     @Named("listItemMapping")
-    @Mappings({
-            @Mapping(target = "productId", source = "productBusinessId"),
-            @Mapping(target = "technicalProductId", source = "productTechnicalId"),
-            @Mapping(target = "listOfProductAttributes", ignore = true)
-
-    })
+    @Mapping(target = "productId", source = "productBusinessId")
+    @Mapping(target = "technicalProductId", source = "productTechnicalId")
+    @Mapping(target = "listOfProductAttributes", ignore = true)
     public abstract ListOfProductsType toDto(PcTProduct source);
 
     @IterableMapping(qualifiedByName = "listItemMapping")

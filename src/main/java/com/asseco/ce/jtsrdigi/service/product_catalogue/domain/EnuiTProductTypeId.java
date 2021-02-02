@@ -1,32 +1,31 @@
 package com.asseco.ce.jtsrdigi.service.product_catalogue.domain;
 
-import java.io.Serializable;
-import java.math.BigInteger;
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import java.io.Serializable;
+import java.math.BigInteger;
+import java.util.Date;
+
 /**
- * Kompozitny klúč pre entitu EnuiTCountry
+ * Kompozitny klúč pre entitu EnuiTProductType
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Embeddable
-public class EnuiTCountryId implements Serializable {
+public class EnuiTProductTypeId implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
      * Primárny kľúč
      */
-    @Column(name = "COUNTRY_ID", nullable = false, precision = 22, scale = 0)
-    private BigInteger countryId;
+    @Column(name = "PRODUCT_TYPE_ID", nullable = false, precision = 22, scale = 0)
+    private BigInteger productTypeId;
 
     /**
      * kód externého systému

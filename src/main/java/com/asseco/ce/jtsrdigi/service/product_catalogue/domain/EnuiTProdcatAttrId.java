@@ -20,6 +20,8 @@ import lombok.NoArgsConstructor;
 @Embeddable
 public class EnuiTProdcatAttrId implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * ID Atribútu
      */

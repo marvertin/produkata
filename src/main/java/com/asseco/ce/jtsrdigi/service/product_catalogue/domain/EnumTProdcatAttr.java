@@ -79,7 +79,7 @@ public class EnumTProdcatAttr implements Serializable {
     @Column(name = "VALID_TO", length = 7)
     private Date validTo;
 
-/*    @OneToMany(fetch = FetchType.LAZY, mappedBy = "enumTProdcatAttr")
+    /*@OneToMany(fetch = FetchType.LAZY, mappedBy = "enumTProdcatAttr")
     private Set pcTProductCatalogueTses = new HashSet(0);
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "enumTProdcatAttr")

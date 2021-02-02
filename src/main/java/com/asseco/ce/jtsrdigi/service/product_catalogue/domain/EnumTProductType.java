@@ -7,17 +7,22 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.experimental.Accessors;
+import lombok.NoArgsConstructor;
 
 /**
  * Číselník typu produktov
  */
-@Entity
 @Data
-@Table(name = "ENUM_T_PRODUCT_TYPE")
-@Accessors(chain = true)
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "ENUM_T_PRODUCT_TYPE"
+, uniqueConstraints = @UniqueConstraint(columnNames = {"PRODUCT_CODE", "VALID_FROM"})
+)
 public class EnumTProductType implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -30,10 +35,16 @@ public class EnumTProductType implements Serializable {
     private String productTypeId;
 
     /**
+     * Kód produktu
+     */
+    @Column(name = "PRODUCT_CODE")
+    private String productCode;
+
+    /**
      * Defaultný - Slovenský názov meny
      */
     @Column(name = "TEXT")
-    private String TEXT;
+    private String text;
 
     /**
      * dátum platnosti záznamu

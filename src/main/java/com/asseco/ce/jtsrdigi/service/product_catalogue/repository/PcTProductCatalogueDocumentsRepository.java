@@ -19,11 +19,11 @@ public interface PcTProductCatalogueDocumentsRepository extends PagingAndSorting
     List<PcTProductCatalogueDocuments> findByIdProductidAndIdLangCode(BigInteger productid, String langCode);
 
     @Query(value = "SELECT * FROM PC_T_PRODUCT_CATALOGUE_DOCUMENTS ptpcd WHERE ptpcd.PRODUCTID = :productId AND ptpcd.LANG_CODE = :lang " +
-            "AND (TO_DATE(ptpcd.VALID_FROM) <= TO_DATE(:dateTo) OR ptpcd.VALID_FROM IS NULL) " +
-            "AND (TO_DATE(ptpcd.VALID_TO) >= TO_DATE(:dateFrom) OR ptpcd.VALID_TO IS NULL)",
+            "AND (ptpcd.VALID_FROM <= :dateTo OR ptpcd.VALID_FROM IS NULL) " +
+            "AND (ptpcd.VALID_TO >= :dateFrom OR ptpcd.VALID_TO IS NULL)",
             countQuery = "SELECT COUNT(*) FROM PC_T_PRODUCT_CATALOGUE_DOCUMENTS ptpcd WHERE ptpcd.PRODUCTID = :productId AND ptpcd.LANG_CODE = :lang " +
-                    "AND (TO_DATE(ptpcd.VALID_FROM) <= TO_DATE(:dateTo) OR ptpcd.VALID_FROM IS NULL) " +
-                    "AND (TO_DATE(ptpcd.VALID_TO) >= TO_DATE(:dateFrom) OR ptpcd.VALID_TO IS NULL)",
+                    "AND (ptpcd.VALID_FROM <= :dateTo OR ptpcd.VALID_FROM IS NULL) " +
+                    "AND (ptpcd.VALID_TO >= :dateFrom OR ptpcd.VALID_TO IS NULL)",
             nativeQuery = true)
     List<PcTProductCatalogueDocuments> findByIdProductidAndIdLangCodeAndDateBetween(@Param("productId")BigInteger productId, @Param("lang") String lang, @Param("dateFrom") LocalDate dateFrom, @Param("dateTo") LocalDate dateTo);
 

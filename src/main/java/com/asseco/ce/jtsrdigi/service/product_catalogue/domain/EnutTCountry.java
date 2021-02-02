@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -35,10 +34,9 @@ public class EnutTCountry implements Serializable {
      * Kompozitny klúč EnutTCountryId
      */
     @EmbeddedId
-    @AttributeOverrides({
-            @AttributeOverride(name = "countryId", column = @Column(name = "COUNTRY_ID", nullable = false, precision = 22, scale = 0)),
-            @AttributeOverride(name = "langCode", column = @Column(name = "LANG_CODE", nullable = false, length = 2)),
-            @AttributeOverride(name = "validFrom", column = @Column(name = "VALID_FROM", nullable = false, length = 7))})
+    @AttributeOverride(name = "countryId", column = @Column(name = "COUNTRY_ID", nullable = false, precision = 22, scale = 0))
+    @AttributeOverride(name = "langCode", column = @Column(name = "LANG_CODE", nullable = false, length = 2))
+    @AttributeOverride(name = "validFrom", column = @Column(name = "VALID_FROM", nullable = false, length = 7))
     private EnutTCountryId id;
 
     @ManyToOne(fetch = FetchType.LAZY)

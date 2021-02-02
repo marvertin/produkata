@@ -18,6 +18,8 @@ import lombok.NoArgsConstructor;
 @Embeddable
 public class ErTPeriodCatalougeId implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     @Column(name = "PERIOD_CODE", nullable = false, precision = 3, scale = 0)
     private short periodCode;
 

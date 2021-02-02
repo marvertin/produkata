@@ -22,6 +22,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class PcTProductCatalogueId implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * ID produktu
      */

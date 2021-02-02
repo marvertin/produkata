@@ -7,20 +7,15 @@ import org.mapstruct.Mappings;
 import com.asseco.ce.jtsrdigi.service.product_catalogue.domain.PcTProduct;
 import com.asseco.ce.jtsrdigi.service.product_catalogue.model.PagingResponseType;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @Mapper(componentModel = "spring", uses = {})
 public abstract class PagingResponseTypeMapper implements EntityMapper<PagingResponseType, PcTProduct> {
 
-    @Mappings({
-            @Mapping(target = "recordCount", source = "entityType"),
-            @Mapping(target = "recordCountTotal", source = "entityType"),
-            @Mapping(target = "hasNextPage", source = "entityType"),
-            @Mapping(target = "hasPreviousPage", source = "entityType"),
-            @Mapping(target = "offset", source = "entityType"),
-            @Mapping(target = "limit", source = "entityType")
-    })
+    @Mapping(target = "recordCount", ignore = true)
+    @Mapping(target = "recordCountTotal", ignore = true)
+    @Mapping(target = "hasNextPage", ignore = true)
+    @Mapping(target = "hasPreviousPage", ignore = true)
+    @Mapping(target = "offset", ignore = true)
+    @Mapping(target = "limit", ignore = true)
     public abstract PagingResponseType toDto(PcTProduct source);
 
     @Mappings({

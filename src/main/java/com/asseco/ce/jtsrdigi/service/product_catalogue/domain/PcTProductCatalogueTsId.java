@@ -20,6 +20,8 @@ import lombok.NoArgsConstructor;
 @Embeddable
 public class PcTProductCatalogueTsId implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * ID produktu na ktorý sa vzťahuje údaj o časovom rade
      */
