@@ -5,15 +5,13 @@
 
 package com.asseco.ce.jtsrdigi.service.product_catalogue;
 
-import java.math.BigInteger;
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
-
+import com.asseco.ce.jtsrdigi.common.aop.logging.LogExecutionTime;
+import com.asseco.ce.jtsrdigi.service.product_catalogue.api.ProductCatalogueApiApiDelegate;
+import com.asseco.ce.jtsrdigi.service.product_catalogue.domain.*;
+import com.asseco.ce.jtsrdigi.service.product_catalogue.mapper.*;
+import com.asseco.ce.jtsrdigi.service.product_catalogue.model.*;
+import com.asseco.ce.jtsrdigi.service.product_catalogue.repository.*;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -22,64 +20,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import com.google.common.collect.Lists;
-
-import com.asseco.ce.jtsrdigi.common.aop.logging.LogExecutionTime;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.api.ProductCatalogueApiApiDelegate;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.domain.EnumTProductType;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.domain.PcTProduct;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.domain.PcTProductCatalogue;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.domain.PcTProductCatalogueDocuments;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.domain.PcTProductCatalogueTs;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.mapper.GetProductAttributesResponseBodyTypeListOfTechnicalAttributesMapper;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.mapper.ListOfDocumentsTypeMapper;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.mapper.ListOfProductAttributesDetailTypeMapper;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.mapper.ListOfProductAttributesTypeMapper;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.mapper.ListOfProductCategoriesItemMapper;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.mapper.ListOfProductsDetailTypeMapper;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.mapper.ListOfProductsTypeMapper;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.mapper.ListOfSimpleGraphDataTypeMapper;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.mapper.ListOfValuesMapper;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.model.CommonResponseType;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.model.CompareProductResponseBodyType;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.model.CompareProductResponseType;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.model.GetListOfProductCategoriesResponseBodyType;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.model.GetListOfProductCategoriesResponseType;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.model.GetListOfProductsInCategoryResponseBodyType;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.model.GetListOfProductsInCategoryResponseType;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.model.GetProductAttributesDetailResponseBodyType;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.model.GetProductAttributesDetailResponseBodyTypeTechnicalAttributeDetail;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.model.GetProductAttributesDetailResponseType;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.model.GetProductAttributesResponseBodyType;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.model.GetProductAttributesResponseType;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.model.GetProductDetailResponseBodyType;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.model.GetProductDetailResponseType;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.model.GetProductDocumentsResponseBodyType;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.model.GetProductDocumentsResponseType;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.model.GetProductPortfolioAssetStructureResponseBodyType;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.model.GetProductPortfolioAssetStructureResponseType;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.model.GetProductPortfolioCompositionResponseBodyType;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.model.GetProductPortfolioCompositionResponseType;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.model.GetProductPortfolioFundPerformanceResponseBodyType;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.model.GetProductPortfolioFundPerformanceResponseType;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.model.GetProductSimpleGraphResponseBodyType;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.model.GetProductSimpleGraphResponseType;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.model.InitiatorSystemType;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.model.ListOfProductAttributesDetailType;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.model.ListOfProductAttributesType;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.model.ListOfProductsDetailType;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.model.ListOfProductsType;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.model.ListOfValues;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.model.PagingRequestType;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.model.PagingResponseType;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.model.SearchProductResponseBodyType;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.model.SearchProductResponseType;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.repository.EnumTProdcatAttrRepository;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.repository.EnumTProductTypeRepository;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.repository.PcTProductCatalogueDocumentsRepository;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.repository.PcTProductCatalogueRepository;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.repository.PcTProductCatalogueTsRepository;
-import com.asseco.ce.jtsrdigi.service.product_catalogue.repository.PcTProductRepository;
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * Service.
@@ -135,6 +83,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
     @Autowired
     private ListOfProductCategoriesItemMapper listOfProductCategoriesItemMapper;
 
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     private NativeWebRequest request;
 
@@ -170,7 +119,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
                 .flatMap(product -> {
 
                     List<PcTProductCatalogue> pcTProductCatalogues = pcTProductCatalogueRepository
-                            .findByLangAndProductIdsAndProductAttrs(lang, Arrays.asList(product.getProductid()), listOfProductAttrs);
+                            .findByLangAndProductIdsAndProductAttrs(lang, Collections.singletonList(product.getProductid()), listOfProductAttrs);
 
                     // Zoznam atributov DISTINCT pre konkretny produkt
                     List<ListOfProductAttributesDetailType> listOfProductAttributesDetailTypes =
@@ -238,8 +187,8 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             String xRequestID, InitiatorSystemType initiatorSystem,
             PagingRequestType paging) {
 
-        int pageSize = paging.getLimit() == null ? 10 : paging.getLimit().intValue();
-        int pageNo = paging.getOffset() == null ? 0 : paging.getOffset().intValue() / pageSize;
+        int pageSize = paging.getLimit() == null ? 10 : paging.getLimit();
+        int pageNo = paging.getOffset() == null ? 0 : paging.getOffset() / pageSize;
 
         Slice<PcTProduct> pcTProducts = pcTProductRepository.findByEntityType(categoryId, PageRequest.of(pageNo, pageSize));
 
@@ -253,7 +202,7 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
         pagingResponseType.setOffset(paging.getOffset());
         pagingResponseType.setRecordCount(pcTProducts.getNumberOfElements());
         if (paging.getReturnTotalCount() != null && paging.getReturnTotalCount() != 0)
-            pagingResponseType.setRecordCountTotal(Integer.valueOf((int)pcTProductRepository.countByEntityType(categoryId)));
+            pagingResponseType.setRecordCountTotal((int) pcTProductRepository.countByEntityType(categoryId));
         params.setPaging(pagingResponseType);
 
         GetListOfProductsInCategoryResponseBodyType data = new GetListOfProductsInCategoryResponseBodyType();
@@ -449,8 +398,8 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
 
         pcTProductRepository.findByProductidExt(productId).ifPresent(pctp -> {
 
-            int pageSize = paging.getLimit() == null ? 10 : paging.getLimit().intValue();
-            int pageNo = paging.getOffset() == null ? 0 : paging.getOffset().intValue() / pageSize;
+            int pageSize = paging.getLimit() == null ? 10 : paging.getLimit();
+            int pageNo = paging.getOffset() == null ? 0 : paging.getOffset() / pageSize;
 
             Slice<PcTProductCatalogue> pcTProductCatalogues = pcTProductCatalogueRepository
                     .findByLangAndProductidAndDateBetween(lang, pctp.getProductid(), dateFrom, dateTo, PageRequest.of(pageNo, pageSize));
@@ -467,8 +416,8 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             pagingResponseType.setOffset(paging.getOffset());
             pagingResponseType.setRecordCount(pcTProductCatalogues.getNumberOfElements());
             if (paging.getReturnTotalCount() != null && paging.getReturnTotalCount() != 0)
-                pagingResponseType.setRecordCountTotal(Integer.valueOf((int)pcTProductCatalogueRepository
-                        .countByLangAndProductidAndDateBetween(lang, pctp.getProductid(), dateFrom, dateTo)));
+                pagingResponseType.setRecordCountTotal((int) pcTProductCatalogueRepository
+                        .countByLangAndProductidAndDateBetween(lang, pctp.getProductid(), dateFrom, dateTo));
             params.setPaging(pagingResponseType);
 
         });
@@ -575,8 +524,8 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
 
         pcTProductRepository.findByProductidExt(productId).ifPresent(pctp -> {
 
-            int pageSize = paging.getLimit() == null ? 10 : paging.getLimit().intValue();
-            int pageNo = paging.getOffset() == null ? 0 : paging.getOffset().intValue() / pageSize;
+            int pageSize = paging.getLimit() == null ? 10 : paging.getLimit();
+            int pageNo = paging.getOffset() == null ? 0 : paging.getOffset() / pageSize;
 
             Slice<PcTProductCatalogueTs> pcTProductCatalogueTs = pcTProductCatalogueTsRepository.findByProductidAndDateBetween(pctp.getProductid(), dateFrom, dateTo, PageRequest.of(pageNo, pageSize));
 
@@ -587,8 +536,8 @@ public class ProductCatalogueService implements ProductCatalogueApiApiDelegate {
             pagingResponseType.setOffset(paging.getOffset());
             pagingResponseType.setRecordCount(pcTProductCatalogueTs.getNumberOfElements());
             if (paging.getReturnTotalCount() != null && paging.getReturnTotalCount() != 0)
-                pagingResponseType.setRecordCountTotal(Integer.valueOf((int)pcTProductCatalogueTsRepository
-                        .countByLangAndProductidAndDateBetween(pctp.getProductid(), dateFrom, dateTo)));
+                pagingResponseType.setRecordCountTotal((int) pcTProductCatalogueTsRepository
+                        .countByLangAndProductidAndDateBetween(pctp.getProductid(), dateFrom, dateTo));
             params.setPaging(pagingResponseType);
 
             data.setProductId(pctp.getProductBusinessId());
