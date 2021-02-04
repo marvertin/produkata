@@ -5,42 +5,44 @@ cache:
     - .m2/repository
 
 variables:
-  BASE_HOST: ostroun.tc.local
 
-  # Toto je tag, pod kterým bude do dockerhubu uložen sestavený image
-  VYSLEDNY_TAG1: ${CI_REGISTRY}/tc/product-katalogue/${CI_COMMIT_REF_SLUG}:$CI_PIPELINE_ID
-  VYSLEDNY_TAG2: ${CI_REGISTRY}/tc/product-katalogue/commit:$CI_COMMIT_SHORT_SHA
+  REGISTRY_IMAGE: $GROUP_REGISTRY_DOMAIN/jtdigi/services/docker/product-catalogue-service                               
+  MAVEN_OPTS: -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository
+ 
   
-  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"  
-
 stages: [mavnage, dockage]
-    
-# Sestavení vlastní aplikace, aplickae jen vypíše proměné prostředí a informace z gradlu
-# získaná při sestavení
+
+
+# Vlastní maven sestavení
 mejvnob:
   stage: mavnage
   image: openjdk:11
   script:
-    - git status
-    - git tag
-    - git describe --match v\* --first-parent
+    - echo VERZE=$(git describe --match v\* --first-parent) >> build.env
     - ./mvnw package
-    - echo "VERZE=hello" >> build.env
   artifacts:
     paths:
       - target/*.jar
-    reports:
-      # dotenv: build.env
-    
+      - build.env
+
+# Docker sestavení a publikace
 dokrob:
   stage: dockage
   image: docker
+  before_script:
+    - docker login -u $GROUP_REGISTRY_USER -p $GROUP_REGISTRY_DEPLOY_TOKEN $GROUP_REGISTRY_DOMAIN
   script:
-    - echo $VERZE
-    - docker login -u $CI_REGISTRY_USER -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - . build.env
+    - VYSLEDNY_TAG1=$REGISTRY_IMAGE/${CI_COMMIT_REF_SLUG}:$CI_PIPELINE_ID
+    - VYSLEDNY_TAG2=$REGISTRY_IMAGE:$VERZE
+    
     - docker build -t $VYSLEDNY_TAG1 .
     - docker tag $VYSLEDNY_TAG1 $VYSLEDNY_TAG2
+    
+
     - docker push $VYSLEDNY_TAG1
     - docker push $VYSLEDNY_TAG2
+  dependencies: 
+    - mejvnob
     
   
