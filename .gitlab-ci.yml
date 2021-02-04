@@ -7,7 +7,7 @@ cache:
 variables:
 
   REGISTRY_IMAGE: $GROUP_REGISTRY_DOMAIN/jtdigi/services/docker/product-catalogue-service                               
-  MAVEN_OPTS: -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository
+  MAVEN_OPTS: -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Dmaven.wagon.http.ssl.ignore.validity.dates=true
  
   
 stages: [mavnage, dockage]
@@ -19,7 +19,7 @@ mejvnob:
   image: openjdk:11
   script:
     - echo VERZE=$(git describe --match v\* --first-parent) >> build.env
-    - ./mvnw package
+    - ./mvnw clean package --settings settings.xml
   artifacts:
     paths:
       - target/*.jar

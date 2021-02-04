@@ -1,0 +1,65 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+  <proxies>
+		<proxy>
+            <id>http</id> 
+ 			<protocol>http</protocol>
+			<host>172.24.72.10</host>
+			<port>8080</port>
+			<nonProxyHosts>*.asseco-ce.com|*.assecosk.local|sonarqube|svn|localhost|hg|nexus</nonProxyHosts>
+		</proxy>   
+		<proxy>
+            <id>https</id> 
+			<protocol>https</protocol>
+			<host>172.24.72.10</host>
+			<port>8080</port>
+			<nonProxyHosts>*.asseco-ce.com|*.assecosk.local|sonarqube|svn|localhost|hg|nexus</nonProxyHosts>
+		</proxy>   
+  </proxies>
+
+  <servers>
+    <server>
+      <id>jtsrdigi-nexus</id>
+      <username>svc-jtsr_digi</username>
+      <password>V@jH}g7Lcdj3BEw&amp;</password>
+    </server>
+    <!-- pre deploy do remote repo -->
+    <server>
+      <id>jtsrdigi-releases</id>
+      <username>svc-jtsr_digi</username>
+      <password>V@jH}g7Lcdj3BEw&amp;</password>
+    </server>
+
+    <server>
+      <id>jtsrdigi-snapshots</id>
+      <username>svc-jtsr_digi</username>
+      <password>V@jH}g7Lcdj3BEw&amp;</password>
+    </server>
+
+  </servers>
+
+  <profiles>
+  	<profile>
+      <id>jedinyProfil</id>
+      <repositories>
+          <repository>
+            <id>jtsrdigi-nexus</id>
+            <url>https://nexus/repository/jtsrdigi/</url>
+            <releases> <enabled>true</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
+          </repository>
+       </repositories>
+       <properties>
+        <downloadSources>true</downloadSources>
+        <downloadJavadocs>true</downloadJavadocs>
+      </properties>
+    </profile>
+  </profiles>
+
+  <activeProfiles>
+    <activeProfile>jedinyProfil</activeProfile>       
+  </activeProfiles>
+  
+</settings>
